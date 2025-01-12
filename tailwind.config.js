@@ -51,6 +51,25 @@ export default {
           5: 'hsl(var(--chart-5))',
         },
       },
+      animation: {
+        'retro-scan': 'retro-scan 2s linear infinite',
+        'retro-progress': 'retro-progress 2s ease-in-out infinite',
+        'retro-fade': 'retro-fade 2s ease-in-out infinite',
+      },
+      keyframes: {
+        'retro-scan': {
+          '0%': { transform: 'translateY(-100%)' },
+          '100%': { transform: 'translateY(100%)' },
+        },
+        'retro-progress': {
+          '0%': { width: '0%' },
+          '100%': { width: '100%' },
+        },
+        'retro-fade': {
+          '0%, 100%': { opacity: '0.8' },
+          '50%': { opacity: '1' },
+        },
+      },
     },
   },
   plugins: [require('tailwindcss-animate')],

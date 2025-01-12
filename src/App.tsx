@@ -1,22 +1,21 @@
-import { Button } from './components/ui/button';
-import './index.css';
+// src/App.tsx
+import { Suspense } from 'react';
+
+import { QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { RouterProvider } from 'react-router-dom';
+
+import { queryClient } from './lib/queryClient';
+import { router } from './lib/router';
 
 const App = () => {
-  // const [count, setCount] = useState(0);
-
   return (
-    <>
-      <h1>Vite + React</h1>
-      <div className='card'>
-        <Button className='rounded-full bg-blue-200'>shadcn Button</Button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className='border text-2xl'>
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <QueryClientProvider client={queryClient}>
+      <Suspense fallback={<div>Loading...</div>}>
+        <RouterProvider router={router} />
+        <ReactQueryDevtools initialIsOpen={false} />
+      </Suspense>
+    </QueryClientProvider>
   );
 };
 
