@@ -32,7 +32,7 @@ const Layout = ({ children }: PropsWithChildren) => {
       <div className='fixed top-0 z-50 w-full'>
         <Header />
       </div>
-      <main className='h-screen w-full pt-14'>
+      <main className='w-full pt-14'>
         <Suspense fallback={<RetroLoading />}>{children}</Suspense>
       </main>
     </div>
