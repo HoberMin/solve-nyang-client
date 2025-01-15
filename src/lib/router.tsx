@@ -9,6 +9,9 @@ import ProfilePage from '@/pages/profile';
 import SalePage from '@/pages/sale';
 import Service from '@/pages/service';
 import Signup from '@/pages/signup';
+import Login from '@/pages/Login';
+import Signup from '@/pages/Signup';
+import Index from '@/pages/index';
 
 export const router = createBrowserRouter([
   {
@@ -47,5 +50,13 @@ export const router = createBrowserRouter([
         element: <Login />,
       },
     ],
+  },
+  {
+    path: '/signup',
+    element: <Signup />,
+  },
+  {
+    path: '/login',
+    element: <Login />,
   },
 ]);

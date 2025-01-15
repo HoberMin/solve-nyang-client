@@ -6,10 +6,14 @@ const Login = () => {
         <label>solved.ac 닉네임</label>
         <input type='text' />
 
-        {/* placeholder를 사용할거면 p태그는 없어도 되지 않을까 */}
         <label>비밀번호</label>
         <input type='password' placeholder='비밀번호를 입력하세요' />
+        <button>로그인</button>
       </form>
+      <div>
+        <p>계정이 없으신가요?</p>
+        <a href='#'>회원가입</a>
+      </div>
     </div>
   );
 };
