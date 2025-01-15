@@ -147,6 +147,7 @@ const Gacha = () => {
       <div className='flex items-center justify-center'>
         <div className='container px-4'>
           <div className='mx-auto flex max-w-[600px] flex-col items-center'>
+
             <div className='relative w-full'>
               <img src={machineImageUrl} alt='Gacha Machine' />
 
