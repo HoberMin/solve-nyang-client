@@ -1,5 +1,8 @@
 import { useState } from 'react';
 
+import { useMutation } from '@tanstack/react-query';
+
+import { gachaCharacter } from '@/apis/character';
 import Layout from '@/components/Layout';
 import {
   AlertDialog,
@@ -22,6 +25,25 @@ import cat from '../assets/cat.svg';
 import ballImageUrl from '../assets/gacha-ball.svg';
 import machineImageUrl from '../assets/gacha-machine.svg';
 import handleImageUrl from '../assets/handle.svg';
+
+const useGachaCharacterApi = () => {
+  // const queryClient = useQueryClient();
+  const { mutate, data } = useMutation({
+    mutationFn: (count: number) => gachaCharacter(count),
+    // onSuccess: () => {
+    //   // 내 포인트 감소시키기
+    // },
+    // onError: (error) => {
+    //   // 뭐 해야 함?
+    // },
+  });
+
+  return {
+    gachaCharacter: mutate,
+    gachaResult: data,
+    // error,
+  };
+};
 
 type Cat = {
   name: string;
@@ -67,6 +89,8 @@ const Gacha = () => {
     count: number;
     cost: number;
   } | null>(null);
+
+  const { gachaCharacter, gachaResult } = useGachaCharacterApi();
 
   const handleConfirmDraw = (count: number) => {
     const cost = count === 1 ? 10 : 100;
@@ -119,10 +143,14 @@ const Gacha = () => {
       setResults(newResults);
       setIsAnimating(false);
 
+      const { gachaCharacter, gachaResult } = useGachaCharacterApi();
+      console.log(gachaResult); // 여기서 뭐가 나오는데 .
+
+      gachaCharacter(count);
       // 1회 뽑기는 개별 모달, 10회 뽑기는 바로 전체 결과 모달
       if (count === 1) {
         setIsModalOpen(true);
-      } else {
+      } else if (count === 10) {
         setIsResultModalOpen(true);
       }
     }
@@ -143,6 +171,7 @@ const Gacha = () => {
         ))}
       </div>
 
+      {/* 가챠 머신 */}
       <div className='flex items-center justify-center'>
         <div className='container px-4'>
           <div className='mx-auto flex max-w-[600px] flex-col items-center'>
@@ -198,6 +227,7 @@ const Gacha = () => {
             </div>
           </div>
         </div>
+
         {/* 확인 다이얼로그 */}
         <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
           <AlertDialogContent>
@@ -214,6 +244,7 @@ const Gacha = () => {
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
+
         {/* 개별 결과 모달 (1회 뽑기용) */}
         <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
           <DialogContent>
