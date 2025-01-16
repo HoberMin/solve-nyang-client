@@ -14,7 +14,6 @@ import {
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
@@ -239,9 +238,6 @@ const Gacha = () => {
                 />
               </div>
             )}
-            <DialogDescription className='text-center'>
-              5초 뒤 창이 자동으로 닫힙니다.
-            </DialogDescription>
           </DialogContent>
         </Dialog>
 
