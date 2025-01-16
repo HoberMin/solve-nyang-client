@@ -31,7 +31,7 @@ type Cat = {
 };
 
 const dummyCat: Cat = {
-  name: '식빵 고양이',
+  name: 'Typescript',
   rarity: 'B',
   imgUrl: cat,
 };
@@ -164,7 +164,7 @@ const Gacha = () => {
 
       <div className='flex items-center justify-center'>
         <div className='container px-4'>
-          <div className='mx-auto flex max-w-[700px] flex-col items-center'>
+          <div className='mx-auto flex max-w-[600px] flex-col items-center'>
             <div className='relative w-full'>
               <img src={machineImageUrl} alt='Gacha Machine' />
 
@@ -215,86 +215,76 @@ const Gacha = () => {
                 <div className='text-sm'>🪙 100 points</div>
               </button>
             </div>
-
-            {/* 확인 다이얼로그 */}
-            <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>확인</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    {pendingDraw &&
-                      `${pendingDraw.cost} 코인을 사용해서 ${pendingDraw.count}회 뽑기를 할까요?`}
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogAction onClick={executeDraw}>
-                    확인
-                  </AlertDialogAction>
-                  <AlertDialogCancel>취소</AlertDialogCancel>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
-            {/* 개별 결과 모달 (1회 뽑기용) */}
-            <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-              <DialogContent>
-                {results[0] && (
-                  <div className='text-center'>
-                    <DialogHeader>
-                      <DialogTitle>
-                        <div className='relative h-14'>
-                          <div className='absolute left-0 top-0 text-5xl text-gray-600'>
-                            {results[0].rarity}
-                          </div>
-                          <div className='absolute left-1/2 top-6 -translate-x-1/2 transform text-3xl font-bold'>
-                            {results[0].name}
-                          </div>
-                        </div>
-                      </DialogTitle>
-                    </DialogHeader>
-                    <img
-                      src={results[0].imgUrl}
-                      alt={results[0].name}
-                      className='mx-auto w-[70%]'
-                    />
-                  </div>
-                )}
-                <DialogDescription className='text-center'>
-                  5초 뒤 창이 자동으로 닫힙니다.
-                </DialogDescription>
-              </DialogContent>
-            </Dialog>
-
-            {/* 전체 결과 모달 (10회 뽑기용) */}
-            <Dialog
-              open={isResultModalOpen}
-              onOpenChange={setIsResultModalOpen}
-            >
-              <DialogContent className='max-w-3xl'>
-                <DialogHeader>
-                  <DialogTitle>{results.length}회 뽑기 결과</DialogTitle>
-                </DialogHeader>
-                <div className='grid grid-cols-5 gap-4 p-4'>
-                  {results.map((cat, index) => (
-                    <div key={index} className='text-center'>
-                      <img
-                        src={cat.imgUrl}
-                        alt={cat.name}
-                        className='mx-auto'
-                      />
-                      <div className='mt-2 flex content-center justify-center gap-3'>
-                        <div className='font-bold'>{cat.rarity}</div>
-                        <div className='text-sm'>{cat.name}</div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                <DialogDescription className='text-center'>
-                  5초 뒤 창이 자동으로 닫힙니다.
-                </DialogDescription>
-              </DialogContent>
-            </Dialog>
           </div>
         </div>
+        {/* 확인 다이얼로그 */}
+        <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>확인</AlertDialogTitle>
+              <AlertDialogDescription>
+                {pendingDraw &&
+                  `${pendingDraw.cost} 코인을 사용해서 ${pendingDraw.count}회 뽑기를 할까요?`}
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogAction onClick={executeDraw}>확인</AlertDialogAction>
+              <AlertDialogCancel>취소</AlertDialogCancel>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+        {/* 개별 결과 모달 (1회 뽑기용) */}
+        <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+          <DialogContent>
+            {results[0] && (
+              <div className='text-center'>
+                <DialogHeader>
+                  <DialogTitle>
+                    <div className='relative h-14'>
+                      <div className='absolute left-0 top-0 text-5xl text-gray-600'>
+                        {results[0].rarity}
+                      </div>
+                      <div className='absolute left-1/2 top-6 -translate-x-1/2 transform text-2xl font-bold'>
+                        {results[0].name} 고양이
+                      </div>
+                    </div>
+                  </DialogTitle>
+                </DialogHeader>
+                <img
+                  src={results[0].imgUrl}
+                  alt={results[0].name}
+                  className='mx-auto w-[70%]'
+                />
+              </div>
+            )}
+            <DialogDescription className='text-center'>
+              5초 뒤 창이 자동으로 닫힙니다.
+            </DialogDescription>
+          </DialogContent>
+        </Dialog>
+
+        {/* 전체 결과 모달 (10회 뽑기용) */}
+        <Dialog open={isResultModalOpen} onOpenChange={setIsResultModalOpen}>
+          <DialogContent className='max-w-3xl'>
+            <DialogHeader>
+              <DialogTitle>{results.length}회 뽑기 결과</DialogTitle>
+            </DialogHeader>
+            <div className='grid grid-cols-5 gap-4 p-4'>
+              {results.map((cat, index) => (
+                <div key={index} className='text-center'>
+                  <img src={cat.imgUrl} alt={cat.name} className='mx-auto' />
+                  <div className='mt-2 flex content-center justify-center gap-3'>
+                    <div className='font-bold'>{cat.rarity}</div>
+                    <div className='text-sm'>{cat.name}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <DialogDescription className='text-center'>
+              5초 뒤 창이 자동으로 닫힙니다.
+            </DialogDescription>
+          </DialogContent>
+        </Dialog>
       </div>
     </Layout>
   );
