@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import Layout from '@/components/Layout';
 import {
@@ -128,24 +128,6 @@ const Gacha = () => {
       }
     }
   };
-
-  // 모달 자동 닫힘 처리
-  useEffect(() => {
-    let timer: NodeJS.Timeout;
-
-    if (isModalOpen || isResultModalOpen) {
-      timer = setTimeout(() => {
-        setIsModalOpen(false);
-        setIsResultModalOpen(false);
-      }, 5000); // 5초 후 자동 닫힘
-    }
-    // cleanup function
-    return () => {
-      if (timer) {
-        clearTimeout(timer);
-      }
-    };
-  }, [isModalOpen, isResultModalOpen]);
 
   return (
     <Layout>
@@ -280,9 +262,6 @@ const Gacha = () => {
                 </div>
               ))}
             </div>
-            <DialogDescription className='text-center'>
-              5초 뒤 창이 자동으로 닫힙니다.
-            </DialogDescription>
           </DialogContent>
         </Dialog>
       </div>
