@@ -12,7 +12,7 @@ const Login = () => {
       </form>
       <div>
         <p>계정이 없으신가요?</p>
-        <a href='#'>회원가입</a>
+        <a href='/signup'>회원가입</a>
       </div>
     </div>
   );
