@@ -115,12 +115,12 @@ const Signup = () => {
         {/* <form onSubmit={onSubmit}> */}
         <div>
           {/* 닉네임 */}
-          <label>solved.ac 닉네임</label>
+          <label className='text-white'>solved.ac 닉네임</label>
           <input
             type='text'
             name='nickname'
             placeholder='닉네임 입력'
-            className='w-full rounded-md border px-4 py-2'
+            className='w-[400px] rounded-md border px-4 py-2'
             value={formData.nickname}
             onChange={inputChange}
           />
@@ -130,12 +130,12 @@ const Signup = () => {
         </div>
 
         <div>
-          <label>비밀번호</label>
+          <label className='text-white'>비밀번호</label>
           <input
             type={isShowPassword ? 'text' : 'password'}
             name='password'
             placeholder='영문, 숫자, 특수문자를 포함하여 입력해주세요(8자 이상)'
-            className='w-full rounded-md border px-4 py-2'
+            className='w-[400px] rounded-md border px-4 py-2'
             value={formData.password}
             onChange={inputChange}
           />
@@ -152,13 +152,13 @@ const Signup = () => {
         </div>
 
         <div>
-          <label className='mb-1 block'>비밀번호 확인</label>
+          <label className='text-white'>비밀번호 확인</label>
           <div className='flex items-center gap-2'>
             <input
               type='password'
               name='passwordConfirm'
               placeholder='비밀번호 확인'
-              className='flex-1 rounded-md border px-4 py-2'
+              className='w-[400px] rounded-md border px-4 py-2'
               value={formData.passwordConfirm}
               onChange={inputChange}
             />
@@ -187,10 +187,10 @@ const Signup = () => {
         </div>
 
         {/* 회원가입 완료 버튼 클릭 후 자동로그인 및 메인페이지로 이동 */}
-        <div className='mt-4'>
+        <div>
           <button
             type='submit'
-            className='w-full rounded-md bg-green-500 py-2 text-white'
+            className='rounded-md bg-green-500 py-2 text-white'
           >
             회원가입 완료
           </button>
