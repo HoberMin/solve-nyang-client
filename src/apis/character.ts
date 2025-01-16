@@ -1,4 +1,4 @@
-export const domain = 'localhost:8080';
+export const domain = 'http://43.201.96.192:8080';
 
 interface Character {
   id: number; // 고유값

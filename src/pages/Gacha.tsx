@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import { useMutation } from '@tanstack/react-query';
 
-import { gachaCharacter } from '@/apis/character';
+import { CharacterList, gachaCharacter } from '@/apis/character';
 import Layout from '@/components/Layout';
 import {
   AlertDialog,
@@ -21,14 +21,14 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 
-import cat from '../assets/cat.svg';
+// import cat from '../assets/cat.svg';
 import ballImageUrl from '../assets/gacha-ball.svg';
 import machineImageUrl from '../assets/gacha-machine.svg';
 import handleImageUrl from '../assets/handle.svg';
 
 const useGachaCharacterApi = () => {
   // const queryClient = useQueryClient();
-  const { mutate, data } = useMutation({
+  const { mutate, data } = useMutation<CharacterList, Error, number>({
     mutationFn: (count: number) => gachaCharacter(count),
     // onSuccess: () => {
     //   // 내 포인트 감소시키기
@@ -45,21 +45,21 @@ const useGachaCharacterApi = () => {
   };
 };
 
-type Cat = {
-  name: string;
-  rarity: string;
-  imgUrl: string;
-};
+// type Cat = {
+//   name: string;
+//   rarity: string;
+//   imgUrl: string;
+// };
 
-const dummyCat: Cat = {
-  name: 'Typescript',
-  rarity: 'B',
-  imgUrl: cat,
-};
+// const dummyCat: Cat = {
+//   name: 'Typescript',
+//   rarity: 'B',
+//   imgUrl: cat,
+// };
 
-const generateResults = (count: number): Cat[] => {
-  return Array(count).fill(dummyCat);
-};
+// const generateResults = (count: number): Cat[] => {
+//   return Array(count).fill(dummyCat);
+// };
 
 const myPoints = 100;
 
@@ -79,10 +79,12 @@ const INITIAL_BALL_POSITIONS = [
 ];
 
 const Gacha = () => {
+  const { gachaCharacter, gachaResult } = useGachaCharacterApi();
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isResultModalOpen, setIsResultModalOpen] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
-  const [results, setResults] = useState<Cat[]>([]);
+  // const [results, setResults] = useState<Cat[]>([]);
   const [ballPositions, setBallPositions] = useState(INITIAL_BALL_POSITIONS);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [pendingDraw, setPendingDraw] = useState<{
@@ -90,10 +92,8 @@ const Gacha = () => {
     cost: number;
   } | null>(null);
 
-  const { gachaCharacter, gachaResult } = useGachaCharacterApi();
-
   const handleConfirmDraw = (count: number) => {
-    const cost = count === 1 ? 10 : 100;
+    const cost = count === 1 ? 10 : 100; // 가격 책정
     setPendingDraw({ count, cost });
     setConfirmOpen(true);
   };
@@ -139,15 +139,9 @@ const Gacha = () => {
       handleElement.classList.remove('rotate-45');
       await new Promise(resolve => setTimeout(resolve, 300));
 
-      const newResults = generateResults(count);
-      setResults(newResults);
-      setIsAnimating(false);
+      gachaCharacter(count); // 캐릭터 뽑기
+      console.log(gachaResult);
 
-      const { gachaCharacter, gachaResult } = useGachaCharacterApi();
-      console.log(gachaResult); // 여기서 뭐가 나오는데 .
-
-      gachaCharacter(count);
-      // 1회 뽑기는 개별 모달, 10회 뽑기는 바로 전체 결과 모달
       if (count === 1) {
         setIsModalOpen(true);
       } else if (count === 10) {
@@ -174,7 +168,7 @@ const Gacha = () => {
       {/* 가챠 머신 */}
       <div className='flex items-center justify-center'>
         <div className='container px-4'>
-          <div className='mx-auto flex max-w-[600px] flex-col items-center'>
+          <div className='mx-auto flex max-w-[50%] flex-col items-center'>
             <div className='relative w-full'>
               <img src={machineImageUrl} alt='Gacha Machine' />
 
@@ -248,32 +242,32 @@ const Gacha = () => {
         {/* 개별 결과 모달 (1회 뽑기용) */}
         <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
           <DialogContent>
-            {results[0] && (
+            {gachaResult && (
               <div className='text-center'>
                 <DialogHeader>
                   <DialogTitle>
                     <div className='relative h-14'>
                       <div className='absolute left-0 top-0 text-5xl text-gray-600'>
-                        {results[0].rarity}
+                        {gachaResult[0].rarity}
                       </div>
                       <div className='absolute left-1/2 top-6 -translate-x-1/2 transform text-2xl font-bold'>
-                        {results[0].name} 고양이
+                        {gachaResult[0].name} 고양이
                       </div>
                     </div>
                   </DialogTitle>
                 </DialogHeader>
-                <img
-                  src={results[0].imgUrl}
-                  alt={results[0].name}
+                {/* <img
+                  src={gachaResult[0].imgUrl}
+                  alt={gachaResult[0].name}
                   className='mx-auto w-[70%]'
-                />
+                /> */}
               </div>
             )}
           </DialogContent>
         </Dialog>
 
         {/* 전체 결과 모달 (10회 뽑기용) */}
-        <Dialog open={isResultModalOpen} onOpenChange={setIsResultModalOpen}>
+        {/* <Dialog open={isResultModalOpen} onOpenChange={setIsResultModalOpen}>
           <DialogContent className='max-w-3xl'>
             <DialogHeader>
               <DialogTitle>{results.length}회 뽑기 결과</DialogTitle>
@@ -290,7 +284,7 @@ const Gacha = () => {
               ))}
             </div>
           </DialogContent>
-        </Dialog>
+        </Dialog> */}
       </div>
     </Layout>
   );
