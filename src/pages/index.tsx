@@ -2,8 +2,6 @@ import { useEffect, useState } from 'react';
 
 import { AnimatePresence, motion } from 'framer-motion';
 
-import Layout from '@/components/Layout';
-
 // Types
 interface Image {
   id: number;
@@ -422,7 +420,7 @@ const MainPage: React.FC = () => {
   const gridConfig = useGridConfig();
 
   return (
-    <Layout>
+    <>
       <motion.section className='relative'>
         <ImageCarousel
           currentPage={currentPage}
@@ -430,15 +428,13 @@ const MainPage: React.FC = () => {
           gridConfig={gridConfig}
         />
       </motion.section>
-
       <motion.section className='relative'>
         <ServiceIntro />
       </motion.section>
-
       <motion.section className='relative'>
         <Footer />
       </motion.section>
-    </Layout>
+    </>
   );
 };
 

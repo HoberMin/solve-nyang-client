@@ -4,18 +4,11 @@ import { Check, Copy } from 'lucide-react';
 import { BookOpen, Flame, Star, Target, Trophy } from 'lucide-react';
 import { toast } from 'sonner';
 
+import { UserAvatar, useGetUserAvatar, useGetUserInfo } from '@/apis/user';
 import Layout from '@/components/Layout';
 import { cn } from '@/lib/utils';
 
-type Rarity = 'S' | 'A' | 'B' | 'C' | 'D';
-
-interface Character {
-  id: string;
-  name: string;
-  rarity: Rarity;
-  dropRate: number;
-  visible: boolean;
-}
+export type Rarity = 'S' | 'A' | 'B' | 'C' | 'D';
 
 interface RarityStyle {
   border: string;
@@ -43,29 +36,10 @@ const getTierInfo = (tier: number) => {
   };
 };
 
-interface PlayerInfoProps {
-  nickname: string;
-  point: number;
-  solvedacTier: number;
-  solvedProblem: number;
-  solvedStrick: number;
-}
+const PlayerInfo = () => {
+  const { data } = useGetUserInfo();
+  const { nickname, point, solvedacTier, solvedCount, solvedacStrick } = data;
 
-interface PlayerInfoProps {
-  nickname: string;
-  point: number;
-  solvedacTier: number;
-  solvedProblem: number;
-  solvedStrick: number;
-}
-
-const PlayerInfo = ({
-  nickname,
-  point,
-  solvedacTier,
-  solvedProblem,
-  solvedStrick,
-}: PlayerInfoProps) => {
   const tierInfo = getTierInfo(solvedacTier);
 
   return (
@@ -132,7 +106,7 @@ const PlayerInfo = ({
                 Solved Problems
               </p>
               <p className='text-sm font-bold text-green-300 sm:text-base'>
-                {solvedProblem}
+                {solvedCount}
               </p>
             </div>
           </div>
@@ -142,7 +116,7 @@ const PlayerInfo = ({
             <div>
               <p className='text-xs text-gray-400 sm:text-sm'>Current Streak</p>
               <p className='text-sm font-bold text-red-300 sm:text-base'>
-                {solvedStrick} days
+                {solvedacStrick} days
               </p>
             </div>
           </div>
@@ -216,7 +190,7 @@ interface CharacterCollectionProps {
   selectedCharacters: Set<string>;
   selectedFilter: FilterType;
   setSelectedFilter: (filter: FilterType) => void;
-  filteredCharacters: Character[];
+  filteredCharacters: UserAvatar[];
   toggleCharacter: (id: string) => void;
   rarityConfig: Record<Rarity, RarityStyle>;
   rarityOrder: Rarity[];
@@ -271,13 +245,13 @@ const CharacterCollection = ({
 
     <div className='grid grid-cols-4 gap-3 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10'>
       {filteredCharacters.map(char => {
-        const isSelected = selectedCharacters.has(char.id);
+        const isSelected = selectedCharacters.has(char.ownedAvatarId);
         const rarity = rarityConfig[char.rarity];
 
         return (
           <div
-            key={char.id}
-            onClick={() => toggleCharacter(char.id)}
+            key={char.ownedAvatarId}
+            onClick={() => toggleCharacter(char.ownedAvatarId)}
             className={cn(
               'relative cursor-pointer rounded-lg border-2',
               'transition-colors duration-200',
@@ -286,7 +260,7 @@ const CharacterCollection = ({
             )}
           >
             <img
-              src='https://picsum.photos/400/400'
+              src={char.name}
               alt={char.name}
               className='aspect-square w-full rounded-lg object-contain p-2'
             />
@@ -320,14 +294,6 @@ const CharacterCollection = ({
 
 // Main Container Component
 const FarmCollection = () => {
-  const [userInfo] = useState({
-    nickname: 'hominson',
-    point: 500,
-    solvedacTier: 15,
-    solvedProblem: 130,
-    solvedStrick: 56,
-  });
-
   const rarityConfig: Record<Rarity, RarityStyle> = {
     S: { border: 'border-yellow-400', text: 'text-yellow-400' },
     A: { border: 'border-purple-400', text: 'text-purple-400' },
@@ -336,75 +302,15 @@ const FarmCollection = () => {
     D: { border: 'border-gray-400', text: 'text-gray-400' },
   };
 
-  const dummyCharacters: Character[] = [
-    { id: '1', name: 'GOOSE', rarity: 'A', dropRate: 0.1, visible: true },
-    {
-      id: '2',
-      name: 'PENGUIN_KOTLIN',
-      rarity: 'S',
-      dropRate: 0.1,
-      visible: false,
-    },
-    { id: '3', name: 'DUCK_PYTHON', rarity: 'B', dropRate: 0.2, visible: true },
-    { id: '4', name: 'CAT_JAVA', rarity: 'A', dropRate: 0.15, visible: false },
-    { id: '5', name: 'DOG_REACT', rarity: 'S', dropRate: 0.05, visible: true },
-    { id: '6', name: 'RABBIT_VUE', rarity: 'C', dropRate: 0.3, visible: false },
-    {
-      id: '7',
-      name: 'HAMSTER_ANGULAR',
-      rarity: 'B',
-      dropRate: 0.2,
-      visible: true,
-    },
-    {
-      id: '8',
-      name: 'BEAR_SWIFT',
-      rarity: 'A',
-      dropRate: 0.15,
-      visible: false,
-    },
-    { id: '9', name: 'FOX_RUST', rarity: 'S', dropRate: 0.05, visible: true },
-    { id: '10', name: 'WOLF_GO', rarity: 'D', dropRate: 0.4, visible: false },
-    { id: '11', name: 'PANDA_CPP', rarity: 'A', dropRate: 0.15, visible: true },
-    { id: '12', name: 'KOALA_RUBY', rarity: 'C', dropRate: 0.3, visible: true },
-    {
-      id: '13',
-      name: 'TIGER_SCALA',
-      rarity: 'B',
-      dropRate: 0.2,
-      visible: false,
-    },
-    { id: '14', name: 'LION_PHP', rarity: 'D', dropRate: 0.4, visible: true },
-    {
-      id: '15',
-      name: 'MONKEY_JS',
-      rarity: 'S',
-      dropRate: 0.05,
-      visible: false,
-    },
-    {
-      id: '16',
-      name: 'ELEPHANT_JAVA',
-      rarity: 'A',
-      dropRate: 0.15,
-      visible: true,
-    },
-    {
-      id: '17',
-      name: 'GIRAFFE_CSS',
-      rarity: 'C',
-      dropRate: 0.3,
-      visible: false,
-    },
-    { id: '18', name: 'ZEBRA_HTML', rarity: 'B', dropRate: 0.2, visible: true },
-    { id: '19', name: 'HIPPO_SQL', rarity: 'D', dropRate: 0.4, visible: false },
-    { id: '20', name: 'OWL_AI', rarity: 'S', dropRate: 0.05, visible: true },
-  ];
+  const { data } = useGetUserAvatar();
+  const { avatars } = data;
 
   const rarityOrder: Rarity[] = ['S', 'A', 'B', 'C', 'D'];
   const [selectedFilter, setSelectedFilter] = useState<FilterType>('ALL');
   const [selectedCharacters, setSelectedCharacters] = useState<Set<string>>(
-    new Set(dummyCharacters.filter(char => char.visible).map(char => char.id)),
+    new Set(
+      avatars.filter(char => char.visible).map(char => char.ownedAvatarId),
+    ),
   );
 
   const toggleCharacter = (id: string) => {
@@ -418,11 +324,11 @@ const FarmCollection = () => {
     setSelectedCharacters(newSelected);
   };
 
-  const filteredCharacters = dummyCharacters
+  const filteredCharacters = avatars
     .filter(char => selectedFilter === 'ALL' || char.rarity === selectedFilter)
     .sort((a, b) => {
-      const isASelected = selectedCharacters.has(a.id);
-      const isBSelected = selectedCharacters.has(b.id);
+      const isASelected = selectedCharacters.has(a.ownedAvatarId);
+      const isBSelected = selectedCharacters.has(b.ownedAvatarId);
 
       if (isASelected !== isBSelected) {
         return isASelected ? -1 : 1;
@@ -440,13 +346,7 @@ const FarmCollection = () => {
         <div className='container mx-auto space-y-6 px-6 py-8'>
           <div className='grid gap-6 md:grid-cols-[1fr,300px]'>
             <MyFarm />
-            <PlayerInfo
-              nickname={userInfo.nickname}
-              point={userInfo.point}
-              solvedacTier={userInfo.solvedacTier}
-              solvedProblem={userInfo.solvedProblem}
-              solvedStrick={userInfo.solvedStrick}
-            />
+            <PlayerInfo />
           </div>
           <CharacterCollection
             selectedCharacters={selectedCharacters}

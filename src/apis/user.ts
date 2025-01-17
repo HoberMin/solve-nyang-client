@@ -1,39 +1,72 @@
-import { domain } from './character';
+import { useSuspenseQuery } from '@tanstack/react-query';
 
-interface UserCharacter {
-  id: number; // 고유값
-  characterId: number;
+import { Rarity } from '@/pages/UserPage';
+
+export interface UserAvatar {
+  ownedAvatarId: string; // 고유값
   name: string;
-  rarity: string;
+  rarity: Rarity;
   dropRate: number;
   visible: boolean;
 }
 
-interface UserCharacterList {
-  characters: UserCharacter[];
+interface UserAvatarList {
+  avatars: UserAvatar[];
 }
 
 interface UserInfo {
-  userId: string;
   nickname: string;
   point: number;
+  solvedacStrick: number;
+  solvedCount: number;
+  solvedacTier: number;
 }
 
-export const userInfo = async () =>
-  await fetch(`${domain}/user/info`, {
-    headers: {
-      'Content-Type': 'application/json',
+const userInfo = async () => {
+  const response = await fetch(
+    `http://ec2-43-201-96-192.ap-northeast-2.compute.amazonaws.com/me`,
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        authorization: '1',
+      },
     },
-  })
-    .then(res => res.json())
-    .then(data => data as UserInfo);
+  );
 
-export const userCharacter = async () => {
-  return await fetch(`${domain}/my/character`, {
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+
+  const data = await response.json();
+
+  return data as UserInfo;
+};
+
+const userAvatar = async () => {
+  const response = await fetch(`http://43.201.96.192:8080/my/avatar`, {
     headers: {
       'Content-Type': 'application/json',
+      authorization: '1',
     },
-  })
-    .then(res => res.json())
-    .then(data => data as UserCharacterList);
+  });
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+
+  const data = await response.json();
+
+  return data as UserAvatarList;
 };
+
+export const useGetUserInfo = () =>
+  useSuspenseQuery({
+    queryKey: ['userInfo'],
+    queryFn: userInfo,
+  });
+
+export const useGetUserAvatar = () =>
+  useSuspenseQuery({
+    queryKey: ['userAvatar'],
+    queryFn: userAvatar,
+  });
