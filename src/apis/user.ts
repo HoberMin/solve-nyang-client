@@ -23,7 +23,7 @@ interface UserInfo {
 }
 
 const userInfo = async () => {
-  const response = await fetch(`http://43.201.96.192:8080/me`, {
+  const response = await fetch(`http://43.201.96.192:8080/user/me`, {
     headers: {
       'Content-Type': 'application/json',
       authorization: '1',
@@ -44,7 +44,7 @@ const userCharacterSelecte = async (ownedAvatarId: string) => {
     `http://43.201.96.192:8080/user/me/avatar/${ownedAvatarId}`,
 
     {
-      method: 'POST',
+      method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
         authorization: '1',
@@ -62,7 +62,7 @@ const userCharacterSelecte = async (ownedAvatarId: string) => {
 };
 
 const userAvatar = async () => {
-  const response = await fetch(`http://43.201.96.192:8080/my/avatar`, {
+  const response = await fetch(`http://43.201.96.192:8080/user/me/avatar`, {
     headers: {
       'Content-Type': 'application/json',
       authorization: '1',
