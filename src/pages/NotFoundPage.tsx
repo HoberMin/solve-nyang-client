@@ -10,7 +10,7 @@ const NotFoundPage = () => {
         <div className='relative inline-flex items-center text-[120px] font-bold text-gray-400'>
           <span className='opacity-20'>4</span>
           <div className='mx-2 flex h-24 w-24 items-center justify-center'>
-            <Cat className='h-20 w-20 animate-bounce text-amber-400' />
+            <Cat className='h-20 w-20 text-amber-400' />
           </div>
           <span className='opacity-20'>4</span>
         </div>
@@ -20,7 +20,7 @@ const NotFoundPage = () => {
         </h2>
 
         <p className='mt-4 text-lg text-gray-200'>
-          찾으시는 페이지를 발견하지 못했어요 <br />
+          찾으시는 페이지를 발견하지 못했어요
         </p>
 
         <div className='mt-6 space-y-2 text-gray-400'>
@@ -29,7 +29,7 @@ const NotFoundPage = () => {
 
         <button
           onClick={() => navigate('/')}
-          className='mx-auto mt-8 flex items-center justify-center gap-2 rounded-lg bg-amber-400 px-6 py-3 text-gray-900 transition-colors hover:bg-amber-500'
+          className='mx-auto mt-8 flex items-center justify-center gap-2 rounded-lg bg-amber-400 px-6 py-3 text-gray-900 hover:bg-amber-500'
         >
           <HomeIcon className='h-5 w-5' />
           <span>메인으로 돌아가기</span>
