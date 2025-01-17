@@ -1,114 +1,46 @@
 import { useState } from 'react';
 
-import { useMutation } from '@tanstack/react-query';
-
-import { CharacterList, gachaCharacter } from '@/apis/character';
+import { Character, useGachaCharacterApi } from '@/apis/character';
 import Layout from '@/components/Layout';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
+import { GachaConfirmDialog } from '@/components/gacha/GachaConfirmDialog';
+import { GachaDropRateInfo } from '@/components/gacha/GachaDropRateInfo';
+import { GachaResultModal } from '@/components/gacha/GachaResultModal';
+import { BallPosition, DrawConfig } from '@/types/gacha';
 
-// import cat from '../assets/cat.svg';
 import ballImageUrl from '../assets/gacha-ball.svg';
 import machineImageUrl from '../assets/gacha-machine.svg';
 import handleImageUrl from '../assets/handle.svg';
 
-const useGachaCharacterApi = () => {
-  // const queryClient = useQueryClient();
-  const { mutate, data } = useMutation<CharacterList, Error, number>({
-    mutationFn: (count: number) => gachaCharacter(count),
-    // onSuccess: () => {
-    //   // 내 포인트 감소시키기
-    // },
-    // onError: (error) => {
-    //   // 뭐 해야 함?
-    // },
-  });
-
-  return {
-    gachaCharacter: mutate,
-    gachaResult: data,
-    // error,
-  };
-};
-
-// type Cat = {
-//   name: string;
-//   rarity: string;
-//   imgUrl: string;
-// };
-
-// const dummyCat: Cat = {
-//   name: 'Typescript',
-//   rarity: 'B',
-//   imgUrl: cat,
-// };
-
-// const generateResults = (count: number): Cat[] => {
-//   return Array(count).fill(dummyCat);
-// };
-
-const myPoints = 100;
-
-const RARITY_INFO = [
-  { rarity: 'S', dropRate: '3' },
-  { rarity: 'A', dropRate: '7' },
-  { rarity: 'B', dropRate: '15' },
-  { rarity: 'C', dropRate: '27' },
-  { rarity: 'D', dropRate: '48' },
-];
-
-const INITIAL_BALL_POSITIONS = [
+const INITIAL_BALL_POSITIONS: BallPosition[] = [
   { left: '40%', top: '40%' },
   { left: '48%', top: '35%' },
   { left: '47%', top: '45%' },
   { left: '55%', top: '40%' },
 ];
 
+const myPoints = 100;
+
 const Gacha = () => {
-  const { gachaCharacter, gachaResult } = useGachaCharacterApi();
+  const getGacha = useGachaCharacterApi();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isResultModalOpen, setIsResultModalOpen] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
-  // const [results, setResults] = useState<Cat[]>([]);
   const [ballPositions, setBallPositions] = useState(INITIAL_BALL_POSITIONS);
-  const [confirmOpen, setConfirmOpen] = useState(false);
-  const [pendingDraw, setPendingDraw] = useState<{
-    count: number;
-    cost: number;
-  } | null>(null);
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const [pendingDraw, setPendingDraw] = useState<DrawConfig | null>(null);
+  const [gachaResults, setGachaResults] = useState<Character[]>([]);
+  const [drawMode, setDrawMode] = useState<'single' | 'multi' | null>(null);
 
   const handleConfirmDraw = (count: number) => {
-    const cost = count === 1 ? 10 : 100; // 가격 책정
+    const cost = count === 1 ? 10 : 100;
     setPendingDraw({ count, cost });
-    setConfirmOpen(true);
-  };
-
-  const executeDraw = async () => {
-    // 뽑기 실행
-    if (!pendingDraw) return;
-    await handleGachaDraw(pendingDraw.count);
-    setPendingDraw(null);
+    setDrawMode(count === 1 ? 'single' : 'multi');
+    setIsConfirmOpen(true);
   };
 
   const shuffleBalls = () => {
     setBallPositions(prevPositions => {
       const newPositions = [...prevPositions];
-      // Fisher-Yates 셔플 알고리즘
       for (let i = newPositions.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [newPositions[i], newPositions[j]] = [newPositions[j], newPositions[i]];
@@ -117,55 +49,47 @@ const Gacha = () => {
     });
   };
 
-  const handleGachaDraw = async (count: number) => {
-    if (isAnimating) return;
+  const handleGachaDraw = async () => {
+    if (!pendingDraw || isAnimating) return;
+
     setIsAnimating(true);
-
     const handleElement = document.getElementById('gacha-handle');
-    if (handleElement) {
-      handleElement.classList.add(
-        'rotate-45',
-        'transition-transform',
-        'duration-1000',
-      );
 
-      await new Promise(resolve => setTimeout(resolve, 500));
+    try {
+      if (handleElement) {
+        handleElement.classList.add(
+          'rotate-45',
+          'transition-transform',
+          'duration-1000',
+        );
 
-      for (let i = 0; i < 3; i++) {
-        shuffleBalls();
+        await new Promise(resolve => setTimeout(resolve, 500));
+
+        for (let i = 0; i < 3; i++) {
+          shuffleBalls();
+          await new Promise(resolve => setTimeout(resolve, 300));
+        }
+
+        handleElement.classList.remove('rotate-45');
         await new Promise(resolve => setTimeout(resolve, 300));
-      }
 
-      handleElement.classList.remove('rotate-45');
-      await new Promise(resolve => setTimeout(resolve, 300));
-
-      gachaCharacter(count); // 캐릭터 뽑기
-      console.log(gachaResult);
-
-      if (count === 1) {
+        const { avatars } = await getGacha(pendingDraw.count);
+        setGachaResults(avatars);
         setIsModalOpen(true);
-      } else if (count === 10) {
-        setIsResultModalOpen(true);
       }
+    } catch (error) {
+      console.error('Gacha draw error:', error);
+      setDrawMode(null);
+    } finally {
+      setIsAnimating(false);
+      setPendingDraw(null);
     }
   };
 
   return (
     <Layout>
-      {/* Drop Rate 정보 블록 */}
-      <div className='fixed right-10 top-24 w-48 rounded-lg bg-black/30 p-5 shadow-md backdrop-blur-sm'>
-        <div className='mb-2 text-center text-lg font-bold text-white'>
-          DROP RATE
-        </div>
-        {RARITY_INFO.map(({ rarity, dropRate }) => (
-          <div key={rarity} className='mb-1 flex items-center gap-4'>
-            <span className='font-bold text-white'>{rarity}</span>
-            <span className='text-white'>{dropRate}%</span>
-          </div>
-        ))}
-      </div>
+      <GachaDropRateInfo />
 
-      {/* 가챠 머신 */}
       <div className='flex items-center justify-center'>
         <div className='container px-4'>
           <div className='mx-auto flex max-w-[50%] flex-col items-center'>
@@ -184,11 +108,11 @@ const Gacha = () => {
                   key={index}
                   src={ballImageUrl}
                   alt={`Ball ${index + 1}`}
-                  className={`absolute w-[9%] transform animate-bounce transition-all`}
+                  className='absolute w-[9%] transform animate-bounce transition-all'
                   style={{
                     ...position,
-                    animationDelay: `${index * 0.2}s`, // 각 볼마다 0.2초씩 지연
-                    animationDuration: '1s', // 전체 바운스 주기는 1초
+                    animationDelay: `${index * 0.2}s`,
+                    animationDuration: '1s',
                   }}
                 />
               ))}
@@ -199,7 +123,6 @@ const Gacha = () => {
               </div>
             </div>
 
-            {/* 버튼 섹션 */}
             <div className='flex gap-2'>
               <button
                 className='bg-red-500 disabled:bg-gray-400'
@@ -222,69 +145,21 @@ const Gacha = () => {
           </div>
         </div>
 
-        {/* 확인 다이얼로그 */}
-        <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>확인</AlertDialogTitle>
-              <AlertDialogDescription>
-                {pendingDraw &&
-                  `${pendingDraw.cost} 코인을 사용해서 ${pendingDraw.count}회 뽑기를 할까요?`}
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogAction onClick={executeDraw}>확인</AlertDialogAction>
-              <AlertDialogCancel>취소</AlertDialogCancel>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-
-        {/* 개별 결과 모달 (1회 뽑기용) */}
-        <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-          <DialogContent>
-            {gachaResult && (
-              <div className='text-center'>
-                <DialogHeader>
-                  <DialogTitle>
-                    <div className='relative h-14'>
-                      <div className='absolute left-0 top-0 text-5xl text-gray-600'>
-                        {gachaResult[0].rarity}
-                      </div>
-                      <div className='absolute left-1/2 top-6 -translate-x-1/2 transform text-2xl font-bold'>
-                        {gachaResult[0].name} 고양이
-                      </div>
-                    </div>
-                  </DialogTitle>
-                </DialogHeader>
-                {/* <img
-                  src={gachaResult[0].imgUrl}
-                  alt={gachaResult[0].name}
-                  className='mx-auto w-[70%]'
-                /> */}
-              </div>
-            )}
-          </DialogContent>
-        </Dialog>
-
-        {/* 전체 결과 모달 (10회 뽑기용) */}
-        {/* <Dialog open={isResultModalOpen} onOpenChange={setIsResultModalOpen}>
-          <DialogContent className='max-w-3xl'>
-            <DialogHeader>
-              <DialogTitle>{results.length}회 뽑기 결과</DialogTitle>
-            </DialogHeader>
-            <div className='grid grid-cols-5 gap-4 p-4'>
-              {results.map((cat, index) => (
-                <div key={index} className='text-center'>
-                  <img src={cat.imgUrl} alt={cat.name} className='mx-auto' />
-                  <div className='mt-2 flex content-center justify-center gap-3'>
-                    <div className='font-bold'>{cat.rarity}</div>
-                    <div className='text-sm'>{cat.name}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </DialogContent>
-        </Dialog> */}
+        <GachaConfirmDialog
+          isOpen={isConfirmOpen}
+          onOpenChange={setIsConfirmOpen}
+          pendingDraw={pendingDraw}
+          onConfirm={handleGachaDraw}
+        />
+        <GachaResultModal
+          isOpen={isModalOpen}
+          onOpenChange={open => {
+            setIsModalOpen(open);
+            if (!open) setDrawMode(null);
+          }}
+          results={gachaResults}
+          isSingleDraw={drawMode === 'single'}
+        />
       </div>
     </Layout>
   );

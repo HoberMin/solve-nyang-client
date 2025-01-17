@@ -1,6 +1,8 @@
+import { useMutation } from '@tanstack/react-query';
+
 export const domain = 'http://43.201.96.192:8080';
 
-interface Character {
+export interface Character {
   id: number; // 고유값
   characterId: number;
   name: string;
@@ -9,7 +11,7 @@ interface Character {
 }
 
 export interface CharacterList {
-  characters: Character[];
+  avatars: Character[];
 }
 
 export const gachaCharacter = async (count: number) =>
@@ -45,3 +47,11 @@ export const getCharacterList = async () =>
 //       characterList,
 //     }),
 //   });
+
+export const useGachaCharacterApi = () => {
+  const { mutateAsync } = useMutation<CharacterList, Error, number>({
+    mutationFn: (count: number) => gachaCharacter(count),
+  });
+
+  return mutateAsync;
+};

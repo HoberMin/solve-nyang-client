@@ -1,0 +1,58 @@
+import { Character } from '@/apis/character';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+
+interface GachaResultModalProps {
+  isOpen: boolean;
+  onOpenChange: (open: boolean) => void;
+  results: Character[];
+  isSingleDraw?: boolean;
+}
+
+export const GachaResultModal = ({
+  isOpen,
+  onOpenChange,
+  results,
+  isSingleDraw = true,
+}: GachaResultModalProps) => (
+  <Dialog open={isOpen} onOpenChange={onOpenChange}>
+    <DialogContent className={isSingleDraw ? '' : 'max-w-3xl'}>
+      {isSingleDraw ? (
+        <div className='text-center'>
+          <DialogHeader>
+            <DialogTitle>
+              <div className='relative h-14'>
+                <div className='absolute left-0 top-0 text-5xl text-gray-600'>
+                  {results[0]?.rarity.toLowerCase()}
+                </div>
+                <div className='absolute left-1/2 top-6 -translate-x-1/2 transform text-2xl font-bold'>
+                  {results[0]?.name}
+                </div>
+              </div>
+            </DialogTitle>
+          </DialogHeader>
+        </div>
+      ) : (
+        <>
+          <DialogHeader>
+            <DialogTitle>{results.length}회 뽑기 결과</DialogTitle>
+          </DialogHeader>
+          <div className='grid grid-cols-5 gap-4 p-4'>
+            {results.map((character, index) => (
+              <div key={index} className='text-center'>
+                <div className='mt-2 flex content-center justify-center gap-3'>
+                  <div className='font-bold'>{character.rarity}</div>
+                  <div className='text-sm'>{character.name}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
+    </DialogContent>
+  </Dialog>
+);
