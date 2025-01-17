@@ -4,7 +4,12 @@ import { Check, Copy } from 'lucide-react';
 import { BookOpen, Flame, Star, Target, Trophy } from 'lucide-react';
 import { toast } from 'sonner';
 
-import { UserAvatar, useGetUserAvatar, useGetUserInfo } from '@/apis/user';
+import {
+  UserAvatar,
+  useGetUserAvatar,
+  useGetUserInfo,
+  useToggleAvatar,
+} from '@/apis/user';
 import Layout from '@/components/Layout';
 import { cn } from '@/lib/utils';
 
@@ -302,6 +307,8 @@ const FarmCollection = () => {
     D: { border: 'border-gray-400', text: 'text-gray-400' },
   };
 
+  const toggle = useToggleAvatar();
+
   const { data } = useGetUserAvatar();
   const { avatars } = data;
 
@@ -321,6 +328,7 @@ const FarmCollection = () => {
       if (newSelected.size >= 20) return;
       newSelected.add(id);
     }
+    toggle(id);
     setSelectedCharacters(newSelected);
   };
 

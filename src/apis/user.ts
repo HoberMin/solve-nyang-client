@@ -1,4 +1,4 @@
-import { useSuspenseQuery } from '@tanstack/react-query';
+import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
 
 import { Rarity } from '@/pages/UserPage';
 
@@ -23,9 +23,28 @@ interface UserInfo {
 }
 
 const userInfo = async () => {
+  const response = await fetch(`http://43.201.96.192:8080/me`, {
+    headers: {
+      'Content-Type': 'application/json',
+      authorization: '1',
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+
+  const data = await response.json();
+
+  return data as UserInfo;
+};
+
+const userCharacterSelecte = async (ownedAvatarId: string) => {
   const response = await fetch(
-    `http://ec2-43-201-96-192.ap-northeast-2.compute.amazonaws.com/me`,
+    `http://43.201.96.192:8080/user/me/avatar/${ownedAvatarId}`,
+
     {
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         authorization: '1',
@@ -70,3 +89,11 @@ export const useGetUserAvatar = () =>
     queryKey: ['userAvatar'],
     queryFn: userAvatar,
   });
+
+export const useToggleAvatar = () => {
+  const { mutate } = useMutation({
+    mutationFn: (ownedAvatarId: string) => userCharacterSelecte(ownedAvatarId),
+  });
+
+  return mutate;
+};
