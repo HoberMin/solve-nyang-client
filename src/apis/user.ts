@@ -1,4 +1,8 @@
-import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
+import {
+  useMutation,
+  useQueryClient,
+  useSuspenseQuery,
+} from '@tanstack/react-query';
 
 import { Rarity } from '@/pages/UserPage';
 
@@ -91,8 +95,11 @@ export const useGetUserAvatar = () =>
   });
 
 export const useToggleAvatar = () => {
+  const queryClient = useQueryClient();
   const { mutate } = useMutation({
     mutationFn: (ownedAvatarId: string) => userCharacterSelecte(ownedAvatarId),
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ['userAvatar'] }),
   });
 
   return mutate;
