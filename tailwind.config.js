@@ -55,8 +55,18 @@ export default {
         'retro-scan': 'retro-scan 2s linear infinite',
         'retro-progress': 'retro-progress 2s ease-in-out infinite',
         'retro-fade': 'retro-fade 2s ease-in-out infinite',
+        glitch: 'glitch 1s linear infinite',
+        scanline: 'scanline 8s linear infinite',
+        'loading-dots': 'loading 2s steps(4, end) infinite',
       },
       keyframes: {
+        loading: {
+          '0%': { width: '0' },
+          '25%': { width: '1.5rem' },
+          '50%': { width: '3rem' },
+          '75%': { width: '4.5rem' },
+          '100%': { width: '0' },
+        },
         'retro-scan': {
           '0%': { transform: 'translateY(-100%)' },
           '100%': { transform: 'translateY(100%)' },
@@ -68,6 +78,15 @@ export default {
         'retro-fade': {
           '0%, 100%': { opacity: '0.8' },
           '50%': { opacity: '1' },
+        },
+        glitch: {
+          '0%, 100%': { transform: 'translate(0)' },
+          '33%': { transform: 'translate(-5px, 2px)' },
+          '66%': { transform: 'translate(5px, -2px)' },
+        },
+        scanline: {
+          '0%': { transform: 'translateY(-100%)' },
+          '100%': { transform: 'translateY(100%)' },
         },
       },
     },

@@ -78,7 +78,7 @@ const RetroLoading = () => {
 
       {/* 스캔라인 효과 */}
       <div
-        className='animate-scanline pointer-events-none absolute inset-0 opacity-5'
+        className='pointer-events-none absolute inset-0 animate-scanline opacity-5'
         style={{
           background:
             'repeating-linear-gradient(0deg, transparent, transparent 1px, rgba(59, 130, 246, 0.2) 2px, rgba(59, 130, 246, 0.2) 2px)',
