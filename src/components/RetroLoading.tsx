@@ -1,90 +1,57 @@
-import { useEffect, useState } from 'react';
+import { Loader2, Sparkles, Terminal } from 'lucide-react';
 
 const RetroLoading = () => {
-  const [dots, setDots] = useState('');
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setDots(prev => (prev.length >= 3 ? '' : prev + '.'));
-    }, 500);
-
-    return () => clearInterval(interval);
-  }, []);
-
   return (
-    <div className='flex h-[calc(100vh-4rem)] w-full items-center justify-center'>
-      {/* 격자 패턴 배경 */}
-      <div
-        className='absolute inset-0'
-        style={{
-          backgroundImage: `
-            linear-gradient(rgba(59, 130, 246, 0.1) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(59, 130, 246, 0.1) 1px, transparent 1px)
-          `,
-          backgroundSize: '8px 8px',
-        }}
-      />
+    <div className='flex h-[calc(100vh-4rem)] w-full items-center justify-center bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-gray-800 via-gray-900 to-black'>
+      <div className='relative rounded-xl bg-black/30 p-10 backdrop-blur-xl backdrop-filter'>
+        {/* 글로우 효과 */}
+        <div className='absolute inset-0 rounded-xl bg-gradient-to-r from-blue-500/10 to-purple-500/10' />
+        <div className='absolute inset-0 rounded-xl bg-gradient-to-b from-transparent via-blue-500/5 to-blue-500/20' />
 
-      <div className='relative'>
-        {/* 메인 콘텐츠 */}
-        <div className='flex flex-col items-center gap-6'>
-          {/* 픽셀 아트 스타일 로딩 아이콘 */}
-          <svg
-            width='60'
-            height='60'
-            viewBox='0 0 80 80'
-            className='animate-spin'
-          >
-            <rect x='35' y='10' width='10' height='10' fill='#3B82F6' />
-            <rect x='60' y='35' width='10' height='10' fill='#60A5FA' />
-            <rect x='35' y='60' width='10' height='10' fill='#1D4ED8' />
-            <rect x='10' y='35' width='10' height='10' fill='#2563EB' />
-          </svg>
-
-          {/* 로딩 텍스트 */}
-          <div
-            className='bg-gradient-to-r from-blue-400 via-blue-500 to-blue-400 bg-clip-text text-xl text-transparent'
-            style={{
-              fontFamily: "'Press Start 2P', monospace",
-              textShadow: '0 0 20px rgba(59, 130, 246, 0.8)',
-            }}
-          >
-            LOADING{dots}
-          </div>
-
-          {/* 레트로 스타일 진행 바 */}
-          <div className='relative h-3 w-48 overflow-hidden rounded border-2 border-blue-500/30 bg-gray-800/50'>
-            <div className='absolute inset-0 opacity-50'>
-              <div className='h-0.5 w-0.5 bg-blue-400' />
-              <div className='absolute right-0 top-0 h-0.5 w-0.5 bg-blue-400' />
-              <div className='absolute bottom-0 h-0.5 w-0.5 bg-blue-400' />
-              <div className='absolute bottom-0 right-0 h-0.5 w-0.5 bg-blue-400' />
+        {/* 컨텐츠 */}
+        <div className='relative flex flex-col items-center space-y-8'>
+          {/* 로딩 스피너 섹션 */}
+          <div className='relative'>
+            <div className='absolute -inset-1 rounded-full bg-blue-500/20 blur-lg' />
+            <div className='relative rounded-full bg-gray-900 p-4'>
+              <Loader2 className='h-12 w-12 animate-spin text-blue-500' />
             </div>
-            <div className='h-full animate-retro-progress bg-gradient-to-r from-blue-600 via-blue-400 to-blue-600' />
           </div>
 
-          {/* 팁 메시지 */}
-          <div
-            className='animate-retro-fade text-xs text-blue-400'
-            style={{
-              fontFamily: "'Press Start 2P', monospace",
-              textShadow: '0 0 5px rgba(59, 130, 246, 0.5)',
-            }}
-          >
-            백준문제를 풀어 포인트를 획득하세요!
+          {/* 로딩 텍스트 섹션 */}
+          <div className='text-center'>
+            <h2 className='flex items-center gap-2 text-xl font-bold'>
+              <Sparkles className='h-5 w-5 text-blue-400' />
+              <span className='bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent'>
+                Loading...
+              </span>
+              <Sparkles className='h-5 w-5 text-purple-400' />
+            </h2>
+            <p className='mt-2 text-sm text-gray-400'>
+              알고리즘의 세계로 여행을 떠나볼까요?
+            </p>
+          </div>
+
+          {/* 팁 섹션 */}
+          <div className='w-80 rounded-lg border border-blue-500/20 bg-blue-500/5 p-4 shadow-lg'>
+            <div className='flex items-center gap-2'>
+              <Terminal className='h-4 w-4 text-blue-400' />
+              <span className='text-xs font-medium text-blue-400'>
+                오늘의 팁
+              </span>
+            </div>
+            <div className='mt-2 text-center text-sm text-gray-300'>
+              백준 문제를 풀어 포인트를 획득하고
+              <br />
+              특별한 아바타를 수집해보세요!
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* 스캔라인 효과 */}
-      <div
-        className='animate-scanline pointer-events-none absolute inset-0 opacity-5'
-        style={{
-          background:
-            'repeating-linear-gradient(0deg, transparent, transparent 1px, rgba(59, 130, 246, 0.2) 2px, rgba(59, 130, 246, 0.2) 2px)',
-          backgroundSize: '4px 4px',
-        }}
-      />
+        {/* 장식용 테두리 */}
+        <div className='absolute inset-0 rounded-xl border border-white/10' />
+        <div className='absolute inset-0 rounded-xl border border-blue-500/5' />
+      </div>
     </div>
   );
 };
