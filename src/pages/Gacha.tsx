@@ -1,10 +1,12 @@
 import { useState } from 'react';
 
 import { Character, useGachaCharacterApi } from '@/apis/character';
+import { useGetUserInfo } from '@/apis/user';
 import Layout from '@/components/Layout';
 import { GachaConfirmDialog } from '@/components/gacha/GachaConfirmDialog';
 import { GachaDropRateInfo } from '@/components/gacha/GachaDropRateInfo';
 import { GachaResultModal } from '@/components/gacha/GachaResultModal';
+import { queryClient } from '@/lib/queryClient';
 import { BallPosition, DrawConfig } from '@/types/gacha';
 
 import ballImageUrl from '../assets/gacha-ball.svg';
@@ -18,10 +20,12 @@ const INITIAL_BALL_POSITIONS: BallPosition[] = [
   { left: '55%', top: '40%' },
 ];
 
-const myPoints = 100;
-
 const Gacha = () => {
   const getGacha = useGachaCharacterApi();
+
+  // 포인트 조회
+  const { data } = useGetUserInfo();
+  const { point } = data;
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
@@ -76,6 +80,8 @@ const Gacha = () => {
         const { avatars } = await getGacha(pendingDraw.count);
         setGachaResults(avatars);
         setIsModalOpen(true);
+
+        queryClient.invalidateQueries({ queryKey: ['userInfo'] }); // 쿼리 무효화
       }
     } catch (error) {
       console.error('Gacha draw error:', error);
@@ -119,7 +125,7 @@ const Gacha = () => {
 
               <div className='absolute bottom-[22%] left-1/2 -translate-x-1/2 transform rounded bg-yellow-300 px-4 py-1 text-center'>
                 <div className='text-sm'>내 포인트</div>
-                <div className='font-bold'>{myPoints.toLocaleString()}</div>
+                <div className='font-bold'>{point.toLocaleString()}</div>
               </div>
             </div>
 
@@ -127,7 +133,7 @@ const Gacha = () => {
               <button
                 className='bg-red-500 disabled:bg-gray-400'
                 onClick={() => handleConfirmDraw(1)}
-                disabled={isAnimating || myPoints < 10}
+                disabled={isAnimating || point < 10}
               >
                 <div>1회 뽑기</div>
                 <div className='text-sm'>🪙 10 points</div>
@@ -136,7 +142,7 @@ const Gacha = () => {
               <button
                 className='bg-red-500 disabled:bg-gray-400'
                 onClick={() => handleConfirmDraw(10)}
-                disabled={isAnimating || myPoints < 100}
+                disabled={isAnimating || point < 100}
               >
                 <div>10회 뽑기</div>
                 <div className='text-sm'>🪙 100 points</div>
