@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { Character, useGachaCharacterApi } from '@/apis/character';
+import { Avatar, useGachaAvatarApi } from '@/apis/avatar';
 import { useGetUserInfo } from '@/apis/user';
 import Layout from '@/components/Layout';
 import { GachaConfirmDialog } from '@/components/gacha/GachaConfirmDialog';
@@ -21,7 +21,7 @@ const INITIAL_BALL_POSITIONS: BallPosition[] = [
 ];
 
 const Gacha = () => {
-  const getGacha = useGachaCharacterApi();
+  const getGacha = useGachaAvatarApi();
 
   // 포인트 조회
   const { data } = useGetUserInfo();
@@ -32,7 +32,7 @@ const Gacha = () => {
   const [ballPositions, setBallPositions] = useState(INITIAL_BALL_POSITIONS);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [pendingDraw, setPendingDraw] = useState<DrawConfig | null>(null);
-  const [gachaResults, setGachaResults] = useState<Character[]>([]);
+  const [gachaResults, setGachaResults] = useState<Avatar[]>([]);
   const [drawMode, setDrawMode] = useState<'single' | 'multi' | null>(null);
 
   const handleConfirmDraw = (count: number) => {

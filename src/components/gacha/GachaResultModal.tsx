@@ -1,4 +1,4 @@
-import { Character } from '@/apis/character';
+import { Avatar } from '@/apis/avatar';
 import {
   Dialog,
   DialogContent,
@@ -9,7 +9,7 @@ import {
 interface GachaResultModalProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
-  results: Character[];
+  results: Avatar[];
   isSingleDraw?: boolean;
 }
 

@@ -1,4 +1,4 @@
-import { domain } from './character';
+import { domain } from './avatar';
 
 interface Encryption {
   encryption: string;
