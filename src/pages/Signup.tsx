@@ -6,6 +6,11 @@ import { getEncryption, postEncryption } from '@/apis/encryption';
 import { signUp } from '@/apis/sign';
 import Layout from '@/components/Layout';
 
+import EyeOffIcon from '/eye-off.svg';
+import EyeIcon from '/eye.svg';
+
+///////////////////////////////////////////////////////////////////////////////////
+
 interface FormData {
   nickname: string;
   password: string;
@@ -57,6 +62,9 @@ const Signup = () => {
       // alert 말고 p 태그로 암호화 키 발급 폼 밑에 초록 글씨로 띄울까
       // 발급 완료/실패에 대한 알림 로직이 필요할까?
       // 암호화키 발급 중 -> 발급 완료 문구 띄우기?
+
+      // 실제 API 호출 시뮬레이션
+      await new Promise(resolve => setTimeout(resolve, 1000));
       alert('암호화 키가 발급되었습니다. solved.ac에서 인증을 진행해주세요.');
     } catch (err) {
       setErrors(prev => ({
@@ -159,56 +167,67 @@ const Signup = () => {
         <div className='w-[500px]'>{/* 인증 방법 설명 캡쳐 이미지 */}</div>
 
         {/* 오른쪽: 회원가입 폼 */}
-        <div>
+        <div className=''>
           <form onSubmit={handleSubmit} className='justify-items-center py-20'>
-            <h2 className='text-white'>Sign up</h2>
+            <h2 className='text-2xl text-white'>Sign up</h2>
 
             {/* 닉네임 */}
             <div className='flex flex-col py-4'>
               <label className='text-white'>solved.ac 닉네임</label>
-              <input
-                type='text'
-                name='nickname'
-                placeholder='닉네임 입력'
-                className='w-[500px] rounded-md border px-4 py-2'
-                value={formData.nickname}
-                onChange={handleInputChange}
-                disabled={isKeyIssued} // true일 경우 disabled
-              />
-              <button
-                type='button'
-                onClick={handleKeyIssuance}
-                disabled={isKeyIssued || isLoading}
-                className={`w-[100px] rounded-md px-4 py-2 text-white ${
-                  isKeyIssued ? 'bg-gray-500' : 'bg-blue-500' // 암호화 키 발행됐으면 파란색.(문구로 안내하면 없어도 될듯)
-                }`}
-              >
-                키 발급
-              </button>
+              <div className='flex items-center gap-2'>
+                <input
+                  type='text'
+                  name='nickname'
+                  placeholder='닉네임 입력'
+                  className='w-[300px] rounded-md border px-4 py-2'
+                  value={formData.nickname}
+                  onChange={handleInputChange}
+                  disabled={isKeyIssued} // true일 경우 disabled
+                />
+                <button
+                  type='button'
+                  onClick={handleKeyIssuance}
+                  disabled={isKeyIssued || isLoading}
+                  className={`w-[96px] rounded-md px-1 py-3 text-xs text-white ${
+                    isKeyIssued ? 'bg-gray-500' : 'bg-blue-500' // 암호화 키 발행됐으면 파란색.(문구로 안내하면 없어도 될듯)
+                  }`}
+                >
+                  암호화 키 발급
+                </button>
+              </div>
               {errors.nickname && (
                 <p className='text-sm text-white'>{errors.nickname}</p>
               )}
             </div>
 
             {/* 암호화 키 */}
-            <div>
-              <label>암호화 키</label>
-              <input
-                id='encryption-key'
-                type={isKeyVisible ? 'text' : 'password'}
-                value={isLoading ? '암호화 키를 불러오는 중...' : encryptionKey}
-                className='col-span-3'
-                readOnly // 복사, 붙여넣기 해야하는데 이게 맞아?
-              />
-              <button
-                type='button'
-                onClick={() => setIsKeyVisible(!isKeyVisible)}
-                className='w-[100px] rounded-md bg-gray-500 px-4 py-2 text-white'
-              >
-                {isKeyVisible ? '👁️' : '🫣'}
-              </button>
+            <div className='flex flex-col py-4'>
+              <label className='text-white'>암호화 키</label>
+              <div className='relative'>
+                <input
+                  id='encryption-key'
+                  type={isKeyVisible ? 'text' : 'password'}
+                  value={
+                    isLoading ? '암호화 키를 불러오는 중...' : encryptionKey
+                  }
+                  className='w-[400px] rounded-md border px-4 py-2'
+                  readOnly
+                />
+                {/* 버튼에 넣지 않고 이미지 클릭으로 해도 되겠네  */}
+                <button
+                  type='button'
+                  onClick={() => setIsKeyVisible(!isKeyVisible)}
+                  className='absolute right-0 top-1/2 -translate-y-1/2 bg-transparent'
+                >
+                  <img
+                    src={isKeyVisible ? EyeOffIcon : EyeIcon}
+                    alt=''
+                    className='h-5 w-5'
+                  />
+                </button>
+              </div>
 
-              {/* 암호화키 에러정보 */}
+              {/* 암호화 키 에러정보 */}
               {errors.encryption && (
                 <p className='text-red-500'>{errors.encryption}</p>
               )}
@@ -217,7 +236,7 @@ const Signup = () => {
             {/* 비밀번호 입력 */}
             <div className='py-4'>
               <label className='text-white'>비밀번호</label>
-              <div className='flex items-center gap-2'>
+              <div className='relative'>
                 <input
                   type={isShowPassword ? 'text' : 'password'}
                   name='password'
@@ -229,9 +248,13 @@ const Signup = () => {
                 <button
                   type='button'
                   onClick={() => setIsShowPassword(!isShowPassword)}
-                  className='w-[100px] rounded-md bg-blue-500 px-4 py-2 text-white'
+                  className='absolute right-0 top-1/2 -translate-y-1/2 bg-transparent'
                 >
-                  {isShowPassword ? '숨기기' : '보이기'}
+                  <img
+                    src={isShowPassword ? EyeOffIcon : EyeIcon}
+                    alt=''
+                    className='h-5 w-5'
+                  />
                 </button>
               </div>
               {/* 비밀번호 정규식 조건 확인 */}
