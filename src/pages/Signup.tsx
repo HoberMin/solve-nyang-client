@@ -162,9 +162,23 @@ const Signup = () => {
 
   return (
     <Layout>
-      <div>
+      <div className='flex min-h-screen flex-col lg:flex-row'>
         {/* 왼쪽: 인증 방법 설명 */}
-        <div className='w-[500px]'>{/* 인증 방법 설명 캡쳐 이미지 */}</div>
+        <div className='mx-10'>
+          <div className='mt-4 flex w-[500px] flex-col items-center'>
+            <h3 className='text-white'>본인 인증 방법</h3>
+            {/* 인증 방법 설명 캡쳐 이미지 */}
+            <img src='/assets/signup_description1.png' alt='인증 방법 설명' />
+            <img
+              className='mt-4'
+              src='/assets/signup_description2.png'
+              alt='인증 방법 설명'
+            />
+          </div>
+          <a href='https://solved.ac/'>
+            <button className='mt-4'>solved.ac 바로가기</button>
+          </a>
+        </div>
 
         {/* 오른쪽: 회원가입 폼 */}
         <div className=''>
