@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 
-export const domain = 'http://43.201.96.192:8080';
+export const domain = 'https://api.solve-nyang.com';
 
 export interface Avatar {
   id: number; // 고유값

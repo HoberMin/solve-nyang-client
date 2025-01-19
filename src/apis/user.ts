@@ -6,6 +6,8 @@ import {
 
 import { Rarity } from '@/pages/profile/AvatarCollection';
 
+import { domain } from './avatar';
+
 export interface UserAvatar {
   ownedAvatarId: string; // 고유값
   name: string;
@@ -27,7 +29,7 @@ interface UserInfo {
 }
 
 const userInfo = async () => {
-  const response = await fetch(`http://43.201.96.192:8080/user/me`, {
+  const response = await fetch(`${domain}/user/me`, {
     headers: {
       'Content-Type': 'application/json',
       authorization: '1',
@@ -45,7 +47,7 @@ const userInfo = async () => {
 
 const userCharacterSelecte = async (ownedAvatarId: string) => {
   const response = await fetch(
-    `http://43.201.96.192:8080/user/me/avatar/${ownedAvatarId}`,
+    `${domain}/user/me/avatar/${ownedAvatarId}`,
 
     {
       method: 'PATCH',
@@ -66,7 +68,7 @@ const userCharacterSelecte = async (ownedAvatarId: string) => {
 };
 
 const userAvatar = async () => {
-  const response = await fetch(`http://43.201.96.192:8080/user/me/avatar`, {
+  const response = await fetch(`${domain}/user/me/avatar`, {
     headers: {
       'Content-Type': 'application/json',
       authorization: '1',
