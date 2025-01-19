@@ -10,15 +10,15 @@ import { PointDisplay } from '@/components/gacha/PointDisplay';
 import { queryClient } from '@/lib/queryClient';
 import { BallPosition, DrawConfig } from '@/types/gacha';
 
-import greenBallImageUrl from '../assets/gacha-ball-1.svg';
-import orangeBallImageUrl from '../assets/gacha-ball-2.svg';
-import skyblueBallImageUrl from '../assets/gacha-ball-3.svg';
-import purpleBallImageUrl from '../assets/gacha-ball-4.svg';
-import pinkBallImageUrl from '../assets/gacha-ball-5.svg';
-import blueBallImageUrl from '../assets/gacha-ball-6.svg';
-import yellowBallImageUrl from '../assets/gacha-ball-7.svg';
-import machineImageUrl from '../assets/gacha-machine.svg';
-import handleImageUrl from '../assets/handle.svg';
+import greenBallImageUrl from '/assets/gacha-ball-1.svg';
+import orangeBallImageUrl from '/assets/gacha-ball-2.svg';
+import skyblueBallImageUrl from '/assets/gacha-ball-3.svg';
+import purpleBallImageUrl from '/assets/gacha-ball-4.svg';
+import pinkBallImageUrl from '/assets/gacha-ball-5.svg';
+import blueBallImageUrl from '/assets/gacha-ball-6.svg';
+import yellowBallImageUrl from '/assets/gacha-ball-7.svg';
+import machineImageUrl from '/assets/gacha-machine.svg';
+import handleImageUrl from '/assets/handle.svg';
 
 const BALL_IMAGES = [
   greenBallImageUrl,
