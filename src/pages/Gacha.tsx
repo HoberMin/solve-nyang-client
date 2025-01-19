@@ -1,0 +1,204 @@
+import { useRef, useState } from 'react';
+
+import { Avatar, useGachaAvatarApi } from '@/apis/avatar';
+import { useGetUserInfo } from '@/apis/user';
+import Layout from '@/components/Layout';
+import { GachaConfirmDialog } from '@/components/gacha/GachaConfirmDialog';
+import { GachaDropRateInfo } from '@/components/gacha/GachaDropRateInfo';
+import { GachaResultModal } from '@/components/gacha/GachaResultModal';
+import { PointDisplay } from '@/components/gacha/PointDisplay';
+import { queryClient } from '@/lib/queryClient';
+import { BallPosition, DrawConfig } from '@/types/gacha';
+
+import greenBallImageUrl from '../assets/gacha-ball-1.svg';
+import orangeBallImageUrl from '../assets/gacha-ball-2.svg';
+import skyblueBallImageUrl from '../assets/gacha-ball-3.svg';
+import purpleBallImageUrl from '../assets/gacha-ball-4.svg';
+import pinkBallImageUrl from '../assets/gacha-ball-5.svg';
+import blueBallImageUrl from '../assets/gacha-ball-6.svg';
+import yellowBallImageUrl from '../assets/gacha-ball-7.svg';
+import machineImageUrl from '../assets/gacha-machine.svg';
+import handleImageUrl from '../assets/handle.svg';
+
+const BALL_IMAGES = [
+  greenBallImageUrl,
+  orangeBallImageUrl,
+  skyblueBallImageUrl,
+  purpleBallImageUrl,
+  pinkBallImageUrl,
+  blueBallImageUrl,
+  yellowBallImageUrl,
+];
+
+const INITIAL_BALL_POSITIONS: BallPosition[] = Array.from(
+  { length: 7 },
+  (_, index) => {
+    const angle = index * ((2 * Math.PI) / 7); // 7개의 공을 원형으로 균등하게 배치
+    const radius = 15;
+
+    return {
+      left: `${Math.cos(angle) * radius}%`,
+      top: `${(Math.sin(angle) * radius) / 2 + 7}%`, // 타원형 + 약간 아래로 이동
+    };
+  },
+);
+
+const Gacha = () => {
+  const getGacha = useGachaAvatarApi();
+
+  // 포인트 조회
+  const { data } = useGetUserInfo();
+  const { point } = data;
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isAnimating, setIsAnimating] = useState(false);
+  const [ballPositions, setBallPositions] = useState(INITIAL_BALL_POSITIONS);
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const [pendingDraw, setPendingDraw] = useState<DrawConfig | null>(null);
+  const [gachaResults, setGachaResults] = useState<Avatar[]>([]);
+  const [drawMode, setDrawMode] = useState<'single' | 'multi' | null>(null);
+
+  const handleConfirmDraw = (count: number) => {
+    const cost = count === 1 ? 100 : 1000;
+    setPendingDraw({ count, cost });
+    setDrawMode(count === 1 ? 'single' : 'multi');
+    setIsConfirmOpen(true);
+  };
+
+  const rotationRef = useRef(0);
+
+  const shuffleBalls = () => {
+    rotationRef.current += Math.PI / 2; // 90도씩 회전
+
+    setBallPositions(prevPositions => {
+      return prevPositions.map((_, index) => {
+        const angle = rotationRef.current + index * ((2 * Math.PI) / 7);
+        const radius = 15;
+
+        return {
+          left: `${Math.cos(angle) * radius}%`,
+          top: `${(Math.sin(angle) * radius) / 2 + 7}%`,
+        };
+      });
+    });
+  };
+
+  const handleGachaDraw = async () => {
+    if (!pendingDraw || isAnimating) return;
+
+    setIsAnimating(true);
+    const handleElement = document.getElementById('gacha-handle');
+
+    try {
+      if (handleElement) {
+        handleElement.classList.add(
+          'rotate-45',
+          'transition-transform',
+          'duration-1000',
+        );
+
+        await new Promise(resolve => setTimeout(resolve, 500));
+
+        shuffleBalls(); // 가챠 볼 섞기
+        await new Promise(resolve => setTimeout(resolve, 1000));
+
+        handleElement.classList.remove('rotate-45');
+        await new Promise(resolve => setTimeout(resolve, 300));
+
+        const { avatars } = await getGacha(pendingDraw.count);
+        setGachaResults(avatars);
+        setIsModalOpen(true);
+
+        queryClient.invalidateQueries({ queryKey: ['userInfo'] }); // 쿼리 무효화
+      }
+    } catch (error) {
+      console.error('Gacha draw error:', error);
+      setDrawMode(null);
+    } finally {
+      setIsAnimating(false);
+      setPendingDraw(null);
+    }
+  };
+
+  return (
+    <Layout>
+      <div className='fixed right-20 top-24 flex items-start gap-2'>
+        <PointDisplay point={point} />
+        <GachaDropRateInfo />
+      </div>
+
+      <div className='flex items-center justify-center'>
+        <div className='container px-4'>
+          <div className='mx-auto flex max-w-[50%] flex-col items-center'>
+            <div className='relative w-full'>
+              {/* 가챠머신 */}
+              <img src={machineImageUrl} alt='Gacha Machine' />
+
+              {/* 가챠머신 손잡이 */}
+              <img
+                id='gacha-handle'
+                src={handleImageUrl}
+                alt='Handle'
+                className='absolute right-[12%] top-[67%] w-[27%] -translate-x-1/2 transform'
+              />
+
+              {/* 가챠 볼 */}
+              {ballPositions.map((position, index) => (
+                <img
+                  key={index}
+                  src={BALL_IMAGES[index]}
+                  alt={`Ball ${index + 1}`}
+                  className='animate-low-bounce absolute transform transition-all duration-1000 ease-in-out'
+                  style={{
+                    ...position,
+                    animationDelay: `${index * 0.2}s`,
+                    animationDuration: '1s',
+                  }}
+                />
+              ))}
+            </div>
+
+            {/* 뽑기 버튼 */}
+            <div className='relative z-50 flex gap-2'>
+              <button
+                className='w-36 rounded-none border-4 border-solid border-black bg-[#21b233] disabled:bg-gray-400'
+                onClick={() => handleConfirmDraw(1)}
+                disabled={isAnimating || point < 10}
+              >
+                <div>1회 뽑기</div>
+                <div className='text-sm'>🪙 100</div>
+              </button>
+
+              <button
+                className='w-36 rounded-none border-4 border-solid border-black bg-[#21b233] disabled:bg-gray-400'
+                onClick={() => handleConfirmDraw(10)}
+                disabled={isAnimating || point < 100}
+              >
+                <div>10회 뽑기</div>
+                <div className='text-sm'>🪙 1000</div>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <GachaConfirmDialog
+          isOpen={isConfirmOpen}
+          onOpenChange={setIsConfirmOpen}
+          pendingDraw={pendingDraw}
+          onConfirm={handleGachaDraw}
+        />
+        <GachaResultModal
+          isOpen={isModalOpen}
+          onOpenChange={open => {
+            setIsModalOpen(open);
+            if (!open) setDrawMode(null);
+          }}
+          results={gachaResults}
+          isSingleDraw={drawMode === 'single'}
+        />
+      </div>
+    </Layout>
+  );
+};
+
+export default Gacha;

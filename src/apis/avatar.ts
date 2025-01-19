@@ -1,18 +1,20 @@
-export const domain = 'localhost:8080';
+import { useMutation } from '@tanstack/react-query';
 
-interface Character {
+export const domain = 'http://43.201.96.192:8080';
+
+export interface Avatar {
   id: number; // 고유값
-  characterId: number;
+  avatarId: number;
   name: string;
   rarity: string;
   dropRate: number;
 }
 
-export interface CharacterList {
-  characters: Character[];
+export interface AvatarList {
+  avatars: Avatar[];
 }
 
-export const gachaCharacter = async (count: number) =>
+export const gachaAvatar = async (count: number) =>
   await fetch(`${domain}/gacha/draw`, {
     method: 'POST',
     headers: {
@@ -23,16 +25,16 @@ export const gachaCharacter = async (count: number) =>
     }),
   })
     .then(res => res.json())
-    .then(data => data as CharacterList);
+    .then(data => data as AvatarList);
 
-export const getCharacterList = async () =>
-  await fetch(`${domain}/character`, {
+export const getAvatarList = async () =>
+  await fetch(`${domain}/avatar`, {
     headers: {
       'Content-Type': 'application/json',
     },
   })
     .then(res => res.json())
-    .then(data => data as CharacterList);
+    .then(data => data as AvatarList);
 
 // 명세 미작성
 // export const saleCharacter = async (characterList: CharacterList) =>
@@ -45,3 +47,11 @@ export const getCharacterList = async () =>
 //       characterList,
 //     }),
 //   });
+
+export const useGachaAvatarApi = () => {
+  const { mutateAsync } = useMutation<AvatarList, Error, number>({
+    mutationFn: (count: number) => gachaAvatar(count),
+  });
+
+  return mutateAsync;
+};

@@ -2,6 +2,7 @@ import { createBrowserRouter } from 'react-router-dom';
 
 import Commingsoon from '@/components/Commingsoon';
 import RetroError from '@/components/ErrorBoundary';
+import Gacha from '@/pages/Gacha';
 import NotFoundPage from '@/pages/NotFoundPage';
 import SalePage from '@/pages/SalePage';
 import UserPage from '@/pages/UserPage';
@@ -30,6 +31,10 @@ export const router = createBrowserRouter([
       {
         path: '*',
         element: <NotFoundPage />,
+      },
+      {
+        path: '/gacha',
+        element: <Gacha />,
       },
     ],
   },
