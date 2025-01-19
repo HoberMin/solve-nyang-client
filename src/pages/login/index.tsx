@@ -52,35 +52,37 @@ const Login = () => {
           <h3 className='flex justify-center text-2xl text-white'>Login</h3>
           <form className='flex flex-col items-center' onSubmit={submitForm}>
             <div className='flex flex-col'>
-              <label className='mt-4 text-white'>solved.ac 닉네임</label>
-              <input
+              <label className='mt-4 text-xl text-white'>
+                solved.ac 닉네임
+              </label>
+              <Input
                 type='text'
                 name='nickname'
                 value={formData.nickname}
                 onChange={changeForm}
-                className='mt-2 w-[300px] rounded border px-3 py-2'
+                className='w-[300px] rounded border px-3 py-3'
+                style={{ marginTop: '-15px' }}
               />
               {error && <p className='mb-4 mt-2 text-red-500'>{error}</p>}
             </div>
 
             <div className='flex flex-col'>
-              <label className='mt-2 text-white'>비밀번호</label>
-              <input
+              <label className='mt-4 text-xl text-white'>비밀번호</label>
+              <Input
                 type='password'
                 name='password'
                 value={formData.password}
                 onChange={changeForm}
-                required // 이 조건 꼭 필요할까
-                placeholder='비밀번호를 입력하세요'
-                className='mt-2 w-[300px] rounded border px-3 py-2'
+                // required // 이 조건 꼭 필요할까
+                // placeholder='비밀번호를 입력하세요'
+                className='w-[300px] rounded border px-3 py-2'
+                style={{ marginTop: '-15px' }}
               />
             </div>
-            <button className='mb-4 mt-4 w-[100px] rounded bg-blue-500 py-2 text-white transition hover:bg-blue-700'>
-              로그인
-            </button>
+            <Button className='mt-2'>로그인</Button>
           </form>
 
-          <div className='flex justify-center gap-4'>
+          <div className='mt-4 flex justify-center gap-4'>
             <p className='text-white'>계정이 없으신가요?</p>
             <a href='/signup'>회원가입</a>
           </div>

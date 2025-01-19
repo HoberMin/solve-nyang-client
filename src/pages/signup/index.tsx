@@ -205,18 +205,19 @@ const Signup = () => {
             // borderRadius: '10px',
           }}
         >
-          <form onSubmit={handleSubmit} className='justify-items-center py-8'>
-            <h2 className='text-56xl text-white'>Sign up</h2>
+          <form onSubmit={handleSubmit} className='justify-items-center py-4'>
+            <h2 className='text-4xl text-white'>Sign up</h2>
 
             {/* 닉네임 */}
             <div className='flex flex-col py-4'>
-              <label className='text-white'>solved.ac 닉네임</label>
+              <label className='text-xl text-white'>solved.ac 닉네임</label>
 
-              <div className='flex items-center gap-2'>
+              <div className='flex items-center gap-2.5'>
                 <Input
                   // color='warning'
                   autoComplete='first-name'
                   style={{
+                    marginTop: '-15px',
                     backgroundColor: 'white',
                     borderRadius: 0, // 이 부분 없으면 테두리 사이에 틈 생김
                   }}
@@ -245,7 +246,7 @@ const Signup = () => {
 
             {/* 암호화 키 */}
             <div className='flex flex-col'>
-              <label className='text-white'>암호화 키</label>
+              <label className='mt-4 text-xl text-white'>암호화 키</label>
               <div className='relative'>
                 <Input
                   id='encryption-key'
@@ -254,6 +255,7 @@ const Signup = () => {
                     isLoading ? '암호화 키를 불러오는 중...' : encryptionKey
                   }
                   style={{
+                    marginTop: '-15px',
                     backgroundColor: 'white',
                     borderRadius: 0, // 이 부분 없으면 테두리 사이에 틈 생김
                   }}
@@ -282,7 +284,7 @@ const Signup = () => {
 
             {/* 비밀번호 입력 */}
             <div className=''>
-              <label className='text-white'>비밀번호</label>
+              <label className='mt-5 text-xl text-white'>비밀번호</label>
               <div className='relative'>
                 <Input
                   type={isShowPassword ? 'text' : 'password'}
@@ -292,6 +294,7 @@ const Signup = () => {
                   value={formData.password}
                   onChange={handleInputChange}
                   style={{
+                    marginTop: '-15px',
                     backgroundColor: 'white',
                     borderRadius: 0, // 이 부분 없으면 테두리 사이에 틈 생김
                   }}
@@ -316,8 +319,8 @@ const Signup = () => {
 
             {/* 비밀번호 확인 */}
             <div className=''>
-              <label className='text-white'>비밀번호 확인</label>
-              <div className='flex items-center gap-2'>
+              <label className='mt-5 text-xl text-white'>비밀번호 확인</label>
+              <div className='flex items-center'>
                 <Input
                   type='password'
                   name='passwordConfirm'
@@ -326,6 +329,7 @@ const Signup = () => {
                   value={formData.passwordConfirm}
                   onChange={handleInputChange}
                   style={{
+                    marginTop: '-15px',
                     backgroundColor: 'white',
                     borderRadius: 0, // 이 부분 없으면 테두리 사이에 틈 생김
                   }}
