@@ -33,11 +33,11 @@ const Login = () => {
     e.preventDefault();
     try {
       const response = await signIn(formData); // 로그인 요청 API 호출
-      if (response.ok) {
+      if (response.status) {
         navigate('/'); // 메인 페이지로 이동
       } else {
-        const errorData = await response.json();
-        setError(errorData.message || '로그인 실패');
+        // const errorData = await response.json();
+        setError(response.data?.message || '로그인 실패');
       }
     } catch (error) {
       setError('서버 문제');

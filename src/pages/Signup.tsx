@@ -53,8 +53,8 @@ const Signup = () => {
       const mockEncryptionKey = 'TEMP-' + Math.random().toString().substr(2, 9);
       setEncryptionKey(mockEncryptionKey);
 
-      // const response = await getEncryption();
-      // setEncryptionKey(response.encryption);
+      const response = await getEncryption();
+      setEncryptionKey(response.encryption);
       setIsKeyIssued(true);
 
       // solved.ac 인증 요청

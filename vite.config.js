@@ -9,5 +9,4 @@ export default defineConfig({
     build: {
         sourcemap: true,
     },
-    base: '/', // base URL 추가
 });
