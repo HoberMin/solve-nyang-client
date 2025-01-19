@@ -3,10 +3,7 @@ import {
   AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
-  AlertDialogDescription,
   AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { DrawConfig } from '@/types/gacha';
 
@@ -25,13 +22,8 @@ export const GachaConfirmDialog = ({
 }: GachaConfirmDialogProps) => (
   <AlertDialog open={isOpen} onOpenChange={onOpenChange}>
     <AlertDialogContent>
-      <AlertDialogHeader>
-        <AlertDialogTitle>확인</AlertDialogTitle>
-        <AlertDialogDescription>
-          {pendingDraw &&
-            `${pendingDraw.cost} 코인을 사용해서 ${pendingDraw.count}회 뽑기를 할까요?`}
-        </AlertDialogDescription>
-      </AlertDialogHeader>
+      {pendingDraw &&
+        `${pendingDraw.cost} 코인을 사용해서 ${pendingDraw.count}회 뽑기를 할까요?`}
       <AlertDialogFooter>
         <AlertDialogAction onClick={onConfirm}>확인</AlertDialogAction>
         <AlertDialogCancel>취소</AlertDialogCancel>
