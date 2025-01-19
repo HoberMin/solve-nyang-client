@@ -9,9 +9,7 @@ const Layout = ({ children }: PropsWithChildren) => {
 
   useEffect(() => {
     checkScreenSize();
-
     window.addEventListener('resize', checkScreenSize);
-
     return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
 
@@ -24,7 +22,16 @@ const Layout = ({ children }: PropsWithChildren) => {
   }
 
   return (
-    <div className='relative min-h-screen w-screen bg-[#111827]'>
+    <div
+      className='relative min-h-screen w-screen'
+      style={{
+        backgroundImage: 'url("/solve-nyang-bg.png")',
+        backgroundSize: '100%', // 또는 특정 크기 '390px 844px'
+        backgroundPosition: 'center',
+        backgroundRepeat: 'repeat',
+        backgroundAttachment: 'fixed', // 스크롤 시 배경 고정
+      }}
+    >
       <div className='fixed top-0 z-50 w-full'>
         <Header />
       </div>

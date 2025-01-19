@@ -4,7 +4,7 @@ import {
   useSuspenseQuery,
 } from '@tanstack/react-query';
 
-import { Rarity } from '@/pages/UserPage';
+import { Rarity } from '@/pages/profile/AvatarCollection';
 
 export interface UserAvatar {
   ownedAvatarId: string; // 고유값

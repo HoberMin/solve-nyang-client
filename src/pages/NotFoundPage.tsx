@@ -5,7 +5,7 @@ const NotFoundPage = () => {
   const navigate = useNavigate();
 
   return (
-    <div className='fixed inset-0 z-50 flex items-center justify-center bg-gray-900 px-4'>
+    <div className='fixed inset-0 z-50 flex items-center justify-center px-4'>
       <div className='rounded-lg bg-gray-800/50 p-8 text-center backdrop-blur-sm'>
         <div className='relative inline-flex items-center text-[120px] font-bold text-gray-400'>
           <span className='opacity-20'>4</span>
