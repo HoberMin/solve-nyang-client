@@ -3,7 +3,7 @@ import Layout from './Layout';
 const ComingSoon = () => {
   return (
     <Layout>
-      <div className='flex min-h-[calc(100vh-4rem)] w-full flex-col items-center justify-center bg-gray-900 p-4'>
+      <div className='flex min-h-[calc(100vh-4rem)] w-full flex-col items-center justify-center p-4'>
         {/* 격자 패턴 배경 */}
         <div
           className='absolute inset-0 opacity-5'

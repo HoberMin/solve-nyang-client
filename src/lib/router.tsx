@@ -2,13 +2,13 @@ import { createBrowserRouter } from 'react-router-dom';
 
 import Commingsoon from '@/components/Commingsoon';
 import RetroError from '@/components/ErrorBoundary';
-import Gacha from '@/pages/Gacha';
-import Login from '@/pages/Login';
-import NotFoundPage from '@/pages/NotFoundPage';
-import SalePage from '@/pages/SalePage';
-import Signup from '@/pages/Signup';
-import UserPage from '@/pages/UserPage';
-import Index from '@/pages/index';
+import Gacha from '@/pages/gacha';
+import Login from '@/pages/login';
+import NotFoundPage from '@/pages/notFound';
+import ProfilePage from '@/pages/profile';
+import SalePage from '@/pages/sale';
+import Service from '@/pages/service';
+import Signup from '@/pages/signup';
 
 export const router = createBrowserRouter([
   {
@@ -20,11 +20,11 @@ export const router = createBrowserRouter([
       },
       {
         path: '/service',
-        element: <Index />,
+        element: <Service />,
       },
       {
         path: '/profile',
-        element: <UserPage />,
+        element: <ProfilePage />,
       },
       {
         path: '/sale',
@@ -38,22 +38,14 @@ export const router = createBrowserRouter([
         path: '/gacha',
         element: <Gacha />,
       },
+      {
+        path: '/signup',
+        element: <Signup />,
+      },
+      {
+        path: '/login',
+        element: <Login />,
+      },
     ],
-  },
-  {
-    path: '/signup',
-    element: <Signup />,
-  },
-  {
-    path: '/login',
-    element: <Login />,
-  },
-  {
-    path: '/signup',
-    element: <Signup />,
-  },
-  {
-    path: '/login',
-    element: <Login />,
   },
 ]);
