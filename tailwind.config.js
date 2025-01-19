@@ -4,6 +4,9 @@ export default {
   content: ['./index.html', './src/**/*.{ts,tsx,js,jsx}'],
   theme: {
     extend: {
+      fontFamily: {
+        neo: ['NeoDunggeunmo', 'sans-serif'],
+      },
       animation: {
         'low-bounce': 'lowBounce 1s infinite',
       },

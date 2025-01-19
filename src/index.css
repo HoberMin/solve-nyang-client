@@ -1,9 +1,11 @@
+@import 'nes-ui-react';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  /* font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif; */
   line-height: 1.5;
   font-weight: 400;
 
@@ -17,6 +19,15 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+@font-face {
+  font-family: 'NeoDunggeunmo';
+  src:
+    url('/fonts/neodgm.woff') format('woff'),
+    url('/fonts/neodgm.woff.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+}
+
 a {
   font-weight: 500;
   color: #646cff;
@@ -27,6 +38,7 @@ a:hover {
 }
 
 body {
+  /* font-family: 'NeoDunggeunmo', sans-serif; */
   margin: 0;
   display: flex;
   place-items: center;

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 
+import { Button, Container, Input } from 'nes-ui-react';
 import { useNavigate } from 'react-router-dom';
 
 import { signIn } from '@/apis/sign';
@@ -46,42 +47,44 @@ const Login = () => {
 
   return (
     <Layout>
-      <div className='flex flex-col items-center py-4'>
-        <h3 className='text-2xl text-white'>Login</h3>
-        <form className='flex flex-col items-center' onSubmit={submitForm}>
-          <div className='flex flex-col'>
-            <label className='mt-4 text-white'>solved.ac 닉네임</label>
-            <input
-              type='text'
-              name='nickname'
-              value={formData.nickname}
-              onChange={changeForm}
-              className='mt-2 w-[300px] rounded border px-3 py-2'
-            />
-            {error && <p className='mb-4 mt-2 text-red-500'>{error}</p>}
-          </div>
+      <div className='mt-40 flex flex-col items-center py-4'>
+        <Container roundedCorners className='py-6 opacity-80'>
+          <h3 className='flex justify-center text-2xl text-white'>Login</h3>
+          <form className='flex flex-col items-center' onSubmit={submitForm}>
+            <div className='flex flex-col'>
+              <label className='mt-4 text-white'>solved.ac 닉네임</label>
+              <input
+                type='text'
+                name='nickname'
+                value={formData.nickname}
+                onChange={changeForm}
+                className='mt-2 w-[300px] rounded border px-3 py-2'
+              />
+              {error && <p className='mb-4 mt-2 text-red-500'>{error}</p>}
+            </div>
 
-          <div className='flex flex-col'>
-            <label className='mt-2 text-white'>비밀번호</label>
-            <input
-              type='password'
-              name='password'
-              value={formData.password}
-              onChange={changeForm}
-              required // 이 조건 꼭 필요할까
-              placeholder='비밀번호를 입력하세요'
-              className='mt-2 w-[300px] rounded border px-3 py-2'
-            />
-          </div>
-          <button className='mb-4 mt-4 w-[100px] rounded bg-blue-500 py-2 text-white transition hover:bg-blue-700'>
-            로그인
-          </button>
-        </form>
+            <div className='flex flex-col'>
+              <label className='mt-2 text-white'>비밀번호</label>
+              <input
+                type='password'
+                name='password'
+                value={formData.password}
+                onChange={changeForm}
+                required // 이 조건 꼭 필요할까
+                placeholder='비밀번호를 입력하세요'
+                className='mt-2 w-[300px] rounded border px-3 py-2'
+              />
+            </div>
+            <button className='mb-4 mt-4 w-[100px] rounded bg-blue-500 py-2 text-white transition hover:bg-blue-700'>
+              로그인
+            </button>
+          </form>
 
-        <div className='flex gap-4'>
-          <p className='text-white'>계정이 없으신가요?</p>
-          <a href='/signup'>회원가입</a>
-        </div>
+          <div className='flex justify-center gap-4'>
+            <p className='text-white'>계정이 없으신가요?</p>
+            <a href='/signup'>회원가입</a>
+          </div>
+        </Container>
       </div>
     </Layout>
   );
