@@ -127,9 +127,9 @@ const Gacha = () => {
         <GachaDropRateInfo />
       </div>
 
-      <div className='flex items-center justify-center'>
+      <div className='mt-[30px] flex items-center'>
         <div className='container px-4'>
-          <div className='mx-auto flex max-w-[50%] flex-col items-center'>
+          <div className='mx-auto flex max-w-[35%] flex-col items-center'>
             <div className='relative w-full'>
               {/* 가챠머신 */}
               <img src={machineImageUrl} alt='Gacha Machine' />
@@ -148,7 +148,7 @@ const Gacha = () => {
                   key={index}
                   src={BALL_IMAGES[index]}
                   alt={`Ball ${index + 1}`}
-                  className='animate-low-bounce absolute transform transition-all duration-1000 ease-in-out'
+                  className='absolute transform animate-low-bounce transition-all duration-1000 ease-in-out'
                   style={{
                     ...position,
                     animationDelay: `${index * 0.2}s`,
@@ -159,9 +159,9 @@ const Gacha = () => {
             </div>
 
             {/* 뽑기 버튼 */}
-            <div className='relative z-50 flex gap-2'>
+            <div className='relative z-50 mt-4 flex gap-2'>
               <button
-                className='w-36 rounded-none border-4 border-solid border-black bg-[#21b233] disabled:bg-gray-400'
+                className='w-36 rounded-none border-4 border-solid border-black bg-[#21b233] p-2 disabled:bg-gray-400'
                 onClick={() => handleConfirmDraw(1)}
                 disabled={isAnimating || point < 10}
               >
@@ -170,7 +170,7 @@ const Gacha = () => {
               </button>
 
               <button
-                className='w-36 rounded-none border-4 border-solid border-black bg-[#21b233] disabled:bg-gray-400'
+                className='w-36 rounded-none border-4 border-solid border-black bg-[#21b233] p-2 disabled:bg-gray-400'
                 onClick={() => handleConfirmDraw(10)}
                 disabled={isAnimating || point < 100}
               >
@@ -180,23 +180,23 @@ const Gacha = () => {
             </div>
           </div>
         </div>
-
-        <GachaConfirmDialog
-          isOpen={isConfirmOpen}
-          onOpenChange={setIsConfirmOpen}
-          pendingDraw={pendingDraw}
-          onConfirm={handleGachaDraw}
-        />
-        <GachaResultModal
-          isOpen={isModalOpen}
-          onOpenChange={open => {
-            setIsModalOpen(open);
-            if (!open) setDrawMode(null);
-          }}
-          results={gachaResults}
-          isSingleDraw={drawMode === 'single'}
-        />
       </div>
+
+      <GachaConfirmDialog
+        isOpen={isConfirmOpen}
+        onOpenChange={setIsConfirmOpen}
+        pendingDraw={pendingDraw}
+        onConfirm={handleGachaDraw}
+      />
+      <GachaResultModal
+        isOpen={isModalOpen}
+        onOpenChange={open => {
+          setIsModalOpen(open);
+          if (!open) setDrawMode(null);
+        }}
+        results={gachaResults}
+        isSingleDraw={drawMode === 'single'}
+      />
     </Layout>
   );
 };
