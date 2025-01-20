@@ -305,7 +305,7 @@ const FormField = ({
   children: React.ReactNode;
 }) => (
   <div className='space-y-2'>
-    <label className='block text-white'>{label}</label>
+    <label className='mb-[-20px] block text-white'>{label}</label>
     {children}
     {error && <p className='text-sm text-red-400'>{error}</p>}
   </div>
