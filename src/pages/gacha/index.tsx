@@ -1,8 +1,11 @@
 import { useRef, useState } from 'react';
 
+import { useNavigate } from 'react-router-dom';
+
 import { Avatar, useGachaAvatarApi } from '@/apis/avatar';
 import { useGetUserInfo } from '@/apis/user';
 import Layout from '@/components/Layout';
+import RetroLoading from '@/components/RetroLoading';
 import { GachaConfirmDialog } from '@/components/gacha/GachaConfirmDialog';
 import { GachaDropRateInfo } from '@/components/gacha/GachaDropRateInfo';
 import { GachaResultModal } from '@/components/gacha/GachaResultModal';
@@ -47,7 +50,19 @@ const Gacha = () => {
   const getGacha = useGachaAvatarApi();
 
   // 포인트 조회
-  const { data } = useGetUserInfo();
+  const { data, isError, isPending } = useGetUserInfo();
+
+  const navigate = useNavigate();
+
+  if (isPending) {
+    return <RetroLoading></RetroLoading>;
+  }
+
+  if (isError) {
+    navigate('/login');
+    return;
+  }
+
   const { point } = data;
 
   const [isModalOpen, setIsModalOpen] = useState(false);

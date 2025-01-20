@@ -1,5 +1,6 @@
 import {
   useMutation,
+  useQuery,
   useQueryClient,
   useSuspenseQuery,
 } from '@tanstack/react-query';
@@ -35,10 +36,6 @@ const userInfo = async () => {
       authorization: '1',
     },
   });
-
-  if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`);
-  }
 
   const data = await response.json();
 
@@ -85,7 +82,7 @@ const userAvatar = async () => {
 };
 
 export const useGetUserInfo = () =>
-  useSuspenseQuery({
+  useQuery<UserInfo>({
     queryKey: ['userInfo'],
     queryFn: userInfo,
   });

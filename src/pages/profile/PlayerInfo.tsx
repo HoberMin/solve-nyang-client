@@ -1,6 +1,8 @@
 import { BookOpen, Flame, Star, Target, Trophy } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 import { useGetUserInfo } from '@/apis/user';
+import RetroLoading from '@/components/RetroLoading';
 
 const getTierInfo = (tier: number) => {
   const tiers = [
@@ -16,8 +18,21 @@ const getTierInfo = (tier: number) => {
 };
 
 export const PlayerInfo = () => {
-  const { data } = useGetUserInfo();
+  const { data, isError, isPending } = useGetUserInfo();
+
+  const navigate = useNavigate();
+
+  if (isPending) {
+    return <RetroLoading></RetroLoading>;
+  }
+
+  if (isError) {
+    navigate('/login');
+    return;
+  }
+
   const { nickname, point, solvedacTier, solvedCount, solvedacStrick } = data;
+
   const tierInfo = getTierInfo(solvedacTier);
 
   return (
