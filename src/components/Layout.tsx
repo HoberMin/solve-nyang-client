@@ -23,19 +23,19 @@ const Layout = ({ children }: PropsWithChildren) => {
 
   return (
     <div
-      className='font-neo relative min-h-screen w-screen'
+      className='font-neo relative min-h-screen w-full overflow-x-hidden bg-cover bg-top bg-repeat'
       style={{
         backgroundImage: 'url("/solve-nyang-bg.png")',
-        backgroundSize: '100%', // 또는 특정 크기 '390px 844px'
-        backgroundPosition: 'top',
-        backgroundRepeat: 'repeat',
+        backgroundColor: '#000', // 기본 배경색
       }}
     >
       <div className='fixed top-0 z-50 w-full'>
         <Header />
       </div>
-      <main className='w-full pt-16'>
-        <Suspense fallback={<RetroLoading />}>{children}</Suspense>
+      <main className='min-h-screen w-full pt-16'>
+        <div className='mx-auto max-w-full px-4 sm:px-6 lg:px-24'>
+          <Suspense fallback={<RetroLoading />}>{children}</Suspense>
+        </div>
       </main>
     </div>
   );
