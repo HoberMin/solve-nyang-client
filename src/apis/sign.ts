@@ -67,6 +67,26 @@ export const signUp = async (authForm: AuthRequest) =>
 export const useSignIn = () => {
   const { mutateAsync } = useMutation({
     mutationFn: (authForm: AuthRequest) => signIn(authForm),
+
+    // 성공시
+    onSuccess: () => {
+      // localStorage에서 저장된 리다이렉트 경로 가져오기(결과가 null 또는 undefined 값이 없으면 기본값 '/')
+      const redirectPath = localStorage.getItem('redirectPath') || '/';
+
+      // 리다이렉트 경로 정보 삭제
+      localStorage.removeItem('redirectPath');
+
+      // 저장된 경로로 이동
+      navigate(redirectPath);
+    },
+
+    // 에러 발생 시
+    onError: (error: ErrorResponse) => {
+      // 401 에러인 경우 처리
+      if (error.statusCode === 401) {
+        console.error('로그인 실패', error);
+      }
+    },
   });
 
   return mutateAsync;
@@ -74,7 +94,19 @@ export const useSignIn = () => {
 
 export const useSignUp = () => {
   const { mutateAsync } = useMutation({
-    mutationFn: (formData: AuthRequest) => signIn(formData),
+    mutationFn: (formData: AuthRequest) => signUp(formData),
+    // 성공시
+    onSuccess: () => {
+      navigate('/login'); // 로그인 페이지로 이동
+      //
+    },
+    // 에러 발생 시
+    onError: (error: ErrorResponse) => {
+      // 401 에러인 경우
+      if (error.statusCode === 401) {
+        console.error('회원가입 실패:', error);
+      }
+    },
   });
 
   return mutate;
