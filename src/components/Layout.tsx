@@ -23,7 +23,7 @@ const Layout = ({ children }: PropsWithChildren) => {
 
   return (
     <div
-      className='font-neo relative min-h-screen w-full overflow-x-hidden bg-cover bg-top bg-repeat'
+      className='relative min-h-screen w-full overflow-x-hidden bg-cover bg-top bg-repeat font-neo'
       style={{
         backgroundImage: 'url("/solve-nyang-bg.png")',
         backgroundColor: '#000', // 기본 배경색
