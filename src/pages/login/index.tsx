@@ -1,94 +1,82 @@
 import { useState } from 'react';
 
 import { Button, Container, Input } from 'nes-ui-react';
-import { useNavigate } from 'react-router-dom';
 
-import { signIn } from '@/apis/sign';
+import { AuthRequest, useSignIn } from '@/apis/sign';
 import Layout from '@/components/Layout';
 
-interface FormData {
-  nickname: string;
-  password: string;
-}
-
 const Login = () => {
-  const [formData, setFormData] = useState<FormData>({
+  const [authForm, setAuthForm] = useState<AuthRequest>({
     nickname: '',
     password: '',
   });
-  const [error, setError] = useState<string>(''); // 에러 메시지 상태
-  const navigate = useNavigate();
+  const signIn = useSignIn();
 
-  // input 값 변경되면 호출되는 이벤트 핸들러
-  const changeForm = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({
-      ...formData, // 기존 상태 복사(사용자가 비밀번호를 입력 중이라면 nickname 값은 그대로 유지하면서 password 값만 업데이트해야 함)
-      [e.target.name]: e.target.value,
-      // e.target.name: 이벤트가 발생한 요소의 name 속성 값(어떤 필드가 변경되었는지 구분)
-      // e.target.value: 입력 필드에 사용자가 입력한 값
-    });
+  const handleInputChange = (value: string, fieldName: string) => {
+    setAuthForm(prev => ({
+      ...prev,
+      [fieldName]: value,
+    }));
   };
 
-  // 로그인 폼 제출 함수
   const submitForm = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    try {
-      const response = await signIn(formData); // 로그인 요청 API 호출
-      if (response.status) {
-        navigate('/'); // 메인 페이지로 이동
-      } else {
-        // const errorData = await response.json();
-        setError(response.data?.message || '로그인 실패');
-      }
-    } catch (error) {
-      setError('서버 문제');
-    }
+    const { accessToken } = await signIn(authForm);
+    localStorage.setItem('token', accessToken);
   };
 
   return (
     <Layout>
-      <div className='mt-40 flex flex-col items-center py-4'>
-        <Container roundedCorners className='py-6 opacity-80'>
-          <h3 className='flex justify-center text-2xl text-white'>Login</h3>
+      <div className='flex h-[calc(100vh-64px)] items-center justify-center'>
+        <Container
+          roundedCorners
+          className='w-[450px] bg-black bg-opacity-70 p-6'
+        >
+          <h3 className='mb-6 flex justify-center text-2xl text-white'>
+            Login
+          </h3>
           <form className='flex flex-col items-center' onSubmit={submitForm}>
-            <div className='flex flex-col'>
-              <label className='mt-4 text-xl text-white'>
+            <div className='mb-4 flex w-full flex-col'>
+              <label className='mb-0 text-xl text-white'>
                 solved.ac 닉네임
               </label>
               <Input
                 type='text'
                 name='nickname'
-                value={formData.nickname}
-                onChange={changeForm}
-                className='w-[300px] rounded border px-3 py-3'
-                style={{ marginTop: '-15px' }}
+                value={authForm.nickname}
+                onChange={value => handleInputChange(value, 'nickname')}
+                className='w-full'
+                style={{ backgroundColor: 'white', color: 'black' }}
               />
-              {error && <p className='mb-4 mt-2 text-red-500'>{error}</p>}
             </div>
 
-            <div className='flex flex-col'>
-              <label className='mt-4 text-xl text-white'>비밀번호</label>
+            <div className='mb-6 flex w-full flex-col'>
+              <label className='mb-0 text-xl text-white'>비밀번호</label>
               <Input
                 type='password'
                 name='password'
-                value={formData.password}
-                onChange={changeForm}
-                // required // 이 조건 꼭 필요할까
-                // placeholder='비밀번호를 입력하세요'
-                className='w-[300px] rounded border px-3 py-2'
-                style={{ marginTop: '-15px' }}
+                value={authForm.password}
+                onChange={value => handleInputChange(value, 'password')}
+                className='w-full'
+                style={{ backgroundColor: 'white', color: 'black' }}
               />
             </div>
-            <Button className='mt-2'>로그인</Button>
+
+            <Button type='submit' color='success' style={{ color: '#000' }}>
+              로그인
+            </Button>
           </form>
 
-          <div className='mt-4 flex justify-center gap-4'>
+          <div className='mt-6 flex justify-center gap-2'>
             <p className='text-white'>계정이 없으신가요?</p>
-            <a href='/signup'>회원가입</a>
+            <a href='/signup' className='text-blue-400 hover:text-blue-300'>
+              회원가입
+            </a>
           </div>
         </Container>
       </div>
     </Layout>
   );
 };
+
 export default Login;
