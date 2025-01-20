@@ -56,10 +56,10 @@ interface SignUpResponse {
 }
 
 // 서버 에러 응답 타입 정의
-// interface ErrorResponse {
-//   message: string;
-//   statusCode: number;
-// }
+interface ErrorResponse {
+  message: string;
+  statusCode: number;
+}
 
 // 로그인 API 호출
 export const signIn = async (authForm: AuthRequest) => {
@@ -98,9 +98,9 @@ export const useSignIn = () => {
     },
 
     // 에러 발생 시
-    onError: (error: any) => {
+    onError: (error: ErrorResponse) => {
       // 401 에러인 경우 처리
-      if (error.response?.status === 401) {
+      if (error.statusCode === 401) {
         console.error('로그인 실패', error);
       }
     },
@@ -120,9 +120,9 @@ export const useSignUp = () => {
       //
     },
     // 에러 발생 시
-    onError: (error: any) => {
+    onError: (error: ErrorResponse) => {
       // 401 에러인 경우
-      if (error.response?.status === 401) {
+      if (error.statusCode === 401) {
         console.error('회원가입 실패:', error);
       }
     },
