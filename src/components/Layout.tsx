@@ -23,7 +23,7 @@ const Layout = ({ children }: PropsWithChildren) => {
 
   return (
     <div
-      className='relative min-h-screen w-screen'
+      className='font-neo relative min-h-screen w-screen'
       style={{
         backgroundImage: 'url("/solve-nyang-bg.png")',
         backgroundSize: '100%', // 또는 특정 크기 '390px 844px'
