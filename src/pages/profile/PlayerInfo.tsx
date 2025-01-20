@@ -21,54 +21,62 @@ export const PlayerInfo = () => {
   const tierInfo = getTierInfo(solvedacTier);
 
   return (
-    <div className='rounded-2xl border p-6'>
-      <h2 className='font-pixel mb-4 text-center text-xl uppercase tracking-widest text-blue-400'>
+    <div className='rounded-2xl border border-gray-700 p-8 shadow-lg'>
+      <h2 className='font-pixel mb-6 text-center uppercase tracking-wide text-blue-400 sm:text-3xl'>
         Player Profile
       </h2>
 
-      <div className='mb-4 flex items-center justify-center'>
-        <p className='flex items-center gap-2 text-2xl font-bold text-blue-200 sm:text-3xl'>
-          <Target className='h-5 w-5 text-blue-400 sm:h-6 sm:w-6' />
+      <div className='mb-8 flex items-center justify-center'>
+        <p className='flex items-center gap-3 text-3xl font-extrabold text-blue-200 sm:text-4xl'>
+          <Target className='h-6 w-6 text-blue-400 sm:h-8 sm:w-8' />
           {nickname}
         </p>
       </div>
 
-      <div className='flex flex-col items-center justify-center gap-4'>
-        <div className='flex w-full items-center gap-3 rounded-lg p-3'>
-          <Star className={`h-6 w-6 ${tierInfo.color}`} />
+      <div className='flex flex-col items-center gap-6'>
+        <div className='flex w-full items-center gap-4 rounded-lg bg-gray-800 p-4 shadow'>
+          <Star className={`h-8 w-8 ${tierInfo.color}`} />
           <div>
-            <p className='text-xs text-gray-400 sm:text-sm'>Tier</p>
-            <p className={`text-sm font-bold sm:text-base ${tierInfo.color}`}>
+            <p className='text-base font-medium text-gray-100 sm:text-lg'>
+              Tier
+            </p>
+            <p className={`text-lg font-bold sm:text-xl ${tierInfo.color}`}>
               {tierInfo.name}
             </p>
           </div>
         </div>
 
-        <div className='flex w-full items-center gap-3 rounded-lg p-3'>
-          <Trophy className='h-6 w-6 text-yellow-400' />
+        <div className='flex w-full items-center gap-4 rounded-lg bg-gray-800 p-4 shadow'>
+          <Trophy className='h-8 w-8 text-yellow-400' />
           <div>
-            <p className='text-xs text-gray-400 sm:text-sm'>Points</p>
-            <p className='text-sm font-bold text-yellow-300 sm:text-base'>
+            <p className='text-base font-medium text-gray-100 sm:text-lg'>
+              Points
+            </p>
+            <p className='text-lg font-bold text-yellow-300 sm:text-xl'>
               {point}
             </p>
           </div>
         </div>
 
-        <div className='flex w-full items-center gap-3 rounded-lg p-3'>
-          <BookOpen className='h-6 w-6 text-green-400' />
+        <div className='flex w-full items-center gap-4 rounded-lg bg-gray-800 p-4 shadow'>
+          <BookOpen className='h-8 w-8 text-green-400' />
           <div>
-            <p className='text-xs text-gray-400 sm:text-sm'>Solved Problems</p>
-            <p className='text-sm font-bold text-green-300 sm:text-base'>
+            <p className='text-base font-medium text-gray-100 sm:text-lg'>
+              Solved Problems
+            </p>
+            <p className='text-lg font-bold text-green-300 sm:text-xl'>
               {solvedCount}
             </p>
           </div>
         </div>
 
-        <div className='flex w-full items-center gap-3 rounded-lg p-3'>
-          <Flame className='h-6 w-6 text-red-400' />
+        <div className='flex w-full items-center gap-4 rounded-lg bg-gray-800 p-4 shadow'>
+          <Flame className='h-8 w-8 text-red-400' />
           <div>
-            <p className='text-xs text-gray-400 sm:text-sm'>Current Streak</p>
-            <p className='text-sm font-bold text-red-300 sm:text-base'>
+            <p className='text-base font-medium text-gray-100 sm:text-lg'>
+              Current Streak
+            </p>
+            <p className='text-lg font-bold text-red-300 sm:text-xl'>
               {solvedacStrick} days
             </p>
           </div>

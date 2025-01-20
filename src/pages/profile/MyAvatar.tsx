@@ -26,14 +26,20 @@ export const MyAvatar = () => {
         <h2 className='font-pixel text-lg text-blue-400'>MY FARM</h2>
         <button
           onClick={handleCopy}
-          className='flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium text-blue-400'
+          className={`relative flex items-center gap-2 rounded-full px-6 py-2 text-sm font-bold text-white transition-all duration-300 ${isCopied ? 'bg-green-500' : 'bg-blue-500'} hover:bg-blue-600`}
+          style={{
+            boxShadow: isCopied
+              ? '0 0 10px rgba(72, 187, 120, 0.8)'
+              : '0 4px 6px rgba(0, 0, 0, 0.1)',
+          }}
         >
-          <Copy className='h-4 w-4' />
-          <span className='relative'>
+          <Copy className='h-5 w-5' />
+          <span
+            className={`transition-transform ${
+              isCopied ? 'animate-bounce' : ''
+            }`}
+          >
             {isCopied ? 'Copied!' : 'Copy Image Tag'}
-            {isCopied && (
-              <span className='animate-progress absolute bottom-0 left-0 h-0.5 w-full bg-white' />
-            )}
           </span>
         </button>
       </div>
