@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
 
+import { Button, Container, Input } from 'nes-ui-react';
 import { useNavigate } from 'react-router-dom';
 
 import { getEncryption, postEncryption } from '@/apis/encryption';
 import { signUp } from '@/apis/sign';
 import Layout from '@/components/Layout';
 
+// import { SourceCodeButton } from '../SourceCodeButton';
 import EyeOffIcon from '/eye-off.svg';
 import EyeIcon from '/eye.svg';
 
@@ -162,52 +164,80 @@ const Signup = () => {
 
   return (
     <Layout>
-      <div className='flex min-h-screen flex-col lg:flex-row'>
+      <div className='flex min-h-screen items-center justify-center'>
         {/* 왼쪽: 인증 방법 설명 */}
         <div className='mx-10'>
           <div className='mt-4 flex w-[500px] flex-col items-center'>
-            <h3 className='text-white'>본인 인증 방법</h3>
+            <h2 className='text-white'>본인 인증 방법</h2>
             {/* 인증 방법 설명 캡쳐 이미지 */}
-            <img src='/assets/signup_description1.png' alt='인증 방법 설명' />
             <img
-              className='mt-4'
-              src='/assets/signup_description2.png'
+              className='mt-4 h-[200px] w-[400px]'
+              src='/signup_description1.jpg'
               alt='인증 방법 설명'
             />
+            {/* 문구 설명 */}
+            <p>1. solved.ac 로그인 후 프로필 설정 클릭</p>
+            <img
+              className='mt-4 h-[120px] w-[400px]'
+              src='/signup_description2.jpg'
+              alt='인증 방법 설명'
+            />
+            <p>2. '이름' 항목의 모국어, 영어로 작성 칸 모두 암호화키 입력</p>
+            <p>3. 프로필 표시 ON</p>
           </div>
-          <a href='https://solved.ac/'>
-            <button className='mt-4'>solved.ac 바로가기</button>
-          </a>
+          <div className='mt-4 flex justify-center'>
+            <a href='https://solved.ac/'>
+              <Button>solved.ac 바로가기</Button>
+            </a>
+          </div>
         </div>
 
         {/* 오른쪽: 회원가입 폼 */}
-        <div className=''>
-          <form onSubmit={handleSubmit} className='justify-items-center py-20'>
-            <h2 className='text-2xl text-white'>Sign up</h2>
+        <Container
+          roundedCorners
+          className='py-6 opacity-55'
+          style={{
+            width: '450px',
+            height: '500px',
+            backgroundColor: '#1a1a1a',
+            // margin: '0 auto',
+            // padding: '16px',
+            // borderRadius: '10px',
+          }}
+        >
+          <form onSubmit={handleSubmit} className='justify-items-center py-4'>
+            <h2 className='text-4xl text-white'>Sign up</h2>
 
             {/* 닉네임 */}
             <div className='flex flex-col py-4'>
-              <label className='text-white'>solved.ac 닉네임</label>
-              <div className='flex items-center gap-2'>
-                <input
+              <label className='text-xl text-white'>solved.ac 닉네임</label>
+
+              <div className='flex items-center gap-2.5'>
+                <Input
+                  // color='warning'
+                  autoComplete='first-name'
+                  style={{
+                    marginTop: '-15px',
+                    backgroundColor: 'white',
+                    borderRadius: 0, // 이 부분 없으면 테두리 사이에 틈 생김
+                  }}
                   type='text'
                   name='nickname'
-                  placeholder='닉네임 입력'
-                  className='w-[300px] rounded-md border px-4 py-2'
+                  // placeholder='닉네임 입력'
+                  className='w-[265px] border px-8 py-3'
                   value={formData.nickname}
                   onChange={handleInputChange}
                   disabled={isKeyIssued} // true일 경우 disabled
                 />
-                <button
+                <Button
                   type='button'
                   onClick={handleKeyIssuance}
                   disabled={isKeyIssued || isLoading}
-                  className={`w-[96px] rounded-md px-1 py-3 text-xs text-white ${
-                    isKeyIssued ? 'bg-gray-500' : 'bg-blue-500' // 암호화 키 발행됐으면 파란색.(문구로 안내하면 없어도 될듯)
-                  }`}
+                  color={isKeyIssued ? 'disabled' : 'primary'} // className 대신 color prop 사용
+                  style={{ color: '#000' }} // 검정색 글씨
                 >
                   암호화 키 발급
-                </button>
+                </Button>
               </div>
               {errors.nickname && (
                 <p className='text-sm text-white'>{errors.nickname}</p>
@@ -215,17 +245,22 @@ const Signup = () => {
             </div>
 
             {/* 암호화 키 */}
-            <div className='flex flex-col py-4'>
-              <label className='text-white'>암호화 키</label>
+            <div className='flex flex-col'>
+              <label className='mt-4 text-xl text-white'>암호화 키</label>
               <div className='relative'>
-                <input
+                <Input
                   id='encryption-key'
                   type={isKeyVisible ? 'text' : 'password'}
                   value={
                     isLoading ? '암호화 키를 불러오는 중...' : encryptionKey
                   }
-                  className='w-[400px] rounded-md border px-4 py-2'
-                  readOnly
+                  style={{
+                    marginTop: '-15px',
+                    backgroundColor: 'white',
+                    borderRadius: 0, // 이 부분 없으면 테두리 사이에 틈 생김
+                  }}
+                  className='w-[350px] rounded-md border px-8 py-3'
+                  // readOnly
                 />
                 {/* 버튼에 넣지 않고 이미지 클릭으로 해도 되겠네  */}
                 <button
@@ -248,16 +283,21 @@ const Signup = () => {
             </div>
 
             {/* 비밀번호 입력 */}
-            <div className='py-4'>
-              <label className='text-white'>비밀번호</label>
+            <div className=''>
+              <label className='mt-5 text-xl text-white'>비밀번호</label>
               <div className='relative'>
-                <input
+                <Input
                   type={isShowPassword ? 'text' : 'password'}
                   name='password'
-                  placeholder='영문, 숫자, 특수문자를 포함하여 입력해주세요(8자 이상)'
-                  className='w-[400px] rounded-md border px-4 py-2'
+                  // placeholder='영문, 숫자, 특수문자를 포함하여 입력해주세요(8자 이상)'
+                  className='w-[350px] rounded-md border px-8 py-3'
                   value={formData.password}
                   onChange={handleInputChange}
+                  style={{
+                    marginTop: '-15px',
+                    backgroundColor: 'white',
+                    borderRadius: 0, // 이 부분 없으면 테두리 사이에 틈 생김
+                  }}
                 />
                 <button
                   type='button'
@@ -278,16 +318,21 @@ const Signup = () => {
             </div>
 
             {/* 비밀번호 확인 */}
-            <div className='py-4'>
-              <label className='text-white'>비밀번호 확인</label>
-              <div className='flex items-center gap-2'>
-                <input
+            <div className=''>
+              <label className='mt-5 text-xl text-white'>비밀번호 확인</label>
+              <div className='flex items-center'>
+                <Input
                   type='password'
                   name='passwordConfirm'
-                  placeholder='비밀번호 확인'
-                  className='w-[400px] rounded-md border px-4 py-2'
+                  // placeholder='비밀번호 확인'
+                  className='w-[350px] rounded-md border px-8 py-3'
                   value={formData.passwordConfirm}
                   onChange={handleInputChange}
+                  style={{
+                    marginTop: '-15px',
+                    backgroundColor: 'white',
+                    borderRadius: 0, // 이 부분 없으면 테두리 사이에 틈 생김
+                  }}
                 />
               </div>
               {errors.passwordConfirm && (
@@ -297,17 +342,18 @@ const Signup = () => {
 
             {/* 회원가입 버튼 클릭 후 로그인 페이지로 이동 */}
             <div>
-              <button
+              <Button
                 type='submit'
-                className='rounded-md bg-green-500 py-2 text-white'
+                color='success'
                 onClick={checkUser}
+                style={{ color: '#000' }} // 검정색 글씨
               >
                 회원가입
-              </button>
+              </Button>
               {errors.submit && <p className='text-red-500'>{errors.submit}</p>}
             </div>
           </form>
-        </div>
+        </Container>
       </div>
     </Layout>
   );
