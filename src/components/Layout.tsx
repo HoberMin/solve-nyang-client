@@ -27,14 +27,14 @@ const Layout = ({ children }: PropsWithChildren) => {
       style={{
         backgroundImage: 'url("/solve-nyang-bg.png")',
         backgroundSize: '100%', // 또는 특정 크기 '390px 844px'
-        backgroundPosition: 'center',
+        backgroundPosition: 'top',
         backgroundRepeat: 'repeat',
       }}
     >
       <div className='fixed top-0 z-50 w-full'>
         <Header />
       </div>
-      <main className='w-full pt-14'>
+      <main className='w-full pt-16'>
         <Suspense fallback={<RetroLoading />}>{children}</Suspense>
       </main>
     </div>

@@ -1,44 +1,46 @@
 import { PropsWithChildren } from 'react';
 
-import { Bell, Github } from 'lucide-react';
+import { Github } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+import { useGetUserInfo } from '@/apis/user';
 
-const RetroMenuItem = ({ children }: PropsWithChildren) => {
+interface RetroMenuItemProps extends PropsWithChildren {
+  href: string;
+}
+
+const RetroMenuItem = ({ children, href }: RetroMenuItemProps) => {
   return (
-    <div className='group relative cursor-pointer'>
-      {/* Background glow on hover */}
-      <div
-        className='absolute inset-0 -z-10 h-full w-full rounded opacity-0 blur transition-all duration-300 group-hover:opacity-30 group-hover:blur-md'
-        style={{
-          background:
-            'radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, transparent 70%)',
-        }}
-      />
+    <Link to={href}>
+      <div className='group relative cursor-pointer'>
+        {/* Background glow on hover */}
+        <div
+          className='absolute inset-0 -z-10 h-full w-full rounded opacity-0 blur transition-all duration-300 group-hover:opacity-30 group-hover:blur-md'
+          style={{
+            background:
+              'radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, transparent 70%)',
+          }}
+        />
 
-      {/* Text with hover effect */}
-      <span
-        className='relative inline-block bg-gradient-to-b from-blue-300 to-blue-500 bg-clip-text text-sm text-transparent transition-transform duration-300 ease-in-out group-hover:scale-105 group-hover:from-blue-200 group-hover:to-blue-400'
-        style={{
-          fontFamily: "'Press Start 2P', monospace",
-          textShadow: '0 0 5px rgba(59, 130, 246, 0.3)',
-          WebkitTextStroke: '1px rgba(59, 130, 246, 0.2)',
-        }}
-      >
-        {children}
-      </span>
+        {/* Text with hover effect */}
+        <span
+          className='relative inline-block bg-gradient-to-b from-blue-300 to-blue-500 bg-clip-text text-sm text-transparent transition-transform duration-300 ease-in-out group-hover:scale-105 group-hover:from-blue-200 group-hover:to-blue-400'
+          style={{
+            fontFamily: "'Press Start 2P', monospace",
+            textShadow: '0 0 5px rgba(59, 130, 246, 0.3)',
+            WebkitTextStroke: '1px rgba(59, 130, 246, 0.2)',
+          }}
+        >
+          {children}
+        </span>
 
-      {/* Pixel corners on hover */}
-      <div className='absolute -left-1 -top-1 h-1.5 w-1.5 scale-0 bg-blue-400/50 transition-all duration-200 group-hover:scale-100' />
-      <div className='absolute -right-1 -top-1 h-1.5 w-1.5 scale-0 bg-blue-400/50 transition-all duration-200 group-hover:scale-100' />
-      <div className='absolute -bottom-1 -left-1 h-1.5 w-1.5 scale-0 bg-blue-400/50 transition-all duration-200 group-hover:scale-100' />
-      <div className='absolute -bottom-1 -right-1 h-1.5 w-1.5 scale-0 bg-blue-400/50 transition-all duration-200 group-hover:scale-100' />
-    </div>
+        {/* Pixel corners on hover */}
+        <div className='absolute -left-1 -top-1 h-1.5 w-1.5 scale-0 bg-blue-400/50 transition-all duration-200 group-hover:scale-100' />
+        <div className='absolute -right-1 -top-1 h-1.5 w-1.5 scale-0 bg-blue-400/50 transition-all duration-200 group-hover:scale-100' />
+        <div className='absolute -bottom-1 -left-1 h-1.5 w-1.5 scale-0 bg-blue-400/50 transition-all duration-200 group-hover:scale-100' />
+        <div className='absolute -bottom-1 -right-1 h-1.5 w-1.5 scale-0 bg-blue-400/50 transition-all duration-200 group-hover:scale-100' />
+      </div>
+    </Link>
   );
 };
 
@@ -60,11 +62,14 @@ const RetroIcon = ({ children }: PropsWithChildren) => {
 };
 
 const Header = () => {
-  const notifications = [
-    { id: 1, message: '새로운 문제가 추가되었습니다!', isNew: true },
-    { id: 2, message: '포인트가 적립되었습니다.', isNew: true },
-    { id: 3, message: '새로운 업적을 달성했습니다!', isNew: false },
-  ];
+  // const notifications = [
+  //   { id: 1, message: '새로운 문제가 추가되었습니다!', isNew: true },
+  //   { id: 2, message: '포인트가 적립되었습니다.', isNew: true },
+  //   { id: 3, message: '새로운 업적을 달성했습니다!', isNew: false },
+  // ];
+
+  const { data } = useGetUserInfo();
+  const { nickname } = data;
 
   return (
     <header className='relative flex h-16 items-center justify-between bg-gray-900 px-6'>
@@ -95,7 +100,7 @@ const Header = () => {
             WebkitTextStroke: '1px rgba(59, 130, 246, 0.2)',
           }}
         >
-          2EIS
+          솔브냥
         </span>
         {/* Logo hover effect */}
         <div className='absolute -bottom-1 left-0 h-px w-0 bg-gradient-to-r from-blue-400/50 to-blue-300/50 transition-all duration-300 group-hover:w-full' />
@@ -121,25 +126,24 @@ const Header = () => {
                 WebkitTextStroke: '1px rgba(59, 130, 246, 0.2)',
               }}
             >
-              PLAYER_1
+              {nickname}
             </span>
           </div>
         </div>
 
         {/* Shop */}
-        <RetroMenuItem>SHOP</RetroMenuItem>
+        <RetroMenuItem href='/gacha'>SHOP</RetroMenuItem>
 
         {/* MyPage */}
-        <RetroMenuItem>MY PAGE</RetroMenuItem>
+        <RetroMenuItem href='/profile'>MY PAGE</RetroMenuItem>
 
         {/* Notification Bell */}
-        <DropdownMenu>
+        {/* <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <div className='relative'>
               <RetroIcon>
                 <Bell className='h-5 w-5 text-blue-400' />
               </RetroIcon>
-              {/* New notification indicator */}
               {notifications.some(n => n.isNew) && (
                 <div className='absolute -right-1 -top-1 h-2 w-2 rounded-full bg-blue-400/70'>
                   <div className='absolute inset-0 animate-ping rounded-full bg-blue-400/50' />
@@ -171,11 +175,11 @@ const Header = () => {
               </DropdownMenuItem>
             ))}
           </DropdownMenuContent>
-        </DropdownMenu>
+        </DropdownMenu> */}
 
         {/* Github */}
         <a
-          href='https://github.com/your-repo'
+          href='https://github.com/solve-nyang/solve-nyang-client'
           target='_blank'
           rel='noopener noreferrer'
         >
