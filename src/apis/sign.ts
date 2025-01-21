@@ -1,13 +1,12 @@
 import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
-// axios의 에러 타입 정의
-// import { AxiosError } from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 
 import { domain } from './avatar';
 
 export interface AuthRequest {
-  nickname: string;
+  username: string;
   password: string;
 }
 
@@ -55,78 +54,53 @@ interface SignUpResponse {
   message: string;
 }
 
-// 서버 에러 응답 타입 정의
-interface ErrorResponse {
-  message: string;
-  statusCode: number;
+interface AxiosResponse<T> {
+  data: T;
 }
 
-// 로그인 API 호출
-export const signIn = async (authForm: AuthRequest) => {
-  // 로그인 요청 보내기
-  const response = await axiosInstance.post('/account/signin', authForm);
-  // 응답 데이터를 SignInResponse 타입으로 변환
-  const data = response.data as SignInResponse;
+export const signIn = async (authForm: AuthRequest) =>
+  (await axiosInstance.post(
+    '/account/signin',
+    authForm,
+  )) as AxiosResponse<SignInResponse>;
 
-  // 응답 데이터에 엑세스 토큰이 있으면 LocalStorage에 저장
-  if (data.accessToken) {
-    localStorage.setItem('token', data.accessToken);
-  }
-  return data;
-};
-
-// 회원 가입 API 호출
-export const signUp = async (authForm: AuthRequest) => {
-  (await axiosInstance.post('/account/signup', authForm)) as SignUpResponse;
-};
+export const signUp = async (authForm: AuthRequest) =>
+  (await axiosInstance.post(
+    '/account/signup',
+    authForm,
+  )) as AxiosResponse<SignUpResponse>;
 
 export const useSignIn = () => {
   const navigate = useNavigate();
-  const { mutateAsync } = useMutation({
+
+  return useMutation({
     mutationFn: (authForm: AuthRequest) => signIn(authForm),
-
-    // 성공시
-    onSuccess: () => {
-      // localStorage에서 저장된 리다이렉트 경로 가져오기(결과가 null 또는 undefined 값이 없으면 기본값 '/')
-      const redirectPath = localStorage.getItem('redirectPath') || '/';
-
-      // 리다이렉트 경로 정보 삭제
-      localStorage.removeItem('redirectPath');
-
-      // 저장된 경로로 이동
-      navigate(redirectPath);
+    onSuccess: response => {
+      const { accessToken } = response.data;
+      localStorage.setItem('token', accessToken);
+      toast.success('로그인에 성공했습니다.');
+      navigate('/');
     },
-
-    // 에러 발생 시
-    onError: (error: ErrorResponse) => {
-      // 401 에러인 경우 처리
-      if (error.statusCode === 401) {
-        console.error('로그인 실패', error);
-      }
+    onError: (error: Error) => {
+      toast.error('로그인에 실패했습니다. 아이디와 비밀번호를 확인해주세요.');
+      console.error(error);
     },
   });
-
-  return mutateAsync;
 };
 
 export const useSignUp = () => {
   const navigate = useNavigate();
 
-  const { mutateAsync } = useMutation({
+  const { mutate } = useMutation({
     mutationFn: (formData: AuthRequest) => signUp(formData),
-    // 성공시
     onSuccess: () => {
-      navigate('/login'); // 로그인 페이지로 이동
-      //
+      toast.success('회원가입이 완료되었습니다.');
+      navigate('/login');
     },
-    // 에러 발생 시
-    onError: (error: ErrorResponse) => {
-      // 401 에러인 경우
-      if (error.statusCode === 401) {
-        console.error('회원가입 실패:', error);
-      }
+    onError: () => {
+      toast.error('회원가입에 실패했습니다. 다시 시도해주세요.');
     },
   });
 
-  return mutateAsync;
+  return mutate;
 };
