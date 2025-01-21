@@ -1,3 +1,4 @@
+// components/Login.tsx
 import { useState } from 'react';
 
 import { Button, Container, Input } from 'nes-ui-react';
@@ -7,10 +8,11 @@ import Layout from '@/components/Layout';
 
 const Login = () => {
   const [authForm, setAuthForm] = useState<AuthRequest>({
-    nickname: '',
+    username: '',
     password: '',
   });
-  const signIn = useSignIn();
+
+  const { mutate: signIn, isPending } = useSignIn();
 
   const handleInputChange = (value: string, fieldName: string) => {
     setAuthForm(prev => ({
@@ -21,8 +23,7 @@ const Login = () => {
 
   const submitForm = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const { accessToken } = await signIn(authForm);
-    localStorage.setItem('token', accessToken);
+    signIn(authForm);
   };
 
   return (
@@ -42,11 +43,12 @@ const Login = () => {
               </label>
               <Input
                 type='text'
-                name='nickname'
-                value={authForm.nickname}
-                onChange={value => handleInputChange(value, 'nickname')}
+                name='username'
+                value={authForm.username}
+                onChange={value => handleInputChange(value, 'username')}
                 className='w-full'
                 style={{ backgroundColor: 'white', color: 'black' }}
+                disabled={isPending}
               />
             </div>
 
@@ -59,11 +61,17 @@ const Login = () => {
                 onChange={value => handleInputChange(value, 'password')}
                 className='w-full'
                 style={{ backgroundColor: 'white', color: 'black' }}
+                disabled={isPending}
               />
             </div>
 
-            <Button type='submit' color='success' style={{ color: '#000' }}>
-              로그인
+            <Button
+              type='submit'
+              color='success'
+              style={{ color: '#000' }}
+              disabled={isPending}
+            >
+              {isPending ? '로그인 중...' : '로그인'}
             </Button>
           </form>
 

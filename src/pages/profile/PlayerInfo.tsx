@@ -1,6 +1,11 @@
+import { useEffect } from 'react';
+
 import { BookOpen, Flame, Star, Target, Trophy } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 
 import { useGetUserInfo } from '@/apis/user';
+import RetroLoading from '@/components/RetroLoading';
 
 const getTierInfo = (tier: number) => {
   const tiers = [
@@ -16,7 +21,30 @@ const getTierInfo = (tier: number) => {
 };
 
 export const PlayerInfo = () => {
-  const { data } = useGetUserInfo();
+  const navigate = useNavigate();
+  const { data, isPending } = useGetUserInfo();
+
+  useEffect(() => {
+    if (!isPending && !data?.nickname) {
+      toast.error('로그인이 필요한 서비스입니다.', {
+        description: '로그인 페이지로 이동합니다.',
+        action: {
+          label: '확인',
+          onClick: () => navigate('/login'),
+        },
+      });
+      navigate('/login');
+    }
+  }, [data, isPending, navigate]);
+
+  if (isPending) {
+    return <RetroLoading />;
+  }
+
+  if (!data?.nickname) {
+    return null;
+  }
+
   const { nickname, point, solvedacTier, solvedCount, solvedacStrick } = data;
   const tierInfo = getTierInfo(solvedacTier);
 

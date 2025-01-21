@@ -1,5 +1,6 @@
 import {
   useMutation,
+  useQuery,
   useQueryClient,
   useSuspenseQuery,
 } from '@tanstack/react-query';
@@ -32,13 +33,9 @@ const userInfo = async () => {
   const response = await fetch(`${domain}/user/me`, {
     headers: {
       'Content-Type': 'application/json',
-      authorization: '1',
+      authorization: `Bearer ${localStorage.getItem('token')}`,
     },
   });
-
-  if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`);
-  }
 
   const data = await response.json();
 
@@ -53,7 +50,7 @@ const userCharacterSelecte = async (ownedAvatarId: string) => {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
-        authorization: '1',
+        authorization: `Bearer ${localStorage.getItem('token')}`,
       },
     },
   );
@@ -85,7 +82,7 @@ const userAvatar = async () => {
 };
 
 export const useGetUserInfo = () =>
-  useSuspenseQuery({
+  useQuery<UserInfo>({
     queryKey: ['userInfo'],
     queryFn: userInfo,
   });
