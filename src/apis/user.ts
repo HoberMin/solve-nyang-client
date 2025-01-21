@@ -33,7 +33,7 @@ const userInfo = async () => {
   const response = await fetch(`${domain}/user/me`, {
     headers: {
       'Content-Type': 'application/json',
-      authorization: '1',
+      authorization: `Bearer ${localStorage.getItem('token')}`,
     },
   });
 
@@ -50,7 +50,7 @@ const userCharacterSelecte = async (ownedAvatarId: string) => {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
-        authorization: '1',
+        authorization: `Bearer ${localStorage.getItem('token')}`,
       },
     },
   );

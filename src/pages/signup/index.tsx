@@ -1,7 +1,6 @@
-import { FormEvent, useEffect, useState } from 'react';
+import { FormEvent, ReactNode, useEffect, useState } from 'react';
 
 import { Button, Container, Input } from 'nes-ui-react';
-import { useNavigate } from 'react-router-dom';
 
 import { useGetEncryption } from '@/apis/encryption';
 import { useSignUp } from '@/apis/sign';
@@ -10,55 +9,82 @@ import Layout from '@/components/Layout';
 import EyeOffIcon from '/eye-off.svg';
 import EyeIcon from '/eye.svg';
 
+// 타입 정의
 interface FormData {
-  nickname: string;
+  username: string;
   password: string;
   passwordConfirm: string;
 }
 
-const VALIDATION = {
+interface FormFieldProps {
+  label: string;
+  error?: string;
+  children: ReactNode;
+}
+
+interface VisibilityToggleProps {
+  isVisible: boolean;
+  onToggle: () => void;
+}
+
+interface ValidationRules {
+  PASSWORD_MIN_LENGTH: number;
+  PASSWORD_PATTERN: RegExp;
+}
+
+interface ErrorMessages {
+  EMPTY_NICKNAME: string;
+  EMPTY_PASSWORD: string;
+  PASSWORD_LENGTH: string;
+  PASSWORD_PATTERN: string;
+  PASSWORD_MISMATCH: string;
+  PASSWORD_CHECK: string;
+}
+
+// 상수 정의
+const VALIDATION: ValidationRules = {
   PASSWORD_MIN_LENGTH: 8,
   PASSWORD_PATTERN:
     /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
 };
 
 const INITIAL_FORM_STATE: FormData = {
-  nickname: '',
+  username: '',
   password: '',
   passwordConfirm: '',
 };
 
-const ERROR_MESSAGES = {
+const ERROR_MESSAGES: ErrorMessages = {
   EMPTY_NICKNAME: '닉네임을 입력해 주세요.',
   EMPTY_PASSWORD: '비밀번호를 입력해 주세요.',
   PASSWORD_LENGTH: '비밀번호는 8자 이상이어야 합니다.',
   PASSWORD_PATTERN:
     '비밀번호는 영문, 숫자, 특수문자를 최소 1자 포함해야 합니다.',
   PASSWORD_MISMATCH: '비밀번호가 일치하지 않습니다.',
-  KEY_ISSUANCE_FAILED: '암호화 키 발급에 실패했습니다. 다시 시도해주세요.',
-  SIGNUP_FAILED: '회원가입에 실패했습니다. 다시 시도해주세요.',
   PASSWORD_CHECK: '비밀번호를 확인해주세요.',
 };
 
-const Signup = () => {
-  const navigate = useNavigate();
+const Signup = (): JSX.Element => {
   const signUpMutation = useSignUp();
   const getEncryptionMutation = useGetEncryption();
 
   const [formData, setFormData] = useState<FormData>(INITIAL_FORM_STATE);
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [encryptionKey, setEncryptionKey] = useState('');
-  const [isShowPassword, setIsShowPassword] = useState(false);
-  const [isKeyVisible, setIsKeyVisible] = useState(false);
-  const [isKeyIssued, setIsKeyIssued] = useState(false);
-  const [isValid, setIsValid] = useState(false);
+  const [encryptionKey, setEncryptionKey] = useState<string>('');
+  const [isShowPassword, setIsShowPassword] = useState<boolean>(false);
+  const [isKeyVisible, setIsKeyVisible] = useState<boolean>(false);
+  const [isKeyIssued, setIsKeyIssued] = useState<boolean>(false);
+  const [isValid, setIsValid] = useState<boolean>(false);
 
-  const handleInputChange = (value: string, fieldName: string) => {
+  const handleInputChange = (
+    value: string,
+    fieldName: keyof FormData,
+  ): void => {
     setFormData(prev => ({ ...prev, [fieldName]: value }));
     setErrors(prev => ({ ...prev, [fieldName]: '' }));
   };
 
-  const validatePassword = () => {
+  const validatePassword = (): string => {
     if (!formData.password) {
       return ERROR_MESSAGES.EMPTY_PASSWORD;
     }
@@ -74,40 +100,25 @@ const Signup = () => {
     return '';
   };
 
-  const handleKeyIssuance = async () => {
-    try {
-      if (!formData.nickname.trim()) {
-        setErrors(prev => ({
-          ...prev,
-          nickname: ERROR_MESSAGES.EMPTY_NICKNAME,
-        }));
-        return;
-      }
-
-      const { encryption } = await getEncryptionMutation(formData.nickname);
-
-      // 서버에서 암호화 키가 제대로 오지 않은 경우도 체크
-      if (!encryption) {
-        setErrors(prev => ({
-          ...prev,
-          encryption: ERROR_MESSAGES.KEY_ISSUANCE_FAILED,
-        }));
-        return;
-      }
-
-      setEncryptionKey(encryption);
-      setIsKeyIssued(true);
-      setErrors(prev => ({ ...prev, encryption: '', nickname: '' }));
-    } catch (error) {
-      // 에러 타입에 따라 다른 메시지를 보여줄 수 있습니다
+  const handleKeyIssuance = (): void => {
+    if (!formData.username.trim()) {
       setErrors(prev => ({
         ...prev,
-        encryption: ERROR_MESSAGES.KEY_ISSUANCE_FAILED,
+        username: ERROR_MESSAGES.EMPTY_NICKNAME,
       }));
+      return;
     }
+
+    getEncryptionMutation(formData.username, {
+      onSuccess: (data: { verificationCode: string }) => {
+        setEncryptionKey(data.verificationCode);
+        setIsKeyIssued(true);
+        setErrors(prev => ({ ...prev, encryption: '', username: '' }));
+      },
+    });
   };
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
 
     const passwordError = validatePassword();
@@ -120,28 +131,18 @@ const Signup = () => {
       return;
     }
 
-    try {
-      await signUpMutation({
-        nickname: formData.nickname,
-        password: formData.password,
-      });
-      navigate('/login');
-    } catch (error) {
-      setErrors(prev => ({
-        ...prev,
-        submit: ERROR_MESSAGES.SIGNUP_FAILED,
-      }));
-    }
+    signUpMutation({
+      username: formData.username,
+      password: formData.password,
+    });
   };
 
   useEffect(() => {
-    // 키가 발급되지 않은 상태에서는 닉네임만 검증
     if (!isKeyIssued) {
-      setIsValid(!!formData.nickname.trim());
+      setIsValid(!!formData.username.trim());
       return;
     }
 
-    // 키가 발급된 후에는 비밀번호 검증도 포함
     const passwordError = validatePassword();
     setIsValid(!passwordError);
   }, [formData, isKeyIssued]);
@@ -200,22 +201,20 @@ const Signup = () => {
             <h2 className='mb-6 text-3xl text-white'>Sign up</h2>
 
             {/* Nickname Input */}
-            <FormField label='solved.ac 닉네임' error={errors.nickname}>
+            <FormField label='solved.ac 닉네임' error={errors.username}>
               <div className='flex w-full items-center gap-2'>
                 <div className='w-full flex-[3]'>
-                  {/* Input이 차지할 비율 */}
                   <Input
                     type='text'
-                    name='nickname'
-                    value={formData.nickname}
-                    onChange={value => handleInputChange(value, 'nickname')}
+                    name='username'
+                    value={formData.username}
+                    onChange={value => handleInputChange(value, 'username')}
                     disabled={isKeyIssued}
                     className='w-full'
                     style={{ backgroundColor: 'white', color: 'black' }}
                   />
                 </div>
                 <div className='flex-1'>
-                  {/* Button이 차지할 비율 */}
                   <Button
                     type='button'
                     onClick={handleKeyIssuance}
@@ -237,7 +236,7 @@ const Signup = () => {
                   type={isKeyVisible ? 'text' : 'password'}
                   value={encryptionKey}
                   className='w-full'
-                  style={{ backgroundColor: 'white' }}
+                  style={{ backgroundColor: 'white', color: 'black' }}
                 />
                 <VisibilityToggle
                   isVisible={isKeyVisible}
@@ -286,7 +285,6 @@ const Signup = () => {
               >
                 회원가입
               </Button>
-              {errors.submit && <p className='text-red-500'>{errors.submit}</p>}
             </div>
           </form>
         </Container>
@@ -295,15 +293,7 @@ const Signup = () => {
   );
 };
 
-const FormField = ({
-  label,
-  error,
-  children,
-}: {
-  label: string;
-  error?: string;
-  children: React.ReactNode;
-}) => (
+const FormField = ({ label, error, children }: FormFieldProps): JSX.Element => (
   <div className='space-y-2'>
     <label className='mb-[-20px] block text-white'>{label}</label>
     {children}
@@ -314,10 +304,7 @@ const FormField = ({
 const VisibilityToggle = ({
   isVisible,
   onToggle,
-}: {
-  isVisible: boolean;
-  onToggle: () => void;
-}) => (
+}: VisibilityToggleProps): JSX.Element => (
   <button
     type='button'
     onClick={onToggle}
