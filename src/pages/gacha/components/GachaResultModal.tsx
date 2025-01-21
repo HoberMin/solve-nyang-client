@@ -81,6 +81,17 @@ export const GachaResultModal = ({
     }
   }, [isOpen, result]);
 
+  // 3초 뒤 모달 창 꺼지기
+  useEffect(() => {
+    if (animationStep === ANIMATION_STEPS.COMPLETE) {
+      const timer = setTimeout(() => {
+        onOpenChange(false);
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [animationStep, onOpenChange]);
+
   if (!isOpen || !result) return null;
 
   const { name, rarity } = result;
