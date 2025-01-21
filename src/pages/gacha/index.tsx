@@ -7,11 +7,11 @@ import { Avatar, useGachaAvatarApi } from '@/apis/avatar';
 import { useGetUserInfo } from '@/apis/user';
 import Layout from '@/components/Layout';
 import RetroLoading from '@/components/RetroLoading';
-import { GachaConfirmDialog } from '@/components/gacha/GachaConfirmDialog';
-import { GachaDropRateInfo } from '@/components/gacha/GachaDropRateInfo';
-import { GachaResultModal } from '@/components/gacha/GachaResultModal';
-import { PointDisplay } from '@/components/gacha/PointDisplay';
 import { queryClient } from '@/lib/queryClient';
+import { GachaConfirmDialog } from '@/pages/gacha/components/GachaConfirmDialog';
+import { GachaDropRateInfo } from '@/pages/gacha/components/GachaDropRateInfo';
+import { GachaResultModal } from '@/pages/gacha/components/GachaResultModal';
+import { PointDisplay } from '@/pages/gacha/components/PointDisplay';
 
 import greenBallImageUrl from '/assets/gacha-ball-1.svg';
 import orangeBallImageUrl from '/assets/gacha-ball-2.svg';
