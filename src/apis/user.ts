@@ -68,7 +68,7 @@ const userAvatar = async () => {
   const response = await fetch(`${domain}/user/me/avatar`, {
     headers: {
       'Content-Type': 'application/json',
-      authorization: '1',
+      authorization: `Bearer ${localStorage.getItem('token')}`,
     },
   });
 
