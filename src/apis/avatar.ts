@@ -19,6 +19,7 @@ export const gachaAvatar = async (count: number) =>
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      authorization: `Bearer ${localStorage.getItem('token')}`,
     },
     body: JSON.stringify({
       count,
@@ -31,6 +32,7 @@ export const getAvatarList = async () =>
   await fetch(`${domain}/avatar`, {
     headers: {
       'Content-Type': 'application/json',
+      authorization: `Bearer ${localStorage.getItem('token')}`,
     },
   })
     .then(res => res.json())
