@@ -12,7 +12,6 @@ import { GachaDropRateInfo } from '@/components/gacha/GachaDropRateInfo';
 import { GachaResultModal } from '@/components/gacha/GachaResultModal';
 import { PointDisplay } from '@/components/gacha/PointDisplay';
 import { queryClient } from '@/lib/queryClient';
-import { BallPosition, DrawConfig } from '@/types/gacha';
 
 import greenBallImageUrl from '/assets/gacha-ball-1.svg';
 import orangeBallImageUrl from '/assets/gacha-ball-2.svg';
@@ -23,6 +22,16 @@ import blueBallImageUrl from '/assets/gacha-ball-6.svg';
 import yellowBallImageUrl from '/assets/gacha-ball-7.svg';
 import machineImageUrl from '/assets/gacha-machine.svg';
 import handleImageUrl from '/assets/handle.svg';
+
+interface BallPosition {
+  left: string;
+  top: string;
+}
+
+interface DrawConfig {
+  count: number;
+  cost: number;
+}
 
 const BALL_IMAGES = [
   greenBallImageUrl,
@@ -48,49 +57,56 @@ const INITIAL_BALL_POSITIONS: BallPosition[] = Array.from(
 );
 
 const Gacha = () => {
-  const getGacha = useGachaAvatarApi();
   const navigate = useNavigate();
-  const { data, isPending } = useGetUserInfo();
-
-  useEffect(() => {
-    if (!isPending && !data?.nickname) {
-      toast.error('로그인이 필요한 서비스입니다.', {
-        description: '로그인 페이지로 이동합니다.',
-        action: {
-          label: '확인',
-          onClick: () => {},
-        },
-      });
-      navigate('/login');
-    }
-  }, [data, isPending, navigate]);
-
-  if (isPending) {
-    return <RetroLoading />;
-  }
-
-  if (!data?.nickname) {
-    return null;
-  }
-
-  const { point } = data;
+  const getGacha = useGachaAvatarApi();
+  const { data: userData, isPending } = useGetUserInfo();
+  const rotationRef = useRef<number>(0);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
-  const [ballPositions, setBallPositions] = useState(INITIAL_BALL_POSITIONS);
+  const [ballPositions, setBallPositions] = useState<BallPosition[]>(
+    INITIAL_BALL_POSITIONS,
+  );
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [pendingDraw, setPendingDraw] = useState<DrawConfig | null>(null);
   const [gachaResults, setGachaResults] = useState<Avatar[]>([]);
   const [drawMode, setDrawMode] = useState<'single' | 'multi' | null>(null);
 
+  useEffect(() => {
+    if (!isPending && !userData?.nickname) {
+      const timer = setTimeout(() => {
+        toast.error('로그인이 필요한 서비스입니다.', {
+          description: '로그인 페이지로 이동합니다.',
+          action: {
+            label: '확인',
+            onClick: () => {},
+          },
+        });
+        navigate('/login');
+      }, 100);
+
+      return () => clearTimeout(timer);
+    }
+  }, [userData, isPending, navigate]);
+
+  if (isPending) {
+    return <RetroLoading />;
+  }
+
+  if (!userData?.nickname) {
+    return null;
+  }
+
+  const { point } = userData;
+
   const handleConfirmDraw = (count: number) => {
+    if (isAnimating) return;
+
     const cost = count === 1 ? 100 : 1000;
     setPendingDraw({ count, cost });
     setDrawMode(count === 1 ? 'single' : 'multi');
     setIsConfirmOpen(true);
   };
-
-  const rotationRef = useRef(0);
 
   const shuffleBalls = () => {
     rotationRef.current += Math.PI / 2;
@@ -123,26 +139,24 @@ const Gacha = () => {
         );
 
         await new Promise(resolve => setTimeout(resolve, 500));
-
         shuffleBalls();
         await new Promise(resolve => setTimeout(resolve, 1000));
-
         handleElement.classList.remove('rotate-45');
         await new Promise(resolve => setTimeout(resolve, 300));
 
         const { avatars } = await getGacha(pendingDraw.count);
         setGachaResults(avatars);
         setIsModalOpen(true);
-
-        queryClient.invalidateQueries({ queryKey: ['userInfo'] });
+        await queryClient.invalidateQueries({ queryKey: ['userInfo'] });
       }
     } catch (error) {
       console.error('Gacha draw error:', error);
       setDrawMode(null);
+      setPendingDraw(null);
+      setIsConfirmOpen(false);
       toast.error('뽑기에 실패했습니다. 다시 시도해주세요.');
     } finally {
       setIsAnimating(false);
-      setPendingDraw(null);
     }
   };
 
@@ -157,7 +171,11 @@ const Gacha = () => {
         <div className='container px-4'>
           <div className='mx-auto flex max-w-[35%] flex-col items-center'>
             <div className='relative w-full'>
-              <img src={machineImageUrl} alt='Gacha Machine' />
+              <img
+                src={machineImageUrl}
+                alt='Gacha Machine'
+                className='w-full'
+              />
 
               <img
                 id='gacha-handle'
@@ -185,7 +203,7 @@ const Gacha = () => {
               <button
                 className='w-36 rounded-none border-4 border-solid border-black bg-[rgb(255,128,65)] p-2 pb-3 text-black hover:bg-[rgb(216,98,38)] disabled:bg-gray-400'
                 onClick={() => handleConfirmDraw(1)}
-                disabled={isAnimating || point < 10}
+                disabled={isAnimating || point < 100}
               >
                 <div className='font-bold'>1회 뽑기</div>
                 <div className='text-sm'>🪙 100</div>
@@ -194,7 +212,7 @@ const Gacha = () => {
               <button
                 className='w-36 rounded-none border-4 border-solid border-black bg-[rgb(255,128,65)] p-2 text-black hover:bg-[rgb(216,98,38)] disabled:bg-gray-400'
                 onClick={() => handleConfirmDraw(10)}
-                disabled={isAnimating || point < 100}
+                disabled={isAnimating || point < 1000}
               >
                 <div className='font-bold'>10회 뽑기</div>
                 <div className='text-sm'>🪙 1000</div>
@@ -214,7 +232,11 @@ const Gacha = () => {
         isOpen={isModalOpen}
         onOpenChange={open => {
           setIsModalOpen(open);
-          if (!open) setDrawMode(null);
+          if (!open) {
+            setDrawMode(null);
+            setPendingDraw(null);
+            setGachaResults([]);
+          }
         }}
         results={gachaResults}
         isSingleDraw={drawMode === 'single'}

@@ -1,7 +1,9 @@
+// src/lib/router.tsx
 import { createBrowserRouter } from 'react-router-dom';
 
 import Commingsoon from '@/components/Commingsoon';
 import RetroError from '@/components/ErrorBoundary';
+import Root from '@/components/Root';
 import Gacha from '@/pages/gacha';
 import Login from '@/pages/login';
 import NotFoundPage from '@/pages/notFound';
@@ -12,39 +14,41 @@ import Signup from '@/pages/signup';
 
 export const router = createBrowserRouter([
   {
+    path: '/',
+    element: <Root />,
     errorElement: <RetroError />,
     children: [
       {
-        path: '/',
+        index: true,
         element: <Commingsoon />,
       },
       {
-        path: '/service',
+        path: 'service',
         element: <Service />,
       },
       {
-        path: '/profile',
+        path: 'profile',
         element: <ProfilePage />,
       },
       {
-        path: '/sale',
+        path: 'sale',
         element: <SalePage />,
+      },
+      {
+        path: 'gacha',
+        element: <Gacha />,
+      },
+      {
+        path: 'signup',
+        element: <Signup />,
+      },
+      {
+        path: 'login',
+        element: <Login />,
       },
       {
         path: '*',
         element: <NotFoundPage />,
-      },
-      {
-        path: '/gacha',
-        element: <Gacha />,
-      },
-      {
-        path: '/signup',
-        element: <Signup />,
-      },
-      {
-        path: '/login',
-        element: <Login />,
       },
     ],
   },
