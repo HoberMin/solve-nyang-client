@@ -15,9 +15,36 @@ const axiosInstance = axios.create({
   timeout: 5000,
   withCredentials: true,
   headers: {
-    'Contenet-Type': 'application/json',
+    'Content-Type': 'application/json',
   },
 });
+
+// 인터셉터: 모든 응담/요청을 가로채서 처리
+// 응답 인터셉터
+axiosInstance.interceptors.response.use(
+  response => response,
+  error => {
+    if (error.response?.status === 401) {
+      localStorage.setItem('redirectPath', window.location.pathname);
+      window.location.href = '/login';
+    }
+    return Promise.reject(error);
+  },
+);
+
+// 요청 인터셉터
+axiosInstance.interceptors.request.use(
+  config => {
+    // localStorage에서 토큰 가져오기
+    const token = localStorage.getItem('token');
+    // 토큰이 있으면 요청 헤더에 추가
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  error => Promise.reject(error),
+);
 
 interface SignInResponse {
   accessToken: string;

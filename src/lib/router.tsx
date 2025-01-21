@@ -5,6 +5,9 @@ import Commingsoon from '@/components/Commingsoon';
 import RetroError from '@/components/ErrorBoundary';
 import Root from '@/components/Root';
 import Gacha from '@/pages/gacha';
+// import Login from '@/pages/Login';
+// import Signup from '@/pages/Signup';
+// import Index from '@/pages/index';
 import Login from '@/pages/login';
 import NotFoundPage from '@/pages/notFound';
 import ProfilePage from '@/pages/profile';
@@ -51,5 +54,13 @@ export const router = createBrowserRouter([
         element: <NotFoundPage />,
       },
     ],
+  },
+  {
+    path: '/signup',
+    element: <Signup />,
+  },
+  {
+    path: '/login',
+    element: <Login />,
   },
 ]);
