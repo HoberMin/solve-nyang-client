@@ -3,9 +3,9 @@ import { RarityInfo } from '@/types/gacha';
 const RARITY_INFO: RarityInfo[] = [
   { rarity: 'S', dropRate: '1' },
   { rarity: 'A', dropRate: '4' },
-  { rarity: 'B', dropRate: '15' },
-  { rarity: 'C', dropRate: '30' },
-  { rarity: 'D', dropRate: '50' },
+  { rarity: 'B', dropRate: '30' },
+  { rarity: 'C', dropRate: '45' },
+  { rarity: 'D', dropRate: '20' },
 ];
 
 export const GachaDropRateInfo = () => (
