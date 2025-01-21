@@ -2,6 +2,8 @@ import { useState } from 'react';
 
 import { AnimatePresence, motion } from 'framer-motion';
 
+import { useGetAvatarList } from '@/apis/avatar';
+
 import { ImageCard } from './ImageCard';
 import { ImageSkeleton } from './ImageSkeleton';
 
@@ -63,7 +65,8 @@ export const ImageCarousel: React.FC<ImageCarouselProps> = ({
   const totalPages = Math.ceil(IMAGES.length / gridConfig.perPage);
   const [direction, setDirection] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
-
+  const { data } = useGetAvatarList();
+  console.log(data);
   const paginate = async (newDirection: number) => {
     if (isAnimating) return;
 
