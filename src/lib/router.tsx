@@ -3,15 +3,15 @@ import { createBrowserRouter } from 'react-router-dom';
 import Commingsoon from '@/components/Commingsoon';
 import RetroError from '@/components/ErrorBoundary';
 import Gacha from '@/pages/gacha';
+// import Login from '@/pages/Login';
+// import Signup from '@/pages/Signup';
+import Index from '@/pages/index';
 import Login from '@/pages/login';
 import NotFoundPage from '@/pages/notFound';
 import ProfilePage from '@/pages/profile';
 import SalePage from '@/pages/sale';
 import Service from '@/pages/service';
 import Signup from '@/pages/signup';
-import Login from '@/pages/Login';
-import Signup from '@/pages/Signup';
-import Index from '@/pages/index';
 
 export const router = createBrowserRouter([
   {

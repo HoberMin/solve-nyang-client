@@ -153,33 +153,18 @@ const Signup = (): JSX.Element => {
         {/* Left Side - Auth Instructions */}
         <div className='w-[500px] rounded bg-black bg-opacity-50 p-6'>
           <div className='flex flex-col items-center'>
-            <h2 className='mb-6 text-2xl text-white'>본인 인증 방법</h2>
+            <h2 className='mb-2 mt-9 text-xl text-white'>본인 인증 방법</h2>
             <div className='space-y-6'>
               <div>
                 <img
-                  className='mb-2 h-auto max-h-[200px] w-full object-contain'
-                  src='/signup_description1.jpg'
+                  className='mb-2 h-auto max-h-[450px] w-full object-contain'
+                  src='/signup_description.jpg'
                   alt='인증 방법 설명'
                 />
-                <p className='text-center text-white'>
-                  1. solved.ac 로그인 후 프로필 설정 클릭
-                </p>
-              </div>
-
-              <div>
-                <img
-                  className='mb-2 h-auto max-h-[120px] w-full object-contain'
-                  src='/signup_description2.jpg'
-                  alt='인증 방법 설명'
-                />
-                <p className='text-center text-white'>
-                  2. '이름' 항목의 모국어, 영어로 작성 칸 모두 암호화키 입력
-                </p>
-                <p className='text-center text-white'>3. 프로필 표시 ON</p>
               </div>
             </div>
 
-            <div className='mt-6'>
+            <div className='mt-2'>
               <a
                 href='https://solved.ac/'
                 target='_blank'
@@ -194,16 +179,16 @@ const Signup = (): JSX.Element => {
         {/* Right Side - Sign Up Form */}
         <Container
           roundedCorners
-          className='w-[450px] bg-black bg-opacity-70'
+          className='w-[400px] bg-black bg-opacity-70'
           style={{ maxHeight: 'calc(100vh - 96px)', overflowY: 'auto' }}
         >
-          <form onSubmit={handleSubmit} className='space-y-4 p-6'>
-            <h2 className='mb-6 text-3xl text-white'>Sign up</h2>
+          <form onSubmit={handleSubmit} className='p-6'>
+            <h2 className='mb-6 text-center text-3xl text-white'>Sign up</h2>
 
             {/* Nickname Input */}
             <FormField label='solved.ac 닉네임' error={errors.username}>
-              <div className='flex w-full items-center gap-2'>
-                <div className='w-full flex-[3]'>
+              <div className='flex items-center gap-2'>
+                <div className='flex-1'>
                   <Input
                     type='text'
                     name='username'
@@ -214,7 +199,7 @@ const Signup = (): JSX.Element => {
                     style={{ backgroundColor: 'white', color: 'black' }}
                   />
                 </div>
-                <div className='flex-1'>
+                <div className='flex'>
                   <Button
                     type='button'
                     onClick={handleKeyIssuance}
@@ -294,8 +279,8 @@ const Signup = (): JSX.Element => {
 };
 
 const FormField = ({ label, error, children }: FormFieldProps): JSX.Element => (
-  <div className='space-y-2'>
-    <label className='mb-[-20px] block text-white'>{label}</label>
+  <div className='mb-6 space-y-2'>
+    <label className='mb-[-10px] mt-2 block text-xl text-white'>{label}</label>
     {children}
     {error && <p className='text-sm text-red-400'>{error}</p>}
   </div>

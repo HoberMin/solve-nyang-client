@@ -5,10 +5,9 @@
 @tailwind components;
 @tailwind utilities;
 
-
 .nes-ui * {
   font-family: 'Galmuri11' !important;
-  font-size: 15px !important;
+  /* font-size: 15px !important; */
 }
 
 :root {
