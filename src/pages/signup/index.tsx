@@ -201,17 +201,16 @@ const Signup = (): JSX.Element => {
                     style={{ backgroundColor: 'white', color: 'black' }}
                   />
                 </div>
-                <div className='flex'>
-                  <Button
-                    type='button'
-                    onClick={handleKeyIssuance}
-                    disabled={isKeyIssued}
-                    color={isKeyIssued ? 'disabled' : 'primary'}
-                    style={{ color: 'black' }}
-                  >
-                    키 발급
-                  </Button>
-                </div>
+
+                <Button
+                  type='button'
+                  onClick={handleKeyIssuance}
+                  disabled={isKeyIssued}
+                  color={isKeyIssued ? 'disabled' : 'primary'}
+                  style={{ color: 'black' }}
+                >
+                  키 발급
+                </Button>
               </div>
             </FormField>
 
@@ -248,6 +247,7 @@ const Signup = (): JSX.Element => {
                   onToggle={() => setIsShowPassword(!isShowPassword)}
                 />
               </div>
+
               {/* Password Validation*/}
               <div>
                 {formData.password && (
@@ -274,6 +274,10 @@ const Signup = (): JSX.Element => {
                 className='w-full'
                 style={{ backgroundColor: 'white', color: 'black' }}
               />
+              {formData.passwordConfirm &&
+                formData.password !== formData.passwordConfirm && (
+                  <p>{ERROR_MESSAGES.PASSWORD_MISMATCH}</p>
+                )}
             </FormField>
 
             {/* Submit Button */}
