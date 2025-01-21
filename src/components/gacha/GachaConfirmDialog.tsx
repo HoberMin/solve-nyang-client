@@ -19,15 +19,24 @@ export const GachaConfirmDialog = ({
   onOpenChange,
   pendingDraw,
   onConfirm,
-}: GachaConfirmDialogProps) => (
-  <AlertDialog open={isOpen} onOpenChange={onOpenChange}>
-    <AlertDialogContent className='text-black'>
-      {pendingDraw &&
-        `${pendingDraw.cost} 코인을 사용해서 ${pendingDraw.count}회 뽑기를 할까요?`}
-      <AlertDialogFooter>
-        <AlertDialogAction onClick={onConfirm}>확인</AlertDialogAction>
-        <AlertDialogCancel>취소</AlertDialogCancel>
-      </AlertDialogFooter>
-    </AlertDialogContent>
-  </AlertDialog>
-);
+}: GachaConfirmDialogProps) => {
+  const handleEnterKey = (event: React.KeyboardEvent) => {
+    if (event.key === 'Enter') {
+      onConfirm();
+      onOpenChange(false);
+    }
+  };
+
+  return (
+    <AlertDialog open={isOpen} onOpenChange={onOpenChange}>
+      <AlertDialogContent className='text-black' onKeyUp={handleEnterKey}>
+        {pendingDraw &&
+          `${pendingDraw.cost} 코인을 사용해서 ${pendingDraw.count}회 뽑기를 할까요?`}
+        <AlertDialogFooter>
+          <AlertDialogAction onClick={onConfirm}>확인</AlertDialogAction>
+          <AlertDialogCancel>취소</AlertDialogCancel>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+};
