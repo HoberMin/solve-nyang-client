@@ -9,11 +9,11 @@
 .nes-ui * {
   font-family: 'Galmuri11' !important;
   font-size: 15px !important;
+  line-height: 1.5 !important;
 }
 
 :root {
   /* font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif; */
-  line-height: 1.5;
   /* font-weight: 400; */
 
   color-scheme: light dark;

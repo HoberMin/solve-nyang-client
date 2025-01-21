@@ -1,6 +1,8 @@
 import { Avatar } from '@/apis/avatar';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 
+// import { Dialog } from '@/components/ui/dialog';
+
 interface GachaResultModalProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
@@ -11,11 +13,14 @@ interface GachaResultModalProps {
 export const GachaResultModal = ({
   isOpen,
   onOpenChange,
-  results,
-  isSingleDraw = true,
+  // results,
+  // isSingleDraw = true,
 }: GachaResultModalProps) => (
   <Dialog open={isOpen} onOpenChange={onOpenChange}>
-    <DialogContent className={isSingleDraw ? '' : 'max-w-7xl'}>
+    <DialogContent className='overflow-hidden rounded-lg border-none bg-transparent p-0 shadow-xl'>
+      짠
+    </DialogContent>
+    {/* <DialogContent className={isSingleDraw ? '' : 'max-w-7xl'}>
       {isSingleDraw ? (
         <div className='text-center'>
           <div className='relative h-14'>
@@ -41,6 +46,6 @@ export const GachaResultModal = ({
           </div>
         </>
       )}
-    </DialogContent>
+    </DialogContent> */}
   </Dialog>
 );
