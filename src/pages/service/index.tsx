@@ -9,10 +9,10 @@ import { ServiceIntro } from './components/ServiceIntro';
 const MainPage = () => {
   return (
     <Layout>
-      <CatGallery />
       <motion.section className='relative'>
         <ServiceIntro />
       </motion.section>
+      <CatGallery />
       <motion.section className='relative'>
         <Footer />
       </motion.section>

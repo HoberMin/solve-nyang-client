@@ -142,7 +142,7 @@ const CharacterGallery: React.FC = () => {
   const rarityOrder: Character['rarity'][] = ['S', 'A', 'B', 'C', 'D'];
 
   return (
-    <div className='flex h-full items-center justify-center py-4'>
+    <div className='mb-[100px] flex h-full items-center justify-center py-4'>
       <div className='max-w-8xl w-full'>
         <div className='mb-8 text-center'>
           <h1 className='mb-3 text-3xl font-bold text-white'>고양이 갤러리</h1>
