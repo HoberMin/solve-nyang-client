@@ -1,9 +1,4 @@
-import {
-  useMutation,
-  useQuery,
-  useQueryClient,
-  useSuspenseQuery,
-} from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { Rarity } from '@/pages/profile/AvatarCollection';
 
@@ -42,8 +37,8 @@ const userInfo = async () => {
   return data as UserInfo;
 };
 
-const userCharacterSelecte = async (ownedAvatarId: string) => {
-  const response = await fetch(
+const userCharacterSelecte = async (ownedAvatarId: string) =>
+  await fetch(
     `${domain}/user/me/avatar/${ownedAvatarId}`,
 
     {
@@ -54,15 +49,6 @@ const userCharacterSelecte = async (ownedAvatarId: string) => {
       },
     },
   );
-
-  if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`);
-  }
-
-  const data = await response.json();
-
-  return data as UserInfo;
-};
 
 const userAvatar = async () => {
   const response = await fetch(`${domain}/user/me/avatar`, {
@@ -88,7 +74,7 @@ export const useGetUserInfo = () =>
   });
 
 export const useGetUserAvatar = () =>
-  useSuspenseQuery({
+  useQuery({
     queryKey: ['userAvatar'],
     queryFn: userAvatar,
   });
@@ -97,8 +83,9 @@ export const useToggleAvatar = () => {
   const queryClient = useQueryClient();
   const { mutate } = useMutation({
     mutationFn: (ownedAvatarId: string) => userCharacterSelecte(ownedAvatarId),
-    onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: ['userAvatar'] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['userAvatar'] });
+    },
   });
 
   return mutate;

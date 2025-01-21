@@ -9,12 +9,12 @@ import RetroLoading from '@/components/RetroLoading';
 
 const getTierInfo = (tier: number) => {
   const tiers = [
-    { name: 'Bronze', color: 'text-[#CD7F32]', range: [1, 5] },
-    { name: 'Silver', color: 'text-gray-300', range: [6, 10] },
-    { name: 'Gold', color: 'text-yellow-500', range: [11, 15] },
-    { name: 'Platinum', color: 'text-blue-300', range: [16, 20] },
-    { name: 'Diamond', color: 'text-cyan-400', range: [21, 25] },
-    { name: 'Ruby', color: 'text-red-500', range: [26, 30] },
+    { name: '브론즈', color: 'text-[#CD7F32]', range: [1, 5] },
+    { name: '실버', color: 'text-gray-300', range: [6, 10] },
+    { name: '골드', color: 'text-yellow-500', range: [11, 15] },
+    { name: '플래티넘', color: 'text-blue-300', range: [16, 20] },
+    { name: '다이아몬드', color: 'text-cyan-400', range: [21, 25] },
+    { name: '루비', color: 'text-red-500', range: [26, 30] },
   ];
 
   return tiers.find(t => tier >= t.range[0] && tier <= t.range[1]) || tiers[0];
@@ -49,64 +49,61 @@ export const PlayerInfo = () => {
   const tierInfo = getTierInfo(solvedacTier);
 
   return (
-    <div className='rounded-2xl border border-gray-700 p-8 shadow-lg'>
-      <h2 className='font-pixel mb-6 text-center uppercase tracking-wide text-blue-400 sm:text-3xl'>
-        Player Profile
-      </h2>
-
-      <div className='mb-8 flex items-center justify-center'>
-        <p className='flex items-center gap-3 text-3xl font-extrabold text-blue-200 sm:text-4xl'>
-          <Target className='h-6 w-6 text-blue-400 sm:h-8 sm:w-8' />
+    <div className='mx-auto w-full max-w-3xl rounded-2xl border border-gray-700/50 bg-gray-900/50 p-8 backdrop-blur-sm'>
+      <div className='mb-8 space-y-2 text-center'>
+        <h2 className='font-pixel text-2xl text-blue-400 sm:text-3xl'>
+          플레이어 프로필
+        </h2>
+        <p className='flex items-center justify-center gap-2 text-2xl font-bold text-blue-200 sm:text-3xl'>
+          <Target className='h-6 w-6 text-blue-400' />
           {nickname}
         </p>
       </div>
 
-      <div className='flex flex-col items-center gap-6'>
-        <div className='flex w-full items-center gap-4 rounded-lg bg-gray-800 p-4 shadow'>
-          <Star className={`h-8 w-8 ${tierInfo.color}`} />
-          <div>
-            <p className='text-base font-medium text-gray-100 sm:text-lg'>
-              Tier
-            </p>
-            <p className={`text-lg font-bold sm:text-xl ${tierInfo.color}`}>
-              {tierInfo.name}
-            </p>
+      <div className='grid gap-4'>
+        <div className='rounded-xl bg-gray-800/80 p-4 transition-all hover:bg-gray-800/90'>
+          <div className='flex items-center gap-4'>
+            <Trophy className='h-7 w-7 text-yellow-400' />
+            <div className='flex-1'>
+              <p className='text-base text-gray-300'>포인트</p>
+              <p className='text-xl font-bold text-yellow-300'>{point}</p>
+            </div>
           </div>
         </div>
 
-        <div className='flex w-full items-center gap-4 rounded-lg bg-gray-800 p-4 shadow'>
-          <Trophy className='h-8 w-8 text-yellow-400' />
-          <div>
-            <p className='text-base font-medium text-gray-100 sm:text-lg'>
-              Points
-            </p>
-            <p className='text-lg font-bold text-yellow-300 sm:text-xl'>
-              {point}
-            </p>
+        <div className='rounded-xl bg-gray-800/80 p-4 transition-all hover:bg-gray-800/90'>
+          <div className='flex items-center gap-4'>
+            <Star className={`h-7 w-7 ${tierInfo.color}`} />
+            <div className='flex-1'>
+              <p className='text-base text-gray-300'>티어</p>
+              <p className={`text-xl font-bold ${tierInfo.color}`}>
+                {tierInfo.name}
+              </p>
+            </div>
           </div>
         </div>
 
-        <div className='flex w-full items-center gap-4 rounded-lg bg-gray-800 p-4 shadow'>
-          <BookOpen className='h-8 w-8 text-green-400' />
-          <div>
-            <p className='text-base font-medium text-gray-100 sm:text-lg'>
-              Solved Problems
-            </p>
-            <p className='text-lg font-bold text-green-300 sm:text-xl'>
-              {solvedCount}
-            </p>
+        <div className='rounded-xl bg-gray-800/80 p-4 transition-all hover:bg-gray-800/90'>
+          <div className='flex items-center gap-4'>
+            <BookOpen className='h-7 w-7 text-green-400' />
+            <div className='flex-1'>
+              <p className='text-base text-gray-300'>해결한 문제</p>
+              <p className='text-xl font-bold text-green-300'>
+                {solvedCount}개
+              </p>
+            </div>
           </div>
         </div>
 
-        <div className='flex w-full items-center gap-4 rounded-lg bg-gray-800 p-4 shadow'>
-          <Flame className='h-8 w-8 text-red-400' />
-          <div>
-            <p className='text-base font-medium text-gray-100 sm:text-lg'>
-              Current Streak
-            </p>
-            <p className='text-lg font-bold text-red-300 sm:text-xl'>
-              {solvedacStrick} days
-            </p>
+        <div className='rounded-xl bg-gray-800/80 p-4 transition-all hover:bg-gray-800/90'>
+          <div className='flex items-center gap-4'>
+            <Flame className='h-7 w-7 text-red-400' />
+            <div className='flex-1'>
+              <p className='text-base text-gray-300'>최대 스트릭</p>
+              <p className='text-xl font-bold text-red-300'>
+                {solvedacStrick}일
+              </p>
+            </div>
           </div>
         </div>
       </div>
