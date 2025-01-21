@@ -151,13 +151,15 @@ const Signup = (): JSX.Element => {
     <Layout>
       <div className='flex h-[calc(100vh-64px)] items-center justify-center gap-8'>
         {/* Left Side - Auth Instructions */}
-        <div className='w-[500px] rounded bg-black bg-opacity-50 p-6'>
+        <div className='m-8 w-[400px] p-6'>
           <div className='flex flex-col items-center'>
-            <h2 className='mb-2 mt-9 text-xl text-white'>본인 인증 방법</h2>
+            <h2 className='mb-2 mt-9 bg-black bg-opacity-80 text-xl text-white'>
+              본인 인증 방법
+            </h2>
             <div className='space-y-6'>
               <div>
                 <img
-                  className='mb-2 h-auto max-h-[450px] w-full object-contain'
+                  className='mb-2 h-[440px] w-full rounded-lg object-contain'
                   src='/signup_description.jpg'
                   alt='인증 방법 설명'
                 />
@@ -245,6 +247,20 @@ const Signup = (): JSX.Element => {
                   isVisible={isShowPassword}
                   onToggle={() => setIsShowPassword(!isShowPassword)}
                 />
+              </div>
+              {/* Password Validation*/}
+              <div>
+                {formData.password && (
+                  <>
+                    {formData.password.length <
+                      VALIDATION.PASSWORD_MIN_LENGTH && (
+                      <p>{ERROR_MESSAGES.PASSWORD_LENGTH}</p>
+                    )}
+                    {!VALIDATION.PASSWORD_PATTERN.test(formData.password) && (
+                      <p>{ERROR_MESSAGES.PASSWORD_PATTERN}</p>
+                    )}
+                  </>
+                )}
               </div>
             </FormField>
 
