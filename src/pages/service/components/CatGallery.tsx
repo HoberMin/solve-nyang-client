@@ -21,23 +21,26 @@ interface RaritySectionProps {
   characters: Character[];
 }
 
-const VISIBLE_CARDS = 7;
+const VISIBLE_CARDS = 5;
 
-const CharacterCard: React.FC<CharacterCardProps> = ({ name, rarity }) => {
+const CharacterCard: React.FC<CharacterCardProps> = ({ name }) => {
   return (
-    <div className='relative h-20 w-20'>
-      <img
-        src={`/public/${rarity}.svg`}
+    <div className='group relative h-[200px] w-[200px]'>
+      {/* <img
+        src={`/cats/ball/${rarity}1-4.svg`}
         alt={`${rarity} rank background`}
         className='absolute inset-0 h-full w-full'
-      />
+      /> */}
       <img
-        src={`/public/cats/${name}.svg`}
+        src={`/public/cats/Cloud.svg`}
         alt={name}
-        className='absolute inset-0 m-auto h-4/5 w-4/5 object-contain'
+        className='absolute inset-0 m-auto h-full w-full object-contain'
       />
-      <div className='absolute -bottom-5 left-0 right-0 text-center'>
-        <span className='text-xs text-white/80'>{name}</span>
+      {/* Hover Effect with Name */}
+      <div className='absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-200 group-hover:opacity-100'>
+        <div className='flex h-full w-full items-center justify-center bg-black/60 backdrop-blur-sm'>
+          <span className='text-sm font-medium text-white'>{name}</span>
+        </div>
       </div>
     </div>
   );
@@ -139,15 +142,16 @@ const CharacterGallery: React.FC = () => {
   const rarityOrder: Character['rarity'][] = ['S', 'A', 'B', 'C', 'D'];
 
   return (
-    <div className='flex h-screen items-center justify-center py-4'>
-      <div className='w-full max-w-5xl'>
-        <div className='mb-6 text-center'>
-          <h1 className='text-2xl font-bold text-white'>
-            Character Collection
-          </h1>
-          <p className='text-xs text-gray-400'>
-            Discover our unique collection of characters
+    <div className='flex h-full items-center justify-center py-4'>
+      <div className='max-w-8xl w-full'>
+        <div className='mb-8 text-center'>
+          <h1 className='mb-3 text-3xl font-bold text-white'>고양이 갤러리</h1>
+          <p className='text-sm text-gray-200'>
+            알고리즘 문제를 풀고, 아래 고양이들을 획득해보세요!
           </p>
+          <div className='mt-2 text-xs text-gray-400'>
+            문제를 해결할 때마다 새로운 고양이 친구들을 만나볼 수 있어요
+          </div>
         </div>
 
         <div className='flex flex-col gap-3'>
