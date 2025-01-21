@@ -63,7 +63,8 @@ const LoadingPulse = () => (
 );
 
 const Header = () => {
-  const { data, isLoading, isError } = useGetUserInfo();
+  const { data, isLoading } = useGetUserInfo();
+  const isAuthenticated = Boolean(data?.nickname);
 
   return (
     <header className='relative flex h-16 items-center justify-between bg-gray-900 px-6'>
@@ -85,22 +86,24 @@ const Header = () => {
           fontFamily: "'Press Start 2P', monospace",
         }}
       >
-        <span
-          className='relative bg-gradient-to-r from-blue-400 via-blue-500 to-blue-400 bg-clip-text text-2xl text-transparent transition-all duration-300 group-hover:from-blue-300 group-hover:via-blue-400 group-hover:to-blue-300'
-          style={{
-            textShadow: '0 0 10px rgba(59, 130, 246, 0.4)',
-            WebkitTextStroke: '1px rgba(59, 130, 246, 0.2)',
-          }}
-        >
-          솔브냥
-        </span>
+        <Link to='/'>
+          <span
+            className='relative bg-gradient-to-r from-blue-400 via-blue-500 to-blue-400 bg-clip-text text-2xl text-transparent transition-all duration-300 group-hover:from-blue-300 group-hover:via-blue-400 group-hover:to-blue-300'
+            style={{
+              textShadow: '0 0 10px rgba(59, 130, 246, 0.4)',
+              WebkitTextStroke: '1px rgba(59, 130, 246, 0.2)',
+            }}
+          >
+            솔브냥
+          </span>
+        </Link>
         <div className='absolute -bottom-1 left-0 h-px w-0 bg-gradient-to-r from-blue-400/50 to-blue-300/50 transition-all duration-300 group-hover:w-full' />
       </div>
 
       <nav className='relative z-10 flex items-center gap-8'>
         {isLoading ? (
           <LoadingPulse />
-        ) : isError ? (
+        ) : !isAuthenticated ? (
           <RetroMenuItem href='/login'>LOGIN</RetroMenuItem>
         ) : (
           <>

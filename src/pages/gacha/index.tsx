@@ -1,6 +1,7 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 
 import { Avatar, useGachaAvatarApi } from '@/apis/avatar';
 import { useGetUserInfo } from '@/apis/user';
@@ -36,31 +37,40 @@ const BALL_IMAGES = [
 const INITIAL_BALL_POSITIONS: BallPosition[] = Array.from(
   { length: 7 },
   (_, index) => {
-    const angle = index * ((2 * Math.PI) / 7); // 7개의 공을 원형으로 균등하게 배치
+    const angle = index * ((2 * Math.PI) / 7);
     const radius = 15;
 
     return {
       left: `${Math.cos(angle) * radius}%`,
-      top: `${(Math.sin(angle) * radius) / 2 + 7}%`, // 타원형 + 약간 아래로 이동
+      top: `${(Math.sin(angle) * radius) / 2 + 7}%`,
     };
   },
 );
 
 const Gacha = () => {
   const getGacha = useGachaAvatarApi();
-
-  // 포인트 조회
-  const { data, isError, isPending } = useGetUserInfo();
-
   const navigate = useNavigate();
+  const { data, isPending } = useGetUserInfo();
+
+  useEffect(() => {
+    if (!isPending && !data?.nickname) {
+      toast.error('로그인이 필요한 서비스입니다.', {
+        description: '로그인 페이지로 이동합니다.',
+        action: {
+          label: '확인',
+          onClick: () => {},
+        },
+      });
+      navigate('/login');
+    }
+  }, [data, isPending, navigate]);
 
   if (isPending) {
-    return <RetroLoading></RetroLoading>;
+    return <RetroLoading />;
   }
 
-  if (isError) {
-    navigate('/login');
-    return;
+  if (!data?.nickname) {
+    return null;
   }
 
   const { point } = data;
@@ -83,7 +93,7 @@ const Gacha = () => {
   const rotationRef = useRef(0);
 
   const shuffleBalls = () => {
-    rotationRef.current += Math.PI / 2; // 90도씩 회전
+    rotationRef.current += Math.PI / 2;
 
     setBallPositions(prevPositions => {
       return prevPositions.map((_, index) => {
@@ -114,7 +124,7 @@ const Gacha = () => {
 
         await new Promise(resolve => setTimeout(resolve, 500));
 
-        shuffleBalls(); // 가챠 볼 섞기
+        shuffleBalls();
         await new Promise(resolve => setTimeout(resolve, 1000));
 
         handleElement.classList.remove('rotate-45');
@@ -124,11 +134,12 @@ const Gacha = () => {
         setGachaResults(avatars);
         setIsModalOpen(true);
 
-        queryClient.invalidateQueries({ queryKey: ['userInfo'] }); // 쿼리 무효화
+        queryClient.invalidateQueries({ queryKey: ['userInfo'] });
       }
     } catch (error) {
       console.error('Gacha draw error:', error);
       setDrawMode(null);
+      toast.error('뽑기에 실패했습니다. 다시 시도해주세요.');
     } finally {
       setIsAnimating(false);
       setPendingDraw(null);
@@ -146,10 +157,8 @@ const Gacha = () => {
         <div className='container px-4'>
           <div className='mx-auto flex max-w-[35%] flex-col items-center'>
             <div className='relative w-full'>
-              {/* 가챠머신 */}
               <img src={machineImageUrl} alt='Gacha Machine' />
 
-              {/* 가챠머신 손잡이 */}
               <img
                 id='gacha-handle'
                 src={handleImageUrl}
@@ -157,7 +166,6 @@ const Gacha = () => {
                 className='absolute right-[12%] top-[67%] w-[27%] -translate-x-1/2 transform'
               />
 
-              {/* 가챠 볼 */}
               {ballPositions.map((position, index) => (
                 <img
                   key={index}
@@ -173,7 +181,6 @@ const Gacha = () => {
               ))}
             </div>
 
-            {/* 뽑기 버튼 */}
             <div className='relative z-50 mt-4 flex gap-2'>
               <button
                 className='w-36 rounded-none border-4 border-solid border-black bg-[rgb(255,128,65)] p-2 pb-3 text-black hover:bg-[rgb(216,98,38)] disabled:bg-gray-400'
