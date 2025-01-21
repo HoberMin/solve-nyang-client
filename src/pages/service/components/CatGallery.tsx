@@ -27,7 +27,7 @@ const CharacterCard: React.FC<CharacterCardProps> = ({ name }) => {
   return (
     <div className='group relative h-32 w-32 lg:h-40 lg:w-40 xl:h-48 xl:w-48 2xl:h-52 2xl:w-52'>
       <img
-        src={`/public/cats/Cloud.svg`}
+        src={`/cats/ExclamationCat.svg`}
         alt={name}
         className='absolute inset-0 m-auto h-full w-full object-contain'
       />

@@ -21,7 +21,7 @@ const RetroMenuItem = ({ children, href }: RetroMenuItemProps) => {
           }}
         />
         <span
-          className='relative inline-block bg-gradient-to-b from-blue-300 to-blue-500 bg-clip-text text-lg text-transparent transition-transform duration-300 ease-in-out group-hover:scale-105 group-hover:from-blue-200 group-hover:to-blue-400'
+          className='relative inline-block bg-gradient-to-b from-blue-300 to-blue-500 bg-clip-text text-2xl text-transparent transition-transform duration-300 ease-in-out group-hover:scale-105 group-hover:from-blue-200 group-hover:to-blue-400'
           style={{
             textShadow: '0 0 5px rgba(59, 130, 246, 0.3)',
             WebkitTextStroke: '1px rgba(59, 130, 246, 0.2)',
@@ -29,10 +29,6 @@ const RetroMenuItem = ({ children, href }: RetroMenuItemProps) => {
         >
           {children}
         </span>
-        <div className='absolute -left-1 -top-1 h-1.5 w-1.5 scale-0 bg-blue-400/50 transition-all duration-200 group-hover:scale-100' />
-        <div className='absolute -right-1 -top-1 h-1.5 w-1.5 scale-0 bg-blue-400/50 transition-all duration-200 group-hover:scale-100' />
-        <div className='absolute -bottom-1 -left-1 h-1.5 w-1.5 scale-0 bg-blue-400/50 transition-all duration-200 group-hover:scale-100' />
-        <div className='absolute -bottom-1 -right-1 h-1.5 w-1.5 scale-0 bg-blue-400/50 transition-all duration-200 group-hover:scale-100' />
       </div>
     </Link>
   );
