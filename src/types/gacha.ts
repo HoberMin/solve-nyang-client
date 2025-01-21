@@ -4,11 +4,6 @@ export interface BallPosition {
   top: string;
 }
 
-export interface RarityInfo {
-  rarity: string;
-  dropRate: string;
-}
-
 export interface DrawConfig {
   count: number;
   cost: number;

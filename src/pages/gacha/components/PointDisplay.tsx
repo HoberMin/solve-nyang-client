@@ -1,3 +1,5 @@
+import coinImg from '/public/coin.svg';
+
 interface PointDisplayProps {
   point: number;
 }
@@ -8,7 +10,11 @@ export const PointDisplay = ({ point }: PointDisplayProps) => {
       <h2 className='mb-2 text-center text-lg font-bold text-white'>
         내 포인트
       </h2>
-      <div className='text-white'>🪙 {point.toLocaleString()}</div>
+      <hr className='mb-4' />
+      <div className='flex text-white'>
+        <img src={coinImg} alt='coin' className='w-8' />
+        {point.toLocaleString()}
+      </div>
     </div>
   );
 };

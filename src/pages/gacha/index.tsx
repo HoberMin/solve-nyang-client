@@ -7,11 +7,11 @@ import { Avatar, useGachaAvatarApi } from '@/apis/avatar';
 import { useGetUserInfo } from '@/apis/user';
 import Layout from '@/components/Layout';
 import RetroLoading from '@/components/RetroLoading';
-import { GachaConfirmDialog } from '@/components/gacha/GachaConfirmDialog';
-import { GachaDropRateInfo } from '@/components/gacha/GachaDropRateInfo';
-import { GachaResultModal } from '@/components/gacha/GachaResultModal';
-import { PointDisplay } from '@/components/gacha/PointDisplay';
 import { queryClient } from '@/lib/queryClient';
+import { GachaConfirmDialog } from '@/pages/gacha/components/GachaConfirmDialog';
+import { GachaDropRateInfo } from '@/pages/gacha/components/GachaDropRateInfo';
+import { GachaResultModal } from '@/pages/gacha/components/GachaResultModal';
+import { PointDisplay } from '@/pages/gacha/components/PointDisplay';
 
 import greenBallImageUrl from '/assets/gacha-ball-1.svg';
 import orangeBallImageUrl from '/assets/gacha-ball-2.svg';
@@ -22,6 +22,7 @@ import blueBallImageUrl from '/assets/gacha-ball-6.svg';
 import yellowBallImageUrl from '/assets/gacha-ball-7.svg';
 import machineImageUrl from '/assets/gacha-machine.svg';
 import handleImageUrl from '/assets/handle.svg';
+import coinImg from '/public/coin.svg';
 
 interface BallPosition {
   left: string;
@@ -168,7 +169,7 @@ const Gacha = () => {
       </div>
 
       <div className='mt-[30px] flex items-center'>
-        <div className='container px-4'>
+        <div className='px-4'>
           <div className='mx-auto flex max-w-[35%] flex-col items-center'>
             <div className='relative w-full'>
               <img
@@ -206,7 +207,10 @@ const Gacha = () => {
                 disabled={isAnimating || point < 100}
               >
                 <div className='font-bold'>1회 뽑기</div>
-                <div className='text-sm'>🪙 100</div>
+                <div className='flex justify-center gap-1'>
+                  <img src={coinImg} alt='coin' className='w-8' />
+                  <div className='text-sm'>100</div>
+                </div>
               </button>
 
               <button
@@ -215,7 +219,10 @@ const Gacha = () => {
                 disabled={isAnimating || point < 1000}
               >
                 <div className='font-bold'>10회 뽑기</div>
-                <div className='text-sm'>🪙 1000</div>
+                <div className='flex justify-center gap-1'>
+                  <img src={coinImg} alt='coin' className='w-8' />
+                  <div className='text-sm'>1000</div>
+                </div>
               </button>
             </div>
           </div>
