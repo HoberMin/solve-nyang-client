@@ -4,6 +4,9 @@ interface CatInfo {
 }
 
 export const CAT_MAPPINGS: Record<string, CatInfo> = {
+  // Hidden
+  SSAFY: { korName: '싸피냥', engName: 'SSAFY' },
+
   // S 등급
   CodingCat: { korName: '코딩냥', engName: 'CodingCat' },
   FishbowlCat: { korName: '어항냥', engName: 'FishbowlCat' },
