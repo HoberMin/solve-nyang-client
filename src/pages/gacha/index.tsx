@@ -169,7 +169,7 @@ const Gacha = () => {
       </div>
 
       <div className='mt-[30px] flex items-center'>
-        <div className='container px-4'>
+        <div className='px-4'>
           <div className='mx-auto flex max-w-[35%] flex-col items-center'>
             <div className='relative w-full'>
               <img
