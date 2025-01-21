@@ -34,6 +34,9 @@ importers:
       framer-motion:
         specifier: ^11.17.0
         version: 11.17.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      lodash:
+        specifier: ^4.17.21
+        version: 4.17.21
       lucide-react:
         specifier: ^0.469.0
         version: 0.469.0(react@18.3.1)
@@ -71,6 +74,9 @@ importers:
       '@trivago/prettier-plugin-sort-imports':
         specifier: ^5.2.1
         version: 5.2.1(prettier@3.4.2)
+      '@types/lodash':
+        specifier: ^4.17.14
+        version: 4.17.14
       '@types/node':
         specifier: ^22.10.5
         version: 22.10.5
@@ -1629,6 +1635,9 @@ packages:
       {
         integrity: sha512-AYnb1nQyY49te+VRAVgmzfcgjYS91mY5P0TKUDCLEM+gNnA+3T6rWITXRLYCpahpqSQbN5cE+gHpnPyXjHWxcw==,
       }
+
+  '@types/lodash@4.17.14':
+    resolution: {integrity: sha512-jsxagdikDiDBeIRaPYtArcT8my4tN1og7MtMRquFT3XNA6axxyHDRUemqDz/taRDdOUn0GnGHRCuff4q48sW9A==}
 
   '@types/node@22.10.5':
     resolution:
@@ -5310,6 +5319,8 @@ snapshots:
   '@types/cookie@0.6.0': {}
 
   '@types/estree@1.0.6': {}
+
+  '@types/lodash@4.17.14': {}
 
   '@types/node@22.10.5':
     dependencies:

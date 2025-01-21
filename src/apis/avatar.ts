@@ -1,12 +1,12 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
 
 export const domain = 'https://api.solve-nyang.com';
 
 export interface Avatar {
-  id: number; // 고유값
+  id: string; // 고유값
   avatarId: number;
   name: string;
-  rarity: string;
+  rarity: 'S' | 'A' | 'B' | 'C' | 'D';
   dropRate: number;
 }
 
@@ -32,7 +32,7 @@ export const getAvatarList = async () =>
   await fetch(`${domain}/avatar`, {
     headers: {
       'Content-Type': 'application/json',
-      authorization: `Bearer ${localStorage.getItem('token')}`,
+      // authorization: `Bearer ${localStorage.getItem('token')}`,
     },
   })
     .then(res => res.json())
@@ -49,6 +49,12 @@ export const getAvatarList = async () =>
 //       characterList,
 //     }),
 //   });
+
+export const useGetAvatarList = () =>
+  useSuspenseQuery({
+    queryKey: ['avatarList'],
+    queryFn: getAvatarList,
+  });
 
 export const useGachaAvatarApi = () => {
   const { mutateAsync } = useMutation<AvatarList, Error, number>({

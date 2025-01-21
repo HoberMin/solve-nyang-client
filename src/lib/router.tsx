@@ -1,7 +1,6 @@
 // src/lib/router.tsx
 import { createBrowserRouter } from 'react-router-dom';
 
-import Commingsoon from '@/components/Commingsoon';
 import RetroError from '@/components/ErrorBoundary';
 import Root from '@/components/Root';
 import Gacha from '@/pages/gacha';
@@ -23,10 +22,6 @@ export const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <Commingsoon />,
-      },
-      {
-        path: 'service',
         element: <Service />,
       },
       {
