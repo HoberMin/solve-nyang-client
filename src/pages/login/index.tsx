@@ -31,13 +31,13 @@ const Login = () => {
       <div className='flex h-[calc(100vh-64px)] items-center justify-center'>
         <Container
           roundedCorners
-          className='w-[450px] bg-black bg-opacity-70 p-6'
+          className='w-[400px] bg-black bg-opacity-70 p-8'
         >
-          <h3 className='mb-6 flex justify-center text-2xl text-white'>
+          <h3 className='mb-6 flex justify-center text-3xl text-white'>
             Login
           </h3>
           <form className='flex flex-col items-center' onSubmit={submitForm}>
-            <div className='mb-4 flex w-full flex-col'>
+            <div className='mb-4 flex w-full max-w-[300px] flex-col'>
               <label className='mb-0 text-xl text-white'>
                 solved.ac 닉네임
               </label>
@@ -52,7 +52,7 @@ const Login = () => {
               />
             </div>
 
-            <div className='mb-6 flex w-full flex-col'>
+            <div className='mb-1 flex w-full max-w-[300px] flex-col'>
               <label className='mb-0 text-xl text-white'>비밀번호</label>
               <Input
                 type='password'
@@ -75,9 +75,12 @@ const Login = () => {
             </Button>
           </form>
 
-          <div className='mt-6 flex justify-center gap-2'>
-            <p className='text-white'>계정이 없으신가요?</p>
-            <a href='/signup' className='text-blue-400 hover:text-blue-300'>
+          <div className='mt-4 flex justify-center gap-2'>
+            <p className='text-base text-white'>계정이 없으신가요?</p>
+            <a
+              href='/signup'
+              className='text-base text-blue-400 hover:text-blue-300'
+            >
               회원가입
             </a>
           </div>

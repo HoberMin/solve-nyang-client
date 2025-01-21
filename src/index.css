@@ -9,6 +9,9 @@
   font-family: 'Galmuri11' !important;
   /* font-size: 15px !important; */
 }
+.nes-ui button {
+  font-size: 1rem !important;
+}
 
 :root {
   /* font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif; */
