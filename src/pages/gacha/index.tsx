@@ -22,6 +22,7 @@ import blueBallImageUrl from '/assets/gacha-ball-6.svg';
 import yellowBallImageUrl from '/assets/gacha-ball-7.svg';
 import machineImageUrl from '/assets/gacha-machine.svg';
 import handleImageUrl from '/assets/handle.svg';
+import coinImg from '/public/coin.svg';
 
 interface BallPosition {
   left: string;
@@ -206,7 +207,10 @@ const Gacha = () => {
                 disabled={isAnimating || point < 100}
               >
                 <div className='font-bold'>1회 뽑기</div>
-                <div className='text-sm'>🪙 100</div>
+                <div className='flex justify-center gap-1'>
+                  <img src={coinImg} alt='coin' className='w-8' />
+                  <div className='text-sm'>100</div>
+                </div>
               </button>
 
               <button
@@ -215,7 +219,10 @@ const Gacha = () => {
                 disabled={isAnimating || point < 1000}
               >
                 <div className='font-bold'>10회 뽑기</div>
-                <div className='text-sm'>🪙 1000</div>
+                <div className='flex justify-center gap-1'>
+                  <img src={coinImg} alt='coin' className='w-8' />
+                  <div className='text-sm'>1000</div>
+                </div>
               </button>
             </div>
           </div>
