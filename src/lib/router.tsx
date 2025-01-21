@@ -7,7 +7,7 @@ import Root from '@/components/Root';
 import Gacha from '@/pages/gacha';
 // import Login from '@/pages/Login';
 // import Signup from '@/pages/Signup';
-import Index from '@/pages/index';
+// import Index from '@/pages/index';
 import Login from '@/pages/login';
 import NotFoundPage from '@/pages/notFound';
 import ProfilePage from '@/pages/profile';
