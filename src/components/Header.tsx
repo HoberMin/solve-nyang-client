@@ -21,9 +21,8 @@ const RetroMenuItem = ({ children, href }: RetroMenuItemProps) => {
           }}
         />
         <span
-          className='relative inline-block bg-gradient-to-b from-blue-300 to-blue-500 bg-clip-text text-sm text-transparent transition-transform duration-300 ease-in-out group-hover:scale-105 group-hover:from-blue-200 group-hover:to-blue-400'
+          className='relative inline-block bg-gradient-to-b from-blue-300 to-blue-500 bg-clip-text text-lg text-transparent transition-transform duration-300 ease-in-out group-hover:scale-105 group-hover:from-blue-200 group-hover:to-blue-400'
           style={{
-            fontFamily: "'Press Start 2P', monospace",
             textShadow: '0 0 5px rgba(59, 130, 246, 0.3)',
             WebkitTextStroke: '1px rgba(59, 130, 246, 0.2)',
           }}
@@ -80,15 +79,10 @@ const Header = () => {
         }}
       />
 
-      <div
-        className='group cursor-pointer'
-        style={{
-          fontFamily: "'Press Start 2P', monospace",
-        }}
-      >
+      <div className='group cursor-pointer'>
         <Link to='/'>
           <span
-            className='relative bg-gradient-to-r from-blue-400 via-blue-500 to-blue-400 bg-clip-text text-2xl text-transparent transition-all duration-300 group-hover:from-blue-300 group-hover:via-blue-400 group-hover:to-blue-300'
+            className='relative bg-gradient-to-r from-blue-400 via-blue-500 to-blue-400 bg-clip-text text-3xl text-transparent transition-all duration-300 group-hover:from-blue-300 group-hover:via-blue-400 group-hover:to-blue-300'
             style={{
               textShadow: '0 0 10px rgba(59, 130, 246, 0.4)',
               WebkitTextStroke: '1px rgba(59, 130, 246, 0.2)',
@@ -109,16 +103,9 @@ const Header = () => {
           <>
             <div className='relative flex items-center'>
               <div className='relative'>
-                <div className='absolute -inset-1 opacity-30'>
-                  <div className='h-1 w-1 bg-blue-400' />
-                  <div className='absolute right-0 top-0 h-1 w-1 bg-blue-400' />
-                  <div className='absolute bottom-0 h-1 w-1 bg-blue-400' />
-                  <div className='absolute bottom-0 right-0 h-1 w-1 bg-blue-400' />
-                </div>
                 <span
-                  className='bg-gradient-to-r from-blue-300 to-blue-500 bg-clip-text text-sm text-transparent'
+                  className='bg-gradient-to-r from-blue-300 to-blue-500 bg-clip-text text-xl text-transparent'
                   style={{
-                    fontFamily: "'Press Start 2P', monospace",
                     textShadow: '0 0 5px rgba(59, 130, 246, 0.3)',
                     WebkitTextStroke: '1px rgba(59, 130, 246, 0.2)',
                   }}
@@ -139,7 +126,7 @@ const Header = () => {
           rel='noopener noreferrer'
         >
           <RetroIcon>
-            <Github className='h-5 w-5 text-blue-400' />
+            <Github className='h-8 w-8 text-blue-400' />
           </RetroIcon>
         </a>
       </nav>
