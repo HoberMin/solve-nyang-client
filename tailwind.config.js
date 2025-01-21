@@ -18,14 +18,14 @@ export default {
           '50%': { transform: 'translateY(-7px)' },
         },
         shake: {
-          '0%, 100%': { transform: 'translateX(-50%) translateY(-50%)' },
-          '25%': { transform: 'translateX(-60%) translateY(-50%)' },
-          '75%': { transform: 'translateX(-40%) translateY(-50%)' },
+          '0%, 100%': { transform: 'translateX(-50%) translateY(-50%) scale(1.5) rotate(0deg)' },
+          '25%': { transform: 'translateX(-55%) translateY(-50%) scale(1.5) rotate(-5deg)' },
+          '75%': { transform: 'translateX(-45%) translateY(-50%) scale(1.5) rotate(5deg)' },
         },
         open: {
-          '0%': { transform: 'translateX(-50%) translateY(-50%) scale(1)' },
-          '50%': { transform: 'translateX(-50%) translateY(-50%) scale(1.2)' },
-          '100%': { transform: 'translateX(-50%) translateY(-50%) scale(1)' },
+          '0%': { transform: 'translateX(-50%) translateY(-50%) scale(1.5)' },
+          '50%': { transform: 'translateX(-50%) translateY(-50%) scale(1.8)' },
+          '100%': { transform: 'translateX(-50%) translateY(-50%) scale(1.5)' },
         },
       },
       borderRadius: {
