@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 
+import { Button } from 'nes-ui-react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
@@ -201,29 +202,29 @@ const Gacha = () => {
             </div>
 
             <div className='relative z-50 mt-4 flex gap-2'>
-              <button
-                className='w-36 rounded-none border-4 border-solid border-black bg-[rgb(255,128,65)] p-2 pb-3 text-black hover:bg-[rgb(216,98,38)] disabled:bg-gray-400'
+              <Button
+                // style="padding:20px;"
+                // color='primary'
                 onClick={() => handleConfirmDraw(1)}
                 disabled={isAnimating || point < 100}
               >
-                <div className='font-bold'>1회 뽑기</div>
-                <div className='flex justify-center gap-1'>
+                <div className='text-xl font-bold'>1회 뽑기</div>
+                <div className='flex items-center justify-center gap-1'>
                   <img src={coinImg} alt='coin' className='w-8' />
-                  <div className='text-sm'>100</div>
+                  <div className='text-lg'>100</div>
                 </div>
-              </button>
-
-              <button
-                className='w-36 rounded-none border-4 border-solid border-black bg-[rgb(255,128,65)] p-2 text-black hover:bg-[rgb(216,98,38)] disabled:bg-gray-400'
+              </Button>
+              <Button
+                // color='primary'
                 onClick={() => handleConfirmDraw(10)}
                 disabled={isAnimating || point < 1000}
               >
-                <div className='font-bold'>10회 뽑기</div>
-                <div className='flex justify-center gap-1'>
+                <div className='text-xl font-bold'>10회 뽑기</div>
+                <div className='flex items-center justify-center gap-1'>
                   <img src={coinImg} alt='coin' className='w-8' />
-                  <div className='text-sm'>1000</div>
+                  <div className='text-lg'>1000</div>
                 </div>
-              </button>
+              </Button>
             </div>
           </div>
         </div>

@@ -82,7 +82,7 @@ const SummaryView = memo(
     onBackdropClick: (e: React.MouseEvent<HTMLDivElement>) => void;
   }) => (
     <div
-      className='fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70'
+      className='fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-80'
       onClick={onBackdropClick}
     >
       <div className='relative bg-transparent'>
@@ -273,7 +273,7 @@ export const GachaResultModal = memo(
 
     return (
       <div
-        className='fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70'
+        className='fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-80'
         onClick={handleBackdropClick}
       >
         <div className='relative h-96 w-96 rounded-lg bg-transparent'>

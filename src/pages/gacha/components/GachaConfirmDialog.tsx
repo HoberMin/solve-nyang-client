@@ -29,7 +29,10 @@ export const GachaConfirmDialog = ({
 
   return (
     <AlertDialog open={isOpen} onOpenChange={onOpenChange}>
-      <AlertDialogContent className='text-black' onKeyUp={handleEnterKey}>
+      <AlertDialogContent
+        className='text-lg text-black'
+        onKeyUp={handleEnterKey}
+      >
         {pendingDraw &&
           `${pendingDraw.cost} 코인을 사용해서 ${pendingDraw.count}회 뽑기를 할까요?`}
         <AlertDialogFooter>
