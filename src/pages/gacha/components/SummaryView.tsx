@@ -11,7 +11,7 @@ export const SummaryView = memo(
     >
       <div className='relative bg-transparent'>
         <div className='absolute left-1/2 top-[-20px] w-full -translate-x-1/2 transform'>
-          <p className='animate-pulse text-center text-base font-semibold text-white'>
+          <p className='animate-pulse text-center text-lg font-semibold text-white'>
             {'Press Enter'}
           </p>
         </div>
