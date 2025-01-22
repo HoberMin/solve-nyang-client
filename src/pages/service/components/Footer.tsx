@@ -90,7 +90,7 @@ export const Footer = () => {
           </div>
 
           <div>
-            <h3 className='mb-6 text-2xl font-bold text-white/90'>
+            <h3 className='mb-6 text-xl font-bold text-white/90'>
               개발팀 소개
             </h3>
             <div className='flex justify-between'>
