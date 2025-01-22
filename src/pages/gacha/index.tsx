@@ -205,26 +205,26 @@ const Gacha = () => {
               ))}
             </div>
 
-            <div className='relative z-50 mt-4 flex gap-2'>
+            <div className='relative z-50 mt-4 flex gap-4'>
               <button
-                className='w-36 rounded-none border-4 border-solid border-black bg-white p-2 pb-3 text-black hover:bg-[rgb(255,242,177)] disabled:bg-gray-400'
+                className='w-36 bg-white p-2 text-black hover:scale-105 disabled:bg-gray-400'
                 onClick={() => handleConfirmDraw(1)}
                 disabled={isAnimating || point < 100}
               >
                 <div className='text-xl font-bold'>1회 뽑기</div>
                 <div className='flex items-center justify-center gap-1'>
-                  <img src={coinImg} alt='coin' className='w-8' />
+                  <img src={coinImg} alt='coin' className='w-7' />
                   <div className='text-lg'>100</div>
                 </div>
               </button>
               <button
-                className='w-36 rounded-none border-4 border-solid border-black bg-white p-2 pb-3 text-black hover:bg-[rgb(255,242,177)] disabled:bg-gray-400'
+                className='w-36 bg-white p-2 text-black hover:scale-105 disabled:bg-gray-400'
                 onClick={() => handleConfirmDraw(10)}
                 disabled={isAnimating || point < 1000}
               >
                 <div className='text-xl font-bold'>10회 뽑기</div>
                 <div className='flex items-center justify-center gap-1'>
-                  <img src={coinImg} alt='coin' className='w-8' />
+                  <img src={coinImg} alt='coin' className='w-7' />
                   <div className='text-lg'>1000</div>
                 </div>
               </button>

@@ -7,12 +7,24 @@ import {
   RARITY_TO_IMAGE,
   getCatKorName,
 } from '../constants/catMappings';
-import { RARITY_INFO } from '../constants/rarityInfo';
 import useImagePreloader, {
   GachaResultModalProps,
 } from '../hooks/usePreloader';
 import Confetti from './Confetti';
 import { SummaryView } from './SummaryView';
+
+interface RarityInfo {
+  dropRate: string;
+  color: string;
+}
+
+const RARITY_INFO: Record<string, RarityInfo> = {
+  S: { dropRate: '1', color: '#f74600' },
+  A: { dropRate: '4', color: '#ffc337' },
+  B: { dropRate: '30', color: '#7abf16' },
+  C: { dropRate: '45', color: '#108df1' },
+  D: { dropRate: '20', color: '#a663ee' },
+};
 
 export const GachaResultModal = memo(
   ({
@@ -79,6 +91,7 @@ export const GachaResultModal = memo(
     }, [currentIndex, results.length, isAnimating]);
 
     const handleSkip = useCallback(() => {
+      if (isAnimating) return;
       setIsSummary(true);
     }, []);
 
@@ -86,12 +99,7 @@ export const GachaResultModal = memo(
       (e: React.MouseEvent<HTMLDivElement>) => {
         if (e.target !== e.currentTarget) return;
 
-        if (isAnimating) {
-          setIsAnimating(false);
-          setIsCapsuleVisible(true);
-          setAnimationStep(ANIMATION_STEPS.COMPLETE);
-          return;
-        }
+        if (isAnimating) return;
 
         if (!isSingleDraw && !isSummary) {
           if (currentIndex < results.length - 1) {
@@ -118,12 +126,10 @@ export const GachaResultModal = memo(
     useEffect(() => {
       const handleKeyPress = (event: globalThis.KeyboardEvent) => {
         if (event.key === 'Enter') {
+          if (isAnimating) return;
+
           if (isSingleDraw) {
-            if (isAnimating) {
-              setIsAnimating(false);
-              setIsCapsuleVisible(true);
-              setAnimationStep(ANIMATION_STEPS.COMPLETE);
-            } else if (animationStep === ANIMATION_STEPS.COMPLETE) {
+            if (animationStep === ANIMATION_STEPS.COMPLETE) {
               onOpenChange(false);
             }
           } else {
@@ -272,18 +278,19 @@ export const GachaResultModal = memo(
             <div className='absolute bottom-[-40%] left-1/2 -translate-x-1/2 transform'>
               <button
                 onClick={handleSkip}
-                className='bg-transparent font-bold text-white underline'
+                className='bg-transparent text-lg font-bold text-gray-300 underline hover:scale-110'
               >
                 ▶ Skip
               </button>
             </div>
           )}
-
-          <div className='absolute left-1/2 top-[-50px] w-full -translate-x-1/2 transform'>
-            <p className='animate-pulse text-center text-base font-semibold text-white'>
-              {'Press Enter'}
-            </p>
-          </div>
+          {isCompleteStep && (
+            <div className='absolute left-1/2 top-[-80px] w-full -translate-x-1/2 transform'>
+              <p className='animate-pulse text-center text-lg font-semibold text-white'>
+                {'Press Enter'}
+              </p>
+            </div>
+          )}
         </div>
       </div>
     );
