@@ -251,7 +251,11 @@ const Signup = (): JSX.Element => {
                     onChange={value => handleInputChange(value, 'username')}
                     disabled={isKeyIssued}
                     className='w-full'
-                    style={{ backgroundColor: 'white', color: 'black' }}
+                    style={{
+                      backgroundColor: 'white',
+                      color: 'black',
+                      padding: '7px',
+                    }}
                   />
                 </div>
 
@@ -275,7 +279,11 @@ const Signup = (): JSX.Element => {
                   type={isKeyVisible ? 'text' : 'password'}
                   value={encryptionKey}
                   className='w-full'
-                  style={{ backgroundColor: 'white', color: 'black' }}
+                  style={{
+                    backgroundColor: 'white',
+                    color: 'black',
+                    padding: '7px',
+                  }}
                 />
                 <VisibilityToggle
                   isVisible={isKeyVisible}
@@ -293,7 +301,11 @@ const Signup = (): JSX.Element => {
                   value={formData.password}
                   onChange={value => handleInputChange(value, 'password')}
                   className='w-full'
-                  style={{ backgroundColor: 'white', color: 'black' }}
+                  style={{
+                    backgroundColor: 'white',
+                    color: 'black',
+                    padding: '7px',
+                  }}
                 />
                 <VisibilityToggle
                   isVisible={isShowPassword}
@@ -314,7 +326,11 @@ const Signup = (): JSX.Element => {
                 value={formData.passwordConfirm}
                 onChange={value => handleInputChange(value, 'passwordConfirm')}
                 className='w-full'
-                style={{ backgroundColor: 'white', color: 'black' }}
+                style={{
+                  backgroundColor: 'white',
+                  color: 'black',
+                  padding: '7px',
+                }}
               />
             </FormField>
 
