@@ -29,7 +29,7 @@ export const router = createBrowserRouter([
         element: <ProfilePage />,
       },
       {
-        path: 'sale',
+        path: 'auction',
         element: <SalePage />,
       },
       {

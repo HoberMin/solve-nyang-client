@@ -25,7 +25,7 @@ export const PlayerInfo = () => {
   const { data, isPending } = useGetUserInfo();
 
   useEffect(() => {
-    if (!isPending && !data?.nickname) {
+    if (!isPending && !data?.username) {
       toast.error('로그인이 필요한 서비스입니다.', {
         description: '로그인 페이지로 이동합니다.',
         action: {
@@ -41,11 +41,11 @@ export const PlayerInfo = () => {
     return <RetroLoading />;
   }
 
-  if (!data?.nickname) {
+  if (!data?.username) {
     return null;
   }
 
-  const { nickname, point, solvedacTier, solvedCount, solvedacStrick } = data;
+  const { username, point, solvedacTier, solvedCount, solvedacStrick } = data;
   const tierInfo = getTierInfo(solvedacTier);
 
   return (
@@ -56,7 +56,7 @@ export const PlayerInfo = () => {
         </h2>
         <p className='flex items-center justify-center gap-2 text-2xl font-bold text-blue-200 sm:text-3xl'>
           <Target className='h-6 w-6 text-blue-400' />
-          {nickname}
+          {username}
         </p>
       </div>
 

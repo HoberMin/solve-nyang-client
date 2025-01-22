@@ -75,7 +75,7 @@ const Gacha = () => {
   const [drawMode, setDrawMode] = useState<'single' | 'multi' | null>(null);
 
   useEffect(() => {
-    if (!isPending && !userData?.nickname) {
+    if (!isPending && !userData?.username) {
       const timer = setTimeout(() => {
         toast.error('로그인이 필요한 서비스입니다.', {
           description: '로그인 페이지로 이동합니다.',
@@ -95,7 +95,7 @@ const Gacha = () => {
     return <RetroLoading />;
   }
 
-  if (!userData?.nickname) {
+  if (!userData?.username) {
     return null;
   }
 
