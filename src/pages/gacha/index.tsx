@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 
+import { Button } from 'nes-ui-react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
@@ -7,11 +8,11 @@ import { Avatar, useGachaAvatarApi } from '@/apis/avatar';
 import { useGetUserInfo } from '@/apis/user';
 import Layout from '@/components/Layout';
 import RetroLoading from '@/components/RetroLoading';
-import { GachaConfirmDialog } from '@/components/gacha/GachaConfirmDialog';
-import { GachaDropRateInfo } from '@/components/gacha/GachaDropRateInfo';
-import { GachaResultModal } from '@/components/gacha/GachaResultModal';
-import { PointDisplay } from '@/components/gacha/PointDisplay';
 import { queryClient } from '@/lib/queryClient';
+import { GachaConfirmDialog } from '@/pages/gacha/components/GachaConfirmDialog';
+import { GachaDropRateInfo } from '@/pages/gacha/components/GachaDropRateInfo';
+import { GachaResultModal } from '@/pages/gacha/components/GachaResultModal';
+import { PointDisplay } from '@/pages/gacha/components/PointDisplay';
 
 import greenBallImageUrl from '/assets/gacha-ball-1.svg';
 import orangeBallImageUrl from '/assets/gacha-ball-2.svg';
@@ -22,6 +23,7 @@ import blueBallImageUrl from '/assets/gacha-ball-6.svg';
 import yellowBallImageUrl from '/assets/gacha-ball-7.svg';
 import machineImageUrl from '/assets/gacha-machine.svg';
 import handleImageUrl from '/assets/handle.svg';
+import coinImg from '/coin.svg';
 
 interface BallPosition {
   left: string;
@@ -167,8 +169,8 @@ const Gacha = () => {
         <GachaDropRateInfo />
       </div>
 
-      <div className='mt-[30px] flex items-center'>
-        <div className='container px-4'>
+      <div className='mt-[30px] flex items-center justify-center'>
+        <div className='px-4'>
           <div className='mx-auto flex max-w-[35%] flex-col items-center'>
             <div className='relative w-full'>
               <img
@@ -200,23 +202,27 @@ const Gacha = () => {
             </div>
 
             <div className='relative z-50 mt-4 flex gap-2'>
-              <button
-                className='w-36 rounded-none border-4 border-solid border-black bg-[rgb(255,128,65)] p-2 pb-3 text-black hover:bg-[rgb(216,98,38)] disabled:bg-gray-400'
+              <Button
                 onClick={() => handleConfirmDraw(1)}
                 disabled={isAnimating || point < 100}
               >
-                <div className='font-bold'>1회 뽑기</div>
-                <div className='text-sm'>🪙 100</div>
-              </button>
-
-              <button
-                className='w-36 rounded-none border-4 border-solid border-black bg-[rgb(255,128,65)] p-2 text-black hover:bg-[rgb(216,98,38)] disabled:bg-gray-400'
+                <div className='text-xl font-bold'>ㅤ 1회 뽑기 ㅤ</div>
+                <div className='flex items-center justify-center gap-1'>
+                  <img src={coinImg} alt='coin' className='w-8' />
+                  <div className='text-lg'>100</div>
+                </div>
+              </Button>
+              <Button
+                // color='primary'
                 onClick={() => handleConfirmDraw(10)}
                 disabled={isAnimating || point < 1000}
               >
-                <div className='font-bold'>10회 뽑기</div>
-                <div className='text-sm'>🪙 1000</div>
-              </button>
+                <div className='text-xl font-bold'>ㅤ10회 뽑기ㅤ</div>
+                <div className='flex items-center justify-center gap-1'>
+                  <img src={coinImg} alt='coin' className='w-8' />
+                  <div className='text-lg'>1000</div>
+                </div>
+              </Button>
             </div>
           </div>
         </div>
