@@ -2,7 +2,7 @@ import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 
 import { Avatar } from '@/apis/avatar';
 
-import { CAT_MAPPINGS } from '../constants/catMappings.ts';
+import { getCatKorName } from '../constants/catMappings.ts';
 
 interface GachaResultModalProps {
   isOpen: boolean;
@@ -69,7 +69,7 @@ const SummaryItem = memo(({ result }: { result: Avatar }) => {
         className='absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 scale-[65%] transform'
       />
       <p className='text-center text-xl font-bold'>
-        {CAT_MAPPINGS[result.name]?.korName}
+        {getCatKorName(result.name)}
       </p>
     </div>
   );
@@ -307,7 +307,7 @@ export const GachaResultModal = memo(
               <div className='absolute left-1/2 top-1/2 h-48 w-48 -translate-x-1/2 -translate-y-1/2 transform rounded-full bg-yellow-300/30 blur-xl' />
               <img src={`/cats/${name}.svg`} alt={name} className='scale-150' />
               <div className='translate-y-5 text-2xl font-bold text-white'>
-                {CAT_MAPPINGS[name]?.korName}
+                {getCatKorName(name)}
               </div>
             </div>
           )}

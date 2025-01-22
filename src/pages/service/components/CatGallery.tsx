@@ -4,6 +4,7 @@ import _ from 'lodash';
 import { ArrowLeftCircle, ArrowRightCircle } from 'lucide-react';
 
 import { useGetAvatarList } from '@/apis/avatar';
+import { getCatKorName } from '@/pages/gacha/constants/catMappings';
 
 interface Character {
   id: string;
@@ -25,13 +26,18 @@ const VISIBLE_CARDS = 5;
 
 const CharacterCard: React.FC<CharacterCardProps> = ({ name }) => {
   return (
-    <div className='flex flex-col items-center gap-2'>
-      <div className='relative h-32 w-32 lg:h-40 lg:w-40 xl:h-48 xl:w-48 2xl:h-52 2xl:w-52'>
-        <img
-          src={`/cats/${name}.svg`}
-          alt={name}
-          className='absolute inset-0 m-auto h-full w-full object-contain'
-        />
+    <div className='group relative h-32 w-32 lg:h-40 lg:w-40 xl:h-48 xl:w-48 2xl:h-52 2xl:w-52'>
+      <img
+        src={`/cats/${name}.svg`}
+        alt={name}
+        className='absolute inset-0 m-auto h-full w-full object-contain'
+      />
+      <div className='absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-200 group-hover:opacity-100'>
+        <div className='flex h-full w-full items-center justify-center bg-black/60 backdrop-blur-sm'>
+          <span className='text-lg font-medium text-white'>
+            {getCatKorName(name)}
+          </span>
+        </div>
       </div>
       <span className='text-base font-medium text-white'>{name}</span>
     </div>
