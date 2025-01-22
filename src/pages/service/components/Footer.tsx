@@ -1,6 +1,3 @@
-import { motion } from 'framer-motion';
-import { Github, Mail } from 'lucide-react';
-
 interface TeamMember {
   role: string;
   name: string;
@@ -40,77 +37,63 @@ export const Footer = () => {
     title: string;
     members: TeamMember[];
   }) => (
-    <div>
-      <h4 className='mb-4 text-lg font-bold text-white/90'>{title}</h4>
-      <div className='grid gap-3'>
-        {members.map((member, index) => (
-          <motion.a
+    <div className='min-w-[140px]'>
+      <h4 className='mb-3 text-sm font-bold text-white/90'>{title}</h4>
+      <div className='space-y-2'>
+        {members.map(member => (
+          <a
             key={member.github}
             href={`https://github.com/${member.github}`}
             target='_blank'
             rel='noopener noreferrer'
-            className='flex items-center gap-3 rounded-lg p-2 text-gray-300/90 transition-all hover:bg-white/5 hover:text-white'
-            initial={{ opacity: 0, x: title.includes('Frontend') ? 5 : -5 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: index * 0.05 }}
+            className='block rounded p-2 text-gray-300/90 transition-colors hover:bg-white/5 hover:text-white'
           >
-            <Github size={16} />
-            <div>
-              <div className='text-sm font-medium text-gray-400/90'>
-                {member.role}
-              </div>
-              <div className='text-xs'>{member.name}</div>
+            <div className='space-y-0.5'>
+              <div className='text-xs text-gray-400/90'>{member.name}</div>
             </div>
-          </motion.a>
+          </a>
         ))}
       </div>
     </div>
   );
 
   const DesignerSection = () => (
-    <div>
-      <h4 className='mb-4 text-center text-lg font-bold text-white/90'>
-        Designer
-      </h4>
-      <motion.a
+    <div className='min-w-[140px]'>
+      <h4 className='mb-3 text-sm font-bold text-white/90'>Designer</h4>
+      <a
         href={`mailto:${designer.email}`}
-        className='flex items-center gap-3 rounded-lg p-2 text-gray-300/90 transition-all hover:bg-white/5 hover:text-white'
-        initial={{ opacity: 0, x: 5 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ delay: 0.05 }}
+        className='block rounded p-2 text-gray-300/90 transition-colors hover:bg-white/5 hover:text-white'
       >
-        <Mail size={16} />
-        <div>
-          <div className='text-sm text-gray-400/90'>{designer.role}</div>
-          <div className='text-xs'>{designer.name}</div>
+        <div className='space-y-0.5'>
+          <div className='text-xs text-gray-400/90'>{designer.name}</div>
         </div>
-      </motion.a>
+      </a>
     </div>
   );
 
   return (
-    <footer className='w-full border-t border-white/10 bg-black/20 py-8'>
-      <div className='mx-auto w-full max-w-5xl px-6'>
-        <div className='mb-8 grid gap-12 border-b border-white/10 pb-8 md:grid-cols-2'>
+    <footer className='mx-auto w-[80%] border-t border-white/10 bg-black/20 py-4'>
+      <div className='mx-auto w-full max-w-3xl px-4'>
+        <div className='mb-4 grid gap-[150px] border-b border-white/10 pb-4 md:grid-cols-2'>
           <div className='flex max-w-sm flex-col justify-center'>
-            <h3 className='mb-4 text-2xl font-bold text-white/90'>
+            <h3 className='mb-2 text-base text-xl font-bold text-white/90'>
               About 솔브냥
             </h3>
-            <p className='text-lg leading-relaxed text-gray-300/90'>
+            <p className='text-xs leading-relaxed text-gray-300/90'>
               솔브냥은 알고리즘 문제 해결을 통해 고양이 캐릭터를 수집하는 특별한
               서비스입니다. 문제를 해결하면 가챠를 통해 다양한 등급의 귀여운
               고양이 캐릭터를 얻을 수 있어요.
             </p>
-            <div className='mt-8'>
-              <p className='text-base text-gray-400/90'>제작: Team 2EIS</p>
+            <div className='mt-2'>
+              <p className='text-xs text-gray-400/90'>제작: Team 2EIS</p>
             </div>
           </div>
 
           <div>
-            <h3 className='mb-6 text-xl font-bold text-white/90'>
+            <h3 className='mb-6 text-2xl font-bold text-white/90'>
               개발팀 소개
             </h3>
-            <div className='flex gap-6'>
+            <div className='flex justify-between'>
               <TeamSection title='Backend Team' members={backendMembers} />
               <TeamSection title='Frontend Team' members={frontendMembers} />
               <DesignerSection />
@@ -118,7 +101,7 @@ export const Footer = () => {
           </div>
         </div>
 
-        <div className='flex flex-col items-center justify-between gap-4 text-center sm:flex-row sm:text-left'>
+        <div className='flex items-center justify-center'>
           <div className='text-xs text-gray-400/80'>
             © 2025 솔브냥. All rights reserved.
           </div>

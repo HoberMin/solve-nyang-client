@@ -1,31 +1,21 @@
-import { FormEvent, ReactNode, useEffect, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 
-import { Button, Container, Input } from 'nes-ui-react';
+import { Copy, ExternalLink, Eye, EyeOff } from 'lucide-react';
+import { toast } from 'sonner';
 
 import { useGetEncryption } from '@/apis/encryption';
 import { useSignUp } from '@/apis/sign';
 import Layout from '@/components/Layout';
-
-import EyeOffIcon from '/eye-off.svg';
-import EyeIcon from '/eye.svg';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
 // 타입 정의
 interface FormData {
   username: string;
   password: string;
   passwordConfirm: string;
-}
-
-interface FormFieldProps {
-  label: string;
-  error?: string;
-  success?: string | boolean;
-  children: ReactNode;
-}
-
-interface VisibilityToggleProps {
-  isVisible: boolean;
-  onToggle: () => void;
 }
 
 interface ValidationRules {
@@ -65,7 +55,7 @@ const ERROR_MESSAGES: ErrorMessages = {
   PASSWORD_CHECK: '비밀번호를 확인해주세요.',
 };
 
-const Signup = (): JSX.Element => {
+const Signup = () => {
   const signUpMutation = useSignUp();
   const getEncryptionMutation = useGetEncryption();
 
@@ -73,7 +63,6 @@ const Signup = (): JSX.Element => {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [encryptionKey, setEncryptionKey] = useState<string>('');
   const [isShowPassword, setIsShowPassword] = useState<boolean>(false);
-  const [isKeyVisible, setIsKeyVisible] = useState<boolean>(false);
   const [isKeyIssued, setIsKeyIssued] = useState<boolean>(false);
   const [isValid, setIsValid] = useState<boolean>(false);
 
@@ -83,9 +72,7 @@ const Signup = (): JSX.Element => {
     fieldName: keyof FormData,
   ): void => {
     setFormData(prev => ({ ...prev, [fieldName]: value }));
-    // setErrors(prev => ({ ...prev, [fieldName]: '' }));
 
-    // 비밀번호 유효성 검사
     if (fieldName === 'password') {
       if (value && value.length < VALIDATION.PASSWORD_MIN_LENGTH) {
         setErrors(prev => ({
@@ -102,7 +89,6 @@ const Signup = (): JSX.Element => {
       }
     }
 
-    // 비밀번호 확인 필드 유효성 검사
     if (fieldName === 'passwordConfirm' || fieldName === 'password') {
       const password = fieldName === 'password' ? value : formData.password;
       const passwordConfirm =
@@ -149,9 +135,17 @@ const Signup = (): JSX.Element => {
     });
   };
 
+  const handleCopyEncryptionKey = async () => {
+    try {
+      await navigator.clipboard.writeText(encryptionKey);
+      toast.success('암호키가 클립보드에 복사되었습니다.');
+    } catch (err) {
+      toast.success('암호키 복사에 실패했습니다.');
+    }
+  };
+
   const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
-
     signUpMutation({
       username: formData.username,
       password: formData.password,
@@ -177,192 +171,165 @@ const Signup = (): JSX.Element => {
 
   return (
     <Layout>
-      <div className='flex h-[calc(100vh-64px)] items-center justify-center gap-8'>
+      <div className='flex min-h-[calc(100vh-64px)] flex-col items-center justify-center gap-16 px-4 lg:flex-row lg:px-8'>
         {/* Left Side - Auth Instructions */}
-        <div className='m-8 w-[400px] p-6'>
-          <div className='flex flex-col items-center'>
-            <h2 className='mb-2 mt-9 bg-black bg-opacity-80 text-xl text-white'>
-              본인 인증 방법
-            </h2>
-            <div className='space-y-6'>
-              <div>
-                <img
-                  className='mb-2 h-[440px] w-full rounded-lg object-contain'
-                  src='/signup_description.jpg'
-                  alt='인증 방법 설명'
-                />
-              </div>
-            </div>
-
-            <div className='mt-2'>
+        <div className='w-full max-w-sm lg:w-[30%]'>
+          <Card className='border-zinc-800 bg-zinc-950/50'>
+            <CardHeader className='flex flex-row items-center justify-between pb-4'>
+              <CardTitle className='text-xl text-zinc-100'>
+                본인 인증 방법
+              </CardTitle>
               <a
                 href='https://solved.ac/'
                 target='_blank'
                 rel='noopener noreferrer'
               >
-                <Button>solved.ac 바로가기</Button>
+                <Button
+                  variant='outline'
+                  className='h-8 border-blue-600/40 bg-transparent text-xs text-blue-500 hover:bg-blue-600/10 hover:text-blue-400'
+                  size='sm'
+                >
+                  solved.ac
+                  <ExternalLink className='ml-1 h-3 w-3' />
+                </Button>
               </a>
-            </div>
-          </div>
+            </CardHeader>
+            <CardContent className='flex flex-col items-center space-y-6'>
+              <div className='relative aspect-[3/4] w-full overflow-hidden rounded-lg'>
+                <img
+                  className='object-fit h-full w-full'
+                  src='/signup_description.jpg'
+                  alt='인증 방법 설명'
+                />
+              </div>
+            </CardContent>
+          </Card>
         </div>
-
         {/* Right Side - Sign Up Form */}
-        <Container
-          roundedCorners
-          className='w-[400px] bg-black bg-opacity-70'
-          style={{ maxHeight: 'calc(100vh - 96px)', overflowY: 'auto' }}
-        >
-          <form onSubmit={handleSubmit} className='p-6'>
-            <h2 className='mb-6 text-center text-3xl text-white'>Sign up</h2>
+        <div className='w-full max-w-sm lg:w-[30%]'>
+          <Card className='border-zinc-800 bg-zinc-950/50'>
+            <CardHeader>
+              <CardTitle className='text-center text-2xl text-zinc-100'>
+                회원가입
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={handleSubmit} className='space-y-6'>
+                <div className='space-y-4'>
+                  <Label className='text-base text-zinc-100'>
+                    solved.ac 닉네임
+                  </Label>
+                  <div className='flex gap-2'>
+                    <div className='relative flex-1'>
+                      <Input
+                        type='text'
+                        value={formData.username}
+                        onChange={e =>
+                          handleInputChange(e.target.value, 'username')
+                        }
+                        disabled={isKeyIssued}
+                        className='h-10 bg-zinc-900 text-zinc-100'
+                        placeholder='닉네임을 입력하세요'
+                      />
+                    </div>
+                    <Button
+                      type='button'
+                      onClick={handleKeyIssuance}
+                      disabled={isKeyIssued}
+                      className='bg-blue-600 hover:bg-blue-700'
+                    >
+                      키 발급
+                    </Button>
+                  </div>
+                  {errors.username && (
+                    <p className='text-sm text-red-500'>{errors.username}</p>
+                  )}
+                </div>
 
-            {/* Nickname Input */}
-            <FormField
-              label='solved.ac 닉네임'
-              error={errors.username}
-              id='username'
-            >
-              <div className='flex items-center gap-2'>
-                <div className='flex-1'>
+                <div className='space-y-4'>
+                  <Label className='text-base text-zinc-100'>암호화 키</Label>
+                  <div className='relative'>
+                    <Input
+                      type='text'
+                      value={encryptionKey}
+                      readOnly
+                      className='h-10 bg-zinc-900 pr-10 text-zinc-100'
+                    />
+                    <Copy
+                      className='absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 cursor-pointer text-zinc-400 transition-colors hover:text-zinc-100'
+                      onClick={handleCopyEncryptionKey}
+                    />
+                  </div>
+                </div>
+
+                <div className='space-y-4'>
+                  <Label className='text-base text-zinc-100'>비밀번호</Label>
+                  <div className='relative'>
+                    <Input
+                      type={isShowPassword ? 'text' : 'password'}
+                      value={formData.password}
+                      onChange={e =>
+                        handleInputChange(e.target.value, 'password')
+                      }
+                      className='h-10 bg-zinc-900 pr-10 text-zinc-100'
+                      placeholder='비밀번호를 입력하세요'
+                    />
+                    {isShowPassword ? (
+                      <EyeOff
+                        className='absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 cursor-pointer text-zinc-400 transition-colors hover:text-zinc-100'
+                        onClick={() => setIsShowPassword(false)}
+                      />
+                    ) : (
+                      <Eye
+                        className='absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 cursor-pointer text-zinc-400 transition-colors hover:text-zinc-100'
+                        onClick={() => setIsShowPassword(true)}
+                      />
+                    )}
+                  </div>
+                  {errors.password && (
+                    <p className='text-sm text-red-500'>{errors.password}</p>
+                  )}
+                </div>
+
+                <div className='space-y-4'>
+                  <Label className='text-base text-zinc-100'>
+                    비밀번호 확인
+                  </Label>
                   <Input
-                    id='username'
-                    type='text'
-                    name='username'
-                    value={formData.username}
-                    onChange={value => handleInputChange(value, 'username')}
-                    disabled={isKeyIssued}
-                    className='w-full'
-                    style={{
-                      backgroundColor: 'white',
-                      color: 'black',
-                      padding: '7px',
-                    }}
+                    type='password'
+                    value={formData.passwordConfirm}
+                    onChange={e =>
+                      handleInputChange(e.target.value, 'passwordConfirm')
+                    }
+                    className='h-10 bg-zinc-900 text-zinc-100'
+                    placeholder='비밀번호를 다시 입력하세요'
                   />
+                  {errors.passwordConfirm && (
+                    <p className='text-sm text-red-500'>
+                      {errors.passwordConfirm}
+                    </p>
+                  )}
+                  {errors.passwordSuccess && (
+                    <p className='text-sm text-green-500'>
+                      {errors.passwordSuccess}
+                    </p>
+                  )}
                 </div>
 
                 <Button
-                  type='button'
-                  onClick={handleKeyIssuance}
-                  disabled={isKeyIssued}
-                  color={isKeyIssued ? 'disabled' : 'primary'}
-                  style={{ color: 'black' }}
+                  type='submit'
+                  disabled={!isValid}
+                  className='mt-6 h-10 w-full bg-blue-600 hover:bg-blue-700'
                 >
-                  키 발급
+                  회원가입
                 </Button>
-              </div>
-            </FormField>
-
-            {/* Encryption Key Input */}
-            <FormField label='암호화 키' error={errors.encryption}>
-              <div className='relative'>
-                <Input
-                  id='encryption-key'
-                  type={isKeyVisible ? 'text' : 'password'}
-                  value={encryptionKey}
-                  className='w-full'
-                  style={{
-                    backgroundColor: 'white',
-                    color: 'black',
-                    padding: '7px',
-                  }}
-                />
-                <VisibilityToggle
-                  isVisible={isKeyVisible}
-                  onToggle={() => setIsKeyVisible(!isKeyVisible)}
-                />
-              </div>
-            </FormField>
-
-            {/* Password Input */}
-            <FormField label='비밀번호' error={errors.password} id='password'>
-              <div className='relative'>
-                <Input
-                  id='password'
-                  type={isShowPassword ? 'text' : 'password'}
-                  name='password'
-                  value={formData.password}
-                  onChange={value => handleInputChange(value, 'password')}
-                  className='w-full'
-                  style={{
-                    backgroundColor: 'white',
-                    color: 'black',
-                    padding: '7px',
-                  }}
-                />
-                <VisibilityToggle
-                  isVisible={isShowPassword}
-                  onToggle={() => setIsShowPassword(!isShowPassword)}
-                />
-              </div>
-            </FormField>
-
-            {/* Password Confirmation */}
-            <FormField
-              label='비밀번호 확인'
-              error={errors.passwordConfirm}
-              success={errors.passwordSuccess}
-              id='password-confirm'
-            >
-              <Input
-                id='password-confirm'
-                type='password'
-                name='passwordConfirm'
-                value={formData.passwordConfirm}
-                onChange={value => handleInputChange(value, 'passwordConfirm')}
-                className='w-full'
-                style={{
-                  backgroundColor: 'white',
-                  color: 'black',
-                  padding: '7px',
-                }}
-              />
-            </FormField>
-
-            {/* Submit Button */}
-            <div className='mt-6 flex flex-col items-center gap-2'>
-              <Button
-                type='submit'
-                color='success'
-                style={{ color: '#000' }}
-                disabled={!isValid}
-              >
-                회원가입
-              </Button>
-            </div>
-          </form>
-        </Container>
+              </form>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     </Layout>
   );
 };
-
-const FormField = ({
-  label,
-  error,
-  success,
-  children,
-  id,
-}: FormFieldProps & { id?: string }): JSX.Element => (
-  <div className='mb-6 space-y-2'>
-    <label htmlFor={id} className='mb-[-10px] mt-2 block text-xl text-white'>
-      {label}
-    </label>
-    {children}
-    {error && <p className='text-sm text-red-400'>{error}</p>}
-    {success && <p className='text-sm text-green-400'>{success}</p>}
-  </div>
-);
-
-const VisibilityToggle = ({
-  isVisible,
-  onToggle,
-}: VisibilityToggleProps): JSX.Element => (
-  <button
-    type='button'
-    onClick={onToggle}
-    className='absolute right-2 top-1/2 -translate-y-1/2 p-1'
-  >
-    <img src={isVisible ? EyeOffIcon : EyeIcon} alt='' className='h-5 w-5' />
-  </button>
-);
 
 export default Signup;
