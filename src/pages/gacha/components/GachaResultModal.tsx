@@ -7,7 +7,6 @@ import {
   RARITY_TO_IMAGE,
   getCatKorName,
 } from '../constants/catMappings';
-import { RARITY_INFO } from '../constants/rarityInfo';
 import useImagePreloader, {
   GachaResultModalProps,
 } from '../hooks/usePreloader';
