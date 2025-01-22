@@ -169,7 +169,7 @@ const Gacha = () => {
         <GachaDropRateInfo />
       </div>
 
-      <div className='mt-[30px] flex items-center'>
+      <div className='mt-[30px] flex items-center justify-center'>
         <div className='px-4'>
           <div className='mx-auto flex max-w-[35%] flex-col items-center'>
             <div className='relative w-full'>
