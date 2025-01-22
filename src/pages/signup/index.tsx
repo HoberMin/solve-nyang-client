@@ -19,6 +19,7 @@ interface FormData {
 interface FormFieldProps {
   label: string;
   error?: string;
+  success?: string;
   children: ReactNode;
 }
 
@@ -76,29 +77,74 @@ const Signup = (): JSX.Element => {
   const [isKeyIssued, setIsKeyIssued] = useState<boolean>(false);
   const [isValid, setIsValid] = useState<boolean>(false);
 
+  // 입력 폼 수정 감지
   const handleInputChange = (
     value: string,
     fieldName: keyof FormData,
   ): void => {
     setFormData(prev => ({ ...prev, [fieldName]: value }));
-    setErrors(prev => ({ ...prev, [fieldName]: '' }));
-  };
+    // setErrors(prev => ({ ...prev, [fieldName]: '' }));
 
-  const validatePassword = (): string => {
-    if (!formData.password) {
-      return ERROR_MESSAGES.EMPTY_PASSWORD;
+    // 비밀번호 유효성 검사
+    if (fieldName === 'password') {
+      if (value && value.length < VALIDATION.PASSWORD_MIN_LENGTH) {
+        setErrors(prev => ({
+          ...prev,
+          password: ERROR_MESSAGES.PASSWORD_LENGTH,
+        }));
+      } else if (value && !VALIDATION.PASSWORD_PATTERN.test(value)) {
+        setErrors(prev => ({
+          ...prev,
+          password: ERROR_MESSAGES.PASSWORD_PATTERN,
+        }));
+      } else {
+        setErrors(prev => ({ ...prev, password: '' }));
+      }
     }
-    if (formData.password.length < VALIDATION.PASSWORD_MIN_LENGTH) {
-      return ERROR_MESSAGES.PASSWORD_LENGTH;
+
+    // 비밀번호 확인 필드 유효성 검사
+    if (fieldName === 'passwordConfirm' || fieldName === 'password') {
+      const password = fieldName === 'password' ? value : formData.password;
+      const passwordConfirm =
+        fieldName === 'passwordConfirm' ? value : formData.passwordConfirm;
+
+      if (!passwordConfirm) {
+        setErrors(prev => ({
+          ...prev,
+          passwordConfirm: '',
+          passwordSuccess: '',
+        }));
+      } else if (password && passwordConfirm)
+        if (password !== passwordConfirm) {
+          setErrors(prev => ({
+            ...prev,
+            passwordConfirm: ERROR_MESSAGES.PASSWORD_MISMATCH,
+            passwordSuccess: '',
+          }));
+        } else {
+          setErrors(prev => ({
+            ...prev,
+            passwordConfirm: '',
+            passwordSuccess: '비밀번호가 일치합니다',
+          }));
+        }
     }
-    if (!VALIDATION.PASSWORD_PATTERN.test(formData.password)) {
-      return ERROR_MESSAGES.PASSWORD_PATTERN;
-    }
-    if (formData.password !== formData.passwordConfirm) {
-      return ERROR_MESSAGES.PASSWORD_MISMATCH;
-    }
-    return '';
   };
+  // const validatePassword = (): string => {
+  //   if (!formData.password) {
+  //     return ERROR_MESSAGES.EMPTY_PASSWORD;
+  //   }
+  //   if (formData.password.length < VALIDATION.PASSWORD_MIN_LENGTH) {
+  //     return ERROR_MESSAGES.PASSWORD_LENGTH;
+  //   }
+  //   if (!VALIDATION.PASSWORD_PATTERN.test(formData.password)) {
+  //     return ERROR_MESSAGES.PASSWORD_PATTERN;
+  //   }
+  //   if (formData.password !== formData.passwordConfirm) {
+  //     return ERROR_MESSAGES.PASSWORD_MISMATCH;
+  //   }
+  //   return '';
+  // };
 
   const handleKeyIssuance = (): void => {
     if (!formData.username.trim()) {
@@ -121,15 +167,15 @@ const Signup = (): JSX.Element => {
   const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
 
-    const passwordError = validatePassword();
-    if (passwordError) {
-      setErrors(prev => ({
-        ...prev,
-        password: ERROR_MESSAGES.PASSWORD_CHECK,
-        passwordConfirm: passwordError,
-      }));
-      return;
-    }
+    // const passwordError = validatePassword();
+    // if (passwordError) {
+    //   setErrors(prev => ({
+    //     ...prev,
+    //     password: ERROR_MESSAGES.PASSWORD_CHECK,
+    //     passwordConfirm: passwordError,
+    //   }));
+    //   return;
+    // }
 
     signUpMutation({
       username: formData.username,
@@ -143,8 +189,13 @@ const Signup = (): JSX.Element => {
       return;
     }
 
-    const passwordError = validatePassword();
-    setIsValid(!passwordError);
+    const isPasswordValid =
+      formData.password &&
+      formData.password.length >= VALIDATION.PASSWORD_MIN_LENGTH &&
+      VALIDATION.PASSWORD_PATTERN.test(formData.password) &&
+      formData.password === formData.passwordConfirm;
+
+    setIsValid(isPasswordValid);
   }, [formData, isKeyIssued]);
 
   return (
@@ -247,25 +298,14 @@ const Signup = (): JSX.Element => {
                   onToggle={() => setIsShowPassword(!isShowPassword)}
                 />
               </div>
-
-              {/* Password Validation*/}
-              <div>
-                {formData.password && (
-                  <>
-                    {formData.password.length <
-                      VALIDATION.PASSWORD_MIN_LENGTH && (
-                      <p>{ERROR_MESSAGES.PASSWORD_LENGTH}</p>
-                    )}
-                    {!VALIDATION.PASSWORD_PATTERN.test(formData.password) && (
-                      <p>{ERROR_MESSAGES.PASSWORD_PATTERN}</p>
-                    )}
-                  </>
-                )}
-              </div>
             </FormField>
 
             {/* Password Confirmation */}
-            <FormField label='비밀번호 확인' error={errors.passwordConfirm}>
+            <FormField
+              label='비밀번호 확인'
+              error={errors.passwordConfirm}
+              success={errors.passwordSuccess}
+            >
               <Input
                 type='password'
                 name='passwordConfirm'
@@ -274,10 +314,6 @@ const Signup = (): JSX.Element => {
                 className='w-full'
                 style={{ backgroundColor: 'white', color: 'black' }}
               />
-              {formData.passwordConfirm &&
-                formData.password !== formData.passwordConfirm && (
-                  <p>{ERROR_MESSAGES.PASSWORD_MISMATCH}</p>
-                )}
             </FormField>
 
             {/* Submit Button */}
@@ -298,11 +334,17 @@ const Signup = (): JSX.Element => {
   );
 };
 
-const FormField = ({ label, error, children }: FormFieldProps): JSX.Element => (
+const FormField = ({
+  label,
+  error,
+  success,
+  children,
+}: FormFieldProps): JSX.Element => (
   <div className='mb-6 space-y-2'>
     <label className='mb-[-10px] mt-2 block text-xl text-white'>{label}</label>
     {children}
     {error && <p className='text-sm text-red-400'>{error}</p>}
+    {success && <p className='text-sm text-green-400'>{success}</p>}
   </div>
 );
 
