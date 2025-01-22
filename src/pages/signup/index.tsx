@@ -130,21 +130,6 @@ const Signup = (): JSX.Element => {
         }
     }
   };
-  // const validatePassword = (): string => {
-  //   if (!formData.password) {
-  //     return ERROR_MESSAGES.EMPTY_PASSWORD;
-  //   }
-  //   if (formData.password.length < VALIDATION.PASSWORD_MIN_LENGTH) {
-  //     return ERROR_MESSAGES.PASSWORD_LENGTH;
-  //   }
-  //   if (!VALIDATION.PASSWORD_PATTERN.test(formData.password)) {
-  //     return ERROR_MESSAGES.PASSWORD_PATTERN;
-  //   }
-  //   if (formData.password !== formData.passwordConfirm) {
-  //     return ERROR_MESSAGES.PASSWORD_MISMATCH;
-  //   }
-  //   return '';
-  // };
 
   const handleKeyIssuance = (): void => {
     if (!formData.username.trim()) {
@@ -166,16 +151,6 @@ const Signup = (): JSX.Element => {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
-
-    // const passwordError = validatePassword();
-    // if (passwordError) {
-    //   setErrors(prev => ({
-    //     ...prev,
-    //     password: ERROR_MESSAGES.PASSWORD_CHECK,
-    //     passwordConfirm: passwordError,
-    //   }));
-    //   return;
-    // }
 
     signUpMutation({
       username: formData.username,
@@ -241,10 +216,15 @@ const Signup = (): JSX.Element => {
             <h2 className='mb-6 text-center text-3xl text-white'>Sign up</h2>
 
             {/* Nickname Input */}
-            <FormField label='solved.ac 닉네임' error={errors.username}>
+            <FormField
+              label='solved.ac 닉네임'
+              error={errors.username}
+              id='username'
+            >
               <div className='flex items-center gap-2'>
                 <div className='flex-1'>
                   <Input
+                    id='username'
                     type='text'
                     name='username'
                     value={formData.username}
@@ -293,9 +273,10 @@ const Signup = (): JSX.Element => {
             </FormField>
 
             {/* Password Input */}
-            <FormField label='비밀번호' error={errors.password}>
+            <FormField label='비밀번호' error={errors.password} id='password'>
               <div className='relative'>
                 <Input
+                  id='password'
                   type={isShowPassword ? 'text' : 'password'}
                   name='password'
                   value={formData.password}
@@ -319,8 +300,10 @@ const Signup = (): JSX.Element => {
               label='비밀번호 확인'
               error={errors.passwordConfirm}
               success={errors.passwordSuccess}
+              id='password-confirm'
             >
               <Input
+                id='password-confirm'
                 type='password'
                 name='passwordConfirm'
                 value={formData.passwordConfirm}
@@ -357,9 +340,12 @@ const FormField = ({
   error,
   success,
   children,
-}: FormFieldProps): JSX.Element => (
+  id,
+}: FormFieldProps & { id?: string }): JSX.Element => (
   <div className='mb-6 space-y-2'>
-    <label className='mb-[-10px] mt-2 block text-xl text-white'>{label}</label>
+    <label htmlFor={id} className='mb-[-10px] mt-2 block text-xl text-white'>
+      {label}
+    </label>
     {children}
     {error && <p className='text-sm text-red-400'>{error}</p>}
     {success && <p className='text-sm text-green-400'>{success}</p>}
