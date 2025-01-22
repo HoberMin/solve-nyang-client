@@ -19,7 +19,7 @@ interface FormData {
 interface FormFieldProps {
   label: string;
   error?: string;
-  success?: string;
+  success?: string | boolean;
   children: ReactNode;
 }
 
@@ -189,11 +189,13 @@ const Signup = (): JSX.Element => {
       return;
     }
 
-    const isPasswordValid =
+    const isPasswordValid: boolean = Boolean(
       formData.password &&
-      formData.password.length >= VALIDATION.PASSWORD_MIN_LENGTH &&
-      VALIDATION.PASSWORD_PATTERN.test(formData.password) &&
-      formData.password === formData.passwordConfirm;
+        formData.passwordConfirm &&
+        formData.password.length >= VALIDATION.PASSWORD_MIN_LENGTH &&
+        VALIDATION.PASSWORD_PATTERN.test(formData.password) &&
+        formData.password === formData.passwordConfirm,
+    );
 
     setIsValid(isPasswordValid);
   }, [formData, isKeyIssued]);
