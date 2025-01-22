@@ -111,7 +111,8 @@ const Header = () => {
               </div>
             </div>
 
-            <RetroMenuItem href='/gacha'>SHOP</RetroMenuItem>
+            <RetroMenuItem href='/gacha'>GACHA</RetroMenuItem>
+            <RetroMenuItem href='/auction'>AUCTION</RetroMenuItem>
             <RetroMenuItem href='/profile'>MY PAGE</RetroMenuItem>
           </>
         )}
