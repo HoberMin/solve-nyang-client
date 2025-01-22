@@ -29,7 +29,7 @@ const RetroMenuItem = ({ children, href }: RetroMenuItemProps) => {
           }}
         />
         <span
-          className='relative inline-block bg-gradient-to-b from-blue-300 to-blue-500 bg-clip-text text-2xl text-transparent transition-transform duration-300 ease-in-out group-hover:scale-105 group-hover:from-blue-200 group-hover:to-blue-400'
+          className='relative inline-block bg-gradient-to-b from-blue-300 to-blue-500 bg-clip-text text-xl text-transparent transition-transform duration-300 ease-in-out group-hover:scale-105 group-hover:from-blue-200 group-hover:to-blue-400'
           style={{
             textShadow: '0 0 5px rgba(59, 130, 246, 0.3)',
             WebkitTextStroke: '1px rgba(59, 130, 246, 0.2)',
@@ -71,31 +71,44 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ username }) => {
   };
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger
-        className='relative inline-block bg-gradient-to-b from-blue-300 to-blue-500 bg-clip-text text-2xl text-transparent transition-transform duration-300 ease-in-out group-hover:scale-105 group-hover:from-blue-200 group-hover:to-blue-400'
-        style={{
-          textShadow: '0 0 5px rgba(59, 130, 246, 0.3)',
-          WebkitTextStroke: '1px rgba(59, 130, 246, 0.2)',
-        }}
-      >
-        {username}
-      </DropdownMenuTrigger>
-      <DropdownMenuContent
-        className='min-w-[120px] bg-gray-900 text-gray-100'
-        align='end'
-        sideOffset={5}
-      >
-        <DropdownMenuItem>
-          <Link to='/profile' className='text-xl'>
-            MY PAGE
-          </Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem className='text-xl' onClick={handleLogout}>
-          로그아웃
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <div className='static'>
+      <DropdownMenu>
+        <DropdownMenuTrigger className='group relative cursor-pointer bg-gray-900 outline-none'>
+          <div
+            className='absolute inset-0 -z-10 h-full w-full rounded opacity-0 blur transition-all duration-300 group-hover:opacity-30 group-hover:blur-md'
+            style={{
+              background:
+                'radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, transparent 70%)',
+            }}
+          />
+          <span
+            className='relative inline-block bg-gradient-to-b from-blue-300 to-blue-500 bg-clip-text text-xl text-transparent transition-transform duration-300 ease-in-out group-hover:scale-105 group-hover:from-blue-200 group-hover:to-blue-400'
+            style={{
+              textShadow: '0 0 5px rgba(59, 130, 246, 0.3)',
+              WebkitTextStroke: '1px rgba(59, 130, 246, 0.2)',
+            }}
+          >
+            {username}
+          </span>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className='border-0 bg-gray-900 py-1' align='end'>
+          <DropdownMenuItem className='focus:bg-transparent'>
+            <Link
+              to='/profile'
+              className='w-full py-2 text-center text-xl text-white hover:text-gray-300'
+            >
+              내 정보
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            className='flex justify-center text-xl text-white hover:text-gray-300'
+            onClick={handleLogout}
+          >
+            로그아웃
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
   );
 };
 
@@ -128,7 +141,7 @@ const Header = () => {
       <div className='group cursor-pointer'>
         <Link to='/'>
           <span
-            className='relative bg-gradient-to-r from-blue-400 via-blue-500 to-blue-400 bg-clip-text text-3xl text-transparent transition-all duration-300 group-hover:from-blue-300 group-hover:via-blue-400 group-hover:to-blue-300'
+            className='relative bg-gradient-to-r from-blue-400 via-blue-500 to-blue-400 bg-clip-text text-2xl text-transparent transition-all duration-300 group-hover:from-blue-300 group-hover:via-blue-400 group-hover:to-blue-300'
             style={{
               textShadow: '0 0 10px rgba(59, 130, 246, 0.4)',
               WebkitTextStroke: '1px rgba(59, 130, 246, 0.2)',
@@ -144,11 +157,11 @@ const Header = () => {
         {isLoading ? (
           <LoadingPulse />
         ) : !isAuthenticated ? (
-          <RetroMenuItem href='/login'>LOGIN</RetroMenuItem>
+          <RetroMenuItem href='/login'>로그인</RetroMenuItem>
         ) : (
           <>
-            <RetroMenuItem href='/gacha'>GACHA</RetroMenuItem>
-            <RetroMenuItem href='/auction'>AUCTION</RetroMenuItem>
+            <RetroMenuItem href='/gacha'>가챠</RetroMenuItem>
+            <RetroMenuItem href='/auction'>상점</RetroMenuItem>
             <UserDropdown username={data?.username || 'User'} />
           </>
         )}
