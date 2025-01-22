@@ -56,26 +56,26 @@ export const AvatarSalePage = () => {
         {/* 헤더 섹션 */}
         <div className='sticky top-0 z-10 py-4'>
           <div className='mb-6 mt-8 text-center'>
-            <div className='font-pixel mb-2 text-2xl font-bold text-blue-400 shadow-blue-400/50 drop-shadow-lg'>
+            <div className='mb-2 text-2xl font-bold text-blue-400 shadow-blue-400/50 drop-shadow-lg'>
               아바타 판매
             </div>
-            <p className='font-mono text-lg text-gray-400'>
+            <p className='text-lg text-gray-400'>
               아바타 한개당 {POINT_PER_AVATAR}포인트를 획득할 수 있습니다
             </p>
-            <div className='mt-2 font-mono'>
+            <div className='mt-8'>
               <span className='text-base text-gray-400'>획득 포인트: </span>
               <span className='text-base text-blue-400'>{totalPoints}</span>
             </div>
           </div>
 
           {/* 등급 필터 */}
-          <div className='mb-4 flex justify-center gap-2'>
+          <div className='mb-4 flex cursor-pointer justify-center gap-2'>
             {['All', 'S', 'A', 'B', 'C', 'D'].map(rarity => (
               <span
                 key={rarity}
                 onClick={() => setSelectedRarity(rarity as Rarity | 'All')}
                 className={cn(
-                  'rounded px-3 py-1 font-mono text-base transition-all',
+                  'rounded px-3 py-1 text-base transition-all',
                   selectedRarity === rarity
                     ? 'bg-blue-400 text-gray-900'
                     : 'bg-gray-800 text-gray-400 hover:bg-gray-700',
@@ -127,13 +127,13 @@ export const AvatarSalePage = () => {
                     />
                     {isSelected && (
                       <div className='absolute inset-0 flex flex-col items-center justify-center bg-black/50'>
-                        <span className='font-mono text-base text-blue-400'>
+                        <span className='text-base text-blue-400'>
                           +{POINT_PER_AVATAR}P
                         </span>
                       </div>
                     )}
                   </div>
-                  <div className='mt-2 text-center font-mono'>
+                  <div className='mt-2 text-center'>
                     <p
                       className={cn(
                         'text-sm',
@@ -177,7 +177,7 @@ export const AvatarSalePage = () => {
                 setSelectedAvatars([]);
               }
             }}
-            className='cursor-pointer rounded-full border border-gray-700 bg-gray-800 px-4 py-2 font-mono text-base text-gray-400 transition-colors hover:border-red-500 hover:text-red-500'
+            className='cursor-pointer rounded-full border border-gray-700 bg-gray-800 px-4 py-2 text-base text-gray-400 transition-colors hover:border-red-500 hover:text-red-500'
           >
             초기화
           </span>
@@ -194,7 +194,7 @@ export const AvatarSalePage = () => {
                   }
                 }}
                 className={cn(
-                  'cursor-pointer rounded-full border px-6 py-2 font-mono text-base transition-colors',
+                  'cursor-pointer rounded-full border px-6 py-2 text-base transition-colors',
                   isCanSale
                     ? 'border-blue-400 bg-blue-400/10 text-blue-400 hover:bg-blue-400 hover:text-gray-900'
                     : 'cursor-not-allowed border-gray-700 bg-gray-800/50 text-gray-700',
@@ -205,10 +205,10 @@ export const AvatarSalePage = () => {
             </DialogTrigger>
             <DialogContent className='border-gray-600 bg-gray-900'>
               <DialogHeader>
-                <DialogTitle className='font-pixel text-xl text-blue-400'>
+                <DialogTitle className='text-xl text-blue-400'>
                   판매 확인
                 </DialogTitle>
-                <DialogDescription className='font-mono text-base text-gray-400'>
+                <DialogDescription className='text-base text-gray-400'>
                   <div className='space-y-4'>
                     <p>
                       {selectedAvatars.length}개의 아바타를 판매하시겠습니까?
@@ -245,7 +245,7 @@ export const AvatarSalePage = () => {
                       setIsDialogOpen(false);
                     }
                   }}
-                  className='cursor-pointer rounded-full px-4 py-2 font-mono text-base text-gray-400 hover:text-white'
+                  className='cursor-pointer rounded-full px-4 py-2 text-base text-gray-400 hover:text-white'
                 >
                   취소
                 </span>
@@ -259,7 +259,7 @@ export const AvatarSalePage = () => {
                       handleSale();
                     }
                   }}
-                  className='cursor-pointer rounded-full border border-blue-400 px-4 py-2 font-mono text-base text-blue-400 hover:bg-blue-400 hover:text-gray-900'
+                  className='cursor-pointer rounded-full border border-blue-400 px-4 py-2 text-base text-blue-400 hover:bg-blue-400 hover:text-gray-900'
                 >
                   확인
                 </span>
