@@ -2,8 +2,16 @@ import { PropsWithChildren } from 'react';
 
 import { Github } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { toast } from 'sonner';
 
 import { useGetUserInfo } from '@/apis/user';
+// shadcn 드롭다운 메뉴 컴포넌트 import 추가
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 interface RetroMenuItemProps extends PropsWithChildren {
   href: string;
@@ -46,6 +54,48 @@ const RetroIcon = ({ children }: PropsWithChildren) => {
         </div>
       </div>
     </div>
+  );
+};
+
+interface UserDropdownProps {
+  username: string;
+}
+
+// 드롭다운
+const UserDropdown: React.FC<UserDropdownProps> = ({ username }) => {
+  // 로그아웃
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    toast.success('로그아웃 되었습니다.');
+    window.location.href = '/';
+  };
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger
+        className='relative inline-block bg-gradient-to-b from-blue-300 to-blue-500 bg-clip-text text-2xl text-transparent transition-transform duration-300 ease-in-out group-hover:scale-105 group-hover:from-blue-200 group-hover:to-blue-400'
+        style={{
+          textShadow: '0 0 5px rgba(59, 130, 246, 0.3)',
+          WebkitTextStroke: '1px rgba(59, 130, 246, 0.2)',
+        }}
+      >
+        {username}
+      </DropdownMenuTrigger>
+      <DropdownMenuContent
+        className='min-w-[120px] bg-gray-900 text-gray-100'
+        align='end'
+        sideOffset={5}
+      >
+        <DropdownMenuItem>
+          <Link to='/profile' className='text-xl'>
+            MY PAGE
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem className='text-xl' onClick={handleLogout}>
+          로그아웃
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 };
 
@@ -97,23 +147,9 @@ const Header = () => {
           <RetroMenuItem href='/login'>LOGIN</RetroMenuItem>
         ) : (
           <>
-            <div className='relative flex items-center'>
-              <div className='relative'>
-                <span
-                  className='bg-gradient-to-r from-blue-300 to-blue-500 bg-clip-text text-xl text-transparent'
-                  style={{
-                    textShadow: '0 0 5px rgba(59, 130, 246, 0.3)',
-                    WebkitTextStroke: '1px rgba(59, 130, 246, 0.2)',
-                  }}
-                >
-                  {data?.username}
-                </span>
-              </div>
-            </div>
-
             <RetroMenuItem href='/gacha'>GACHA</RetroMenuItem>
             <RetroMenuItem href='/auction'>AUCTION</RetroMenuItem>
-            <RetroMenuItem href='/profile'>MY PAGE</RetroMenuItem>
+            <UserDropdown username={data?.username || 'User'} />
           </>
         )}
 
