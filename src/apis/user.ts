@@ -75,13 +75,19 @@ const userAvatar = async () => {
 };
 
 const saleAvatar = async (avatarList: UserAvatarList) => {
-  const response = await fetch(`${domain}/user/me/avatar`, {
+  const response = await fetch(`${domain}/gacha/sale`, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
       authorization: `Bearer ${localStorage.getItem('token')}`,
     },
-    body: JSON.stringify(avatarList),
+    body: JSON.stringify({
+      soldAvatars: avatarList.avatars.map(e => {
+        return {
+          ownedAvatarId: e.ownedAvatarId,
+        };
+      }),
+    }),
   });
 
   if (!response.ok) {
