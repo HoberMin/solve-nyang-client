@@ -1,6 +1,6 @@
 import { FormEvent, useEffect, useState } from 'react';
 
-import { Copy, ExternalLink, Eye, EyeOff, HelpCircle } from 'lucide-react';
+import { Copy, Eye, EyeOff, HelpCircle } from 'lucide-react';
 import { toast } from 'sonner';
 
 import { useGetEncryption } from '@/apis/encryption';
@@ -193,34 +193,39 @@ const Signup = () => {
             <h3 className='mb-1 text-xl font-bold'>회원가입 방법</h3>
             <TooltipProvider>
               <Tooltip>
-                <TooltipTrigger>
-                  <Dialog>
-                    <DialogTrigger>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <TooltipTrigger asChild>
                       <HelpCircle
                         size={24}
                         color='lightgreen'
                         strokeWidth={1.5}
+                        className='cursor-pointer'
                       />
-                    </DialogTrigger>
-                    <DialogContent className='sm:max-w-[500px]'>
-                      <DialogHeader>
-                        <DialogTitle className='text-base'>
-                          회원가입 상세 설명
-                        </DialogTitle>
-                      </DialogHeader>
-                      <div className='relative aspect-[3/4] w-full overflow-hidden rounded-lg'>
-                        <img
-                          className='object-fit h-full w-full'
-                          src='/signup_description.jpg'
-                          alt='회원가입 설명'
-                        />
-                      </div>
-                    </DialogContent>
-                  </Dialog>
-                  <TooltipContent>
-                    <p>자세한 설명을 원한다면 클릭하세요</p>
-                  </TooltipContent>
-                </TooltipTrigger>
+                    </TooltipTrigger>
+                  </DialogTrigger>
+                  <DialogContent className='border-zinc-500 bg-white bg-zinc-950/90 sm:max-w-[500px]'>
+                    <DialogHeader>
+                      <DialogTitle className='text-base text-white'>
+                        회원가입 상세 설명
+                      </DialogTitle>
+                    </DialogHeader>
+                    <div className='relative aspect-[3/4] w-full overflow-hidden rounded-lg'>
+                      <img
+                        className='object-fit h-full w-full'
+                        src='/signup_description.jpg'
+                        alt='회원가입 설명'
+                      />
+                    </div>
+                  </DialogContent>
+                </Dialog>
+                <TooltipContent
+                  side='top' // 위쪽으로 표시
+                  align='center' // 중앙 정렬
+                  className='rounded border border-gray-200 bg-white p-2 text-black shadow-md'
+                >
+                  <p>자세한 설명을 원한다면 클릭하세요</p>
+                </TooltipContent>
               </Tooltip>
             </TooltipProvider>
           </div>
