@@ -100,3 +100,43 @@ export const getCatImagePath = (engName: string, rarity: string): string => {
 export const getCatKorName = (engName: string): string => {
   return CAT_MAPPINGS[engName]?.korName || engName;
 };
+
+export const ANIMATION_STEPS = {
+  INITIAL: 'initial', // 초기 상태
+  CAPSULE: 'capsule', // 캡슐 등장
+  SHAKE: 'shake', // 흔들기 애니메이션
+  OPEN: 'open', // 캡슐 열기 애니메이션
+  COMPLETE: 'complete', // 결과
+} as const;
+
+export type AnimationStep =
+  (typeof ANIMATION_STEPS)[keyof typeof ANIMATION_STEPS];
+
+export const RARITY_TO_IMAGE = {
+  S: {
+    capsule: '/cats/ball/S1-3.svg',
+    opened: '/cats/ball/S1-4.svg',
+  },
+  A: {
+    capsule: '/cats/ball/A1-3.svg',
+    opened: '/cats/ball/A1-4.svg',
+  },
+  B: {
+    capsule: '/cats/ball/B1-3.svg',
+    opened: '/cats/ball/B1-4.svg',
+  },
+  C: {
+    capsule: '/cats/ball/C1-3.svg',
+    opened: '/cats/ball/C1-4.svg',
+  },
+  D: {
+    capsule: '/cats/ball/D1-3.svg',
+    opened: '/cats/ball/D1-4.svg',
+  },
+} as const;
+
+export const ANIMATION_TIMING = {
+  CAPSULE: 1000, // 캡슐 등장 시간
+  SHAKE: 1000, // 흔들기 애니메이션 시간
+  OPEN: 1000, // 열기 애니메이션 시간
+} as const;

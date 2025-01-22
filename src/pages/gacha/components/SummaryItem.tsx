@@ -1,0 +1,30 @@
+import { memo } from 'react';
+
+import { CAT_MAPPINGS, RARITY_TO_IMAGE } from '../constants/catMappings';
+import { SummaryItemProps } from '../hooks/usePreloader';
+
+export const SummaryItem = memo(({ result }: SummaryItemProps) => {
+  const capsuleImages =
+    RARITY_TO_IMAGE[result.rarity as keyof typeof RARITY_TO_IMAGE];
+
+  return (
+    <div className='relative flex flex-col items-center justify-center'>
+      <img
+        src={capsuleImages.opened}
+        alt={`${result.rarity} Capsule`}
+        className='h-[250px] w-[250px]'
+      />
+      <div className='absolute left-1/2 top-1/2 h-48 w-48 -translate-x-1/2 -translate-y-1/2 transform rounded-full bg-yellow-300/30 blur-xl' />
+      <img
+        src={`/cats/${result.name}.svg`}
+        alt={result.name}
+        className='absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 scale-[65%] transform'
+      />
+      <p className='text-center text-xl font-bold'>
+        {CAT_MAPPINGS[result.name]?.korName}
+      </p>
+    </div>
+  );
+});
+
+SummaryItem.displayName = 'SummaryItem';
