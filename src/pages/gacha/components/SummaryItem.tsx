@@ -1,6 +1,7 @@
 import { memo } from 'react';
 
 import { CAT_MAPPINGS, RARITY_TO_IMAGE } from '../constants/catMappings';
+import { RARITY_INFO } from '../constants/rarityInfo';
 import { SummaryItemProps } from '../hooks/usePreloader';
 
 export const SummaryItem = memo(({ result }: SummaryItemProps) => {
@@ -20,9 +21,17 @@ export const SummaryItem = memo(({ result }: SummaryItemProps) => {
         alt={result.name}
         className='absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 scale-[65%] transform'
       />
-      <p className='text-center text-xl font-bold'>
-        {CAT_MAPPINGS[result.name]?.korName}
-      </p>
+      <div className='flex justify-center gap-4'>
+        <div
+          className='text-xl font-bold'
+          style={{ color: RARITY_INFO[result.rarity].color }}
+        >
+          {result.rarity}
+        </div>
+        <div className='text-center text-xl font-bold'>
+          {CAT_MAPPINGS[result.name]?.korName}
+        </div>
+      </div>
     </div>
   );
 });

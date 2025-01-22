@@ -9,7 +9,7 @@ const RARITY_INFO: RarityInfo[] = [
   { rarity: 'A', dropRate: '4', color: '#ffc337' },
   { rarity: 'B', dropRate: '30', color: '#7abf16' },
   { rarity: 'C', dropRate: '45', color: '#006bff' },
-  { rarity: 'D', dropRate: '20', color: '#7122d5' },
+  { rarity: 'D', dropRate: '20', color: '#a663ee' },
 ];
 
 export const GachaDropRateInfo = () => (

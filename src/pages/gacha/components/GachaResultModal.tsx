@@ -7,9 +7,11 @@ import {
   RARITY_TO_IMAGE,
   getCatKorName,
 } from '../constants/catMappings';
+import { RARITY_INFO } from '../constants/rarityInfo';
 import useImagePreloader, {
   GachaResultModalProps,
 } from '../hooks/usePreloader';
+import Confetti from './Confetti';
 import { SummaryView } from './SummaryView';
 
 export const GachaResultModal = memo(
@@ -26,6 +28,7 @@ export const GachaResultModal = memo(
     const [currentIndex, setCurrentIndex] = useState(0);
     const [isSummary, setIsSummary] = useState(false);
     const [isAnimating, setIsAnimating] = useState(false);
+    const [isConfetti, setIsConfetti] = useState(false);
 
     // 필요한 모든 이미지 URL 수집
     const imagesToPreload = useMemo(() => {
@@ -51,6 +54,18 @@ export const GachaResultModal = memo(
       () => results[currentIndex],
       [results, currentIndex],
     );
+
+    useEffect(() => {
+      if (
+        animationStep === ANIMATION_STEPS.COMPLETE &&
+        currentResult &&
+        (currentResult.rarity === 'S' || currentResult.rarity === 'A')
+      ) {
+        setIsConfetti(true);
+      } else {
+        setIsConfetti(false);
+      }
+    }, [animationStep, currentResult]);
 
     const handleNext = useCallback(() => {
       if (isAnimating) return;
@@ -219,7 +234,8 @@ export const GachaResultModal = memo(
         className='fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-80'
         onClick={handleBackdropClick}
       >
-        <div className='relative h-96 w-96 rounded-lg bg-transparent'>
+        {isConfetti && <Confetti />}
+        <div className='relative z-50 h-96 w-96 rounded-lg bg-transparent'>
           {isCapsuleVisible && (
             <img
               src={
@@ -238,14 +254,22 @@ export const GachaResultModal = memo(
             <div className='absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 scale-150 transform text-center'>
               <div className='absolute left-1/2 top-1/2 h-48 w-48 -translate-x-1/2 -translate-y-1/2 transform rounded-full bg-yellow-300/30 blur-xl' />
               <img src={`/cats/${name}.svg`} alt={name} className='scale-150' />
-              <div className='translate-y-5 text-2xl font-bold text-white'>
-                {getCatKorName(name)}
+              <div className='flex translate-y-20 justify-center gap-4'>
+                <div
+                  className='text-2xl font-bold'
+                  style={{ color: RARITY_INFO[rarity].color }}
+                >
+                  {rarity}
+                </div>
+                <div className='text-2xl font-bold text-white'>
+                  {getCatKorName(name)}
+                </div>
               </div>
             </div>
           )}
 
           {isCompleteStep && !isSingleDraw && (
-            <div className='absolute bottom-[-30%] left-1/2 -translate-x-1/2 transform'>
+            <div className='absolute bottom-[-40%] left-1/2 -translate-x-1/2 transform'>
               <button
                 onClick={handleSkip}
                 className='bg-transparent font-bold text-white underline'
