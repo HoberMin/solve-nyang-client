@@ -38,7 +38,7 @@ const Login = () => {
           </h3>
           <form className='flex flex-col items-center' onSubmit={submitForm}>
             <div className='mb-4 flex w-full max-w-[300px] flex-col'>
-              <label className='mb-0 text-xl text-white'>
+              <label className='mb-[-5px] mt-2 text-xl text-white'>
                 solved.ac 닉네임
               </label>
               <Input
@@ -47,20 +47,30 @@ const Login = () => {
                 value={authForm.username}
                 onChange={value => handleInputChange(value, 'username')}
                 className='w-full'
-                style={{ backgroundColor: 'white', color: 'black' }}
+                style={{
+                  backgroundColor: 'white',
+                  color: 'black',
+                  padding: '7px',
+                }}
                 disabled={isPending}
               />
             </div>
 
             <div className='mb-1 flex w-full max-w-[300px] flex-col'>
-              <label className='mb-0 text-xl text-white'>비밀번호</label>
+              <label className='mb-[-5px] mt-2 text-xl text-white'>
+                비밀번호
+              </label>
               <Input
                 type='password'
                 name='password'
                 value={authForm.password}
                 onChange={value => handleInputChange(value, 'password')}
                 className='w-full'
-                style={{ backgroundColor: 'white', color: 'black' }}
+                style={{
+                  backgroundColor: 'white',
+                  color: 'black',
+                  padding: '7px',
+                }}
                 disabled={isPending}
               />
             </div>

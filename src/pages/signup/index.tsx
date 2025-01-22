@@ -19,6 +19,7 @@ interface FormData {
 interface FormFieldProps {
   label: string;
   error?: string;
+  success?: string | boolean;
   children: ReactNode;
 }
 
@@ -76,28 +77,58 @@ const Signup = (): JSX.Element => {
   const [isKeyIssued, setIsKeyIssued] = useState<boolean>(false);
   const [isValid, setIsValid] = useState<boolean>(false);
 
+  // 입력 폼 수정 감지
   const handleInputChange = (
     value: string,
     fieldName: keyof FormData,
   ): void => {
     setFormData(prev => ({ ...prev, [fieldName]: value }));
-    setErrors(prev => ({ ...prev, [fieldName]: '' }));
-  };
+    // setErrors(prev => ({ ...prev, [fieldName]: '' }));
 
-  const validatePassword = (): string => {
-    if (!formData.password) {
-      return ERROR_MESSAGES.EMPTY_PASSWORD;
+    // 비밀번호 유효성 검사
+    if (fieldName === 'password') {
+      if (value && value.length < VALIDATION.PASSWORD_MIN_LENGTH) {
+        setErrors(prev => ({
+          ...prev,
+          password: ERROR_MESSAGES.PASSWORD_LENGTH,
+        }));
+      } else if (value && !VALIDATION.PASSWORD_PATTERN.test(value)) {
+        setErrors(prev => ({
+          ...prev,
+          password: ERROR_MESSAGES.PASSWORD_PATTERN,
+        }));
+      } else {
+        setErrors(prev => ({ ...prev, password: '' }));
+      }
     }
-    if (formData.password.length < VALIDATION.PASSWORD_MIN_LENGTH) {
-      return ERROR_MESSAGES.PASSWORD_LENGTH;
+
+    // 비밀번호 확인 필드 유효성 검사
+    if (fieldName === 'passwordConfirm' || fieldName === 'password') {
+      const password = fieldName === 'password' ? value : formData.password;
+      const passwordConfirm =
+        fieldName === 'passwordConfirm' ? value : formData.passwordConfirm;
+
+      if (!passwordConfirm) {
+        setErrors(prev => ({
+          ...prev,
+          passwordConfirm: '',
+          passwordSuccess: '',
+        }));
+      } else if (password && passwordConfirm)
+        if (password !== passwordConfirm) {
+          setErrors(prev => ({
+            ...prev,
+            passwordConfirm: ERROR_MESSAGES.PASSWORD_MISMATCH,
+            passwordSuccess: '',
+          }));
+        } else {
+          setErrors(prev => ({
+            ...prev,
+            passwordConfirm: '',
+            passwordSuccess: '비밀번호가 일치합니다',
+          }));
+        }
     }
-    if (!VALIDATION.PASSWORD_PATTERN.test(formData.password)) {
-      return ERROR_MESSAGES.PASSWORD_PATTERN;
-    }
-    if (formData.password !== formData.passwordConfirm) {
-      return ERROR_MESSAGES.PASSWORD_MISMATCH;
-    }
-    return '';
   };
 
   const handleKeyIssuance = (): void => {
@@ -121,16 +152,6 @@ const Signup = (): JSX.Element => {
   const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
 
-    const passwordError = validatePassword();
-    if (passwordError) {
-      setErrors(prev => ({
-        ...prev,
-        password: ERROR_MESSAGES.PASSWORD_CHECK,
-        passwordConfirm: passwordError,
-      }));
-      return;
-    }
-
     signUpMutation({
       username: formData.username,
       password: formData.password,
@@ -143,21 +164,30 @@ const Signup = (): JSX.Element => {
       return;
     }
 
-    const passwordError = validatePassword();
-    setIsValid(!passwordError);
+    const isPasswordValid: boolean = Boolean(
+      formData.password &&
+        formData.passwordConfirm &&
+        formData.password.length >= VALIDATION.PASSWORD_MIN_LENGTH &&
+        VALIDATION.PASSWORD_PATTERN.test(formData.password) &&
+        formData.password === formData.passwordConfirm,
+    );
+
+    setIsValid(isPasswordValid);
   }, [formData, isKeyIssued]);
 
   return (
     <Layout>
       <div className='flex h-[calc(100vh-64px)] items-center justify-center gap-8'>
         {/* Left Side - Auth Instructions */}
-        <div className='w-[500px] rounded bg-black bg-opacity-50 p-6'>
+        <div className='m-8 w-[400px] p-6'>
           <div className='flex flex-col items-center'>
-            <h2 className='mb-2 mt-9 text-xl text-white'>본인 인증 방법</h2>
+            <h2 className='mb-2 mt-9 bg-black bg-opacity-80 text-xl text-white'>
+              본인 인증 방법
+            </h2>
             <div className='space-y-6'>
               <div>
                 <img
-                  className='mb-2 h-auto max-h-[450px] w-full object-contain'
+                  className='mb-2 h-[440px] w-full rounded-lg object-contain'
                   src='/signup_description.jpg'
                   alt='인증 방법 설명'
                 />
@@ -186,30 +216,38 @@ const Signup = (): JSX.Element => {
             <h2 className='mb-6 text-center text-3xl text-white'>Sign up</h2>
 
             {/* Nickname Input */}
-            <FormField label='solved.ac 닉네임' error={errors.username}>
+            <FormField
+              label='solved.ac 닉네임'
+              error={errors.username}
+              id='username'
+            >
               <div className='flex items-center gap-2'>
                 <div className='flex-1'>
                   <Input
+                    id='username'
                     type='text'
                     name='username'
                     value={formData.username}
                     onChange={value => handleInputChange(value, 'username')}
                     disabled={isKeyIssued}
                     className='w-full'
-                    style={{ backgroundColor: 'white', color: 'black' }}
+                    style={{
+                      backgroundColor: 'white',
+                      color: 'black',
+                      padding: '7px',
+                    }}
                   />
                 </div>
-                <div className='flex'>
-                  <Button
-                    type='button'
-                    onClick={handleKeyIssuance}
-                    disabled={isKeyIssued}
-                    color={isKeyIssued ? 'disabled' : 'primary'}
-                    style={{ color: 'black' }}
-                  >
-                    키 발급
-                  </Button>
-                </div>
+
+                <Button
+                  type='button'
+                  onClick={handleKeyIssuance}
+                  disabled={isKeyIssued}
+                  color={isKeyIssued ? 'disabled' : 'primary'}
+                  style={{ color: 'black' }}
+                >
+                  키 발급
+                </Button>
               </div>
             </FormField>
 
@@ -221,7 +259,11 @@ const Signup = (): JSX.Element => {
                   type={isKeyVisible ? 'text' : 'password'}
                   value={encryptionKey}
                   className='w-full'
-                  style={{ backgroundColor: 'white', color: 'black' }}
+                  style={{
+                    backgroundColor: 'white',
+                    color: 'black',
+                    padding: '7px',
+                  }}
                 />
                 <VisibilityToggle
                   isVisible={isKeyVisible}
@@ -231,15 +273,20 @@ const Signup = (): JSX.Element => {
             </FormField>
 
             {/* Password Input */}
-            <FormField label='비밀번호' error={errors.password}>
+            <FormField label='비밀번호' error={errors.password} id='password'>
               <div className='relative'>
                 <Input
+                  id='password'
                   type={isShowPassword ? 'text' : 'password'}
                   name='password'
                   value={formData.password}
                   onChange={value => handleInputChange(value, 'password')}
                   className='w-full'
-                  style={{ backgroundColor: 'white', color: 'black' }}
+                  style={{
+                    backgroundColor: 'white',
+                    color: 'black',
+                    padding: '7px',
+                  }}
                 />
                 <VisibilityToggle
                   isVisible={isShowPassword}
@@ -249,14 +296,24 @@ const Signup = (): JSX.Element => {
             </FormField>
 
             {/* Password Confirmation */}
-            <FormField label='비밀번호 확인' error={errors.passwordConfirm}>
+            <FormField
+              label='비밀번호 확인'
+              error={errors.passwordConfirm}
+              success={errors.passwordSuccess}
+              id='password-confirm'
+            >
               <Input
+                id='password-confirm'
                 type='password'
                 name='passwordConfirm'
                 value={formData.passwordConfirm}
                 onChange={value => handleInputChange(value, 'passwordConfirm')}
                 className='w-full'
-                style={{ backgroundColor: 'white', color: 'black' }}
+                style={{
+                  backgroundColor: 'white',
+                  color: 'black',
+                  padding: '7px',
+                }}
               />
             </FormField>
 
@@ -278,11 +335,20 @@ const Signup = (): JSX.Element => {
   );
 };
 
-const FormField = ({ label, error, children }: FormFieldProps): JSX.Element => (
+const FormField = ({
+  label,
+  error,
+  success,
+  children,
+  id,
+}: FormFieldProps & { id?: string }): JSX.Element => (
   <div className='mb-6 space-y-2'>
-    <label className='mb-[-10px] mt-2 block text-xl text-white'>{label}</label>
+    <label htmlFor={id} className='mb-[-10px] mt-2 block text-xl text-white'>
+      {label}
+    </label>
     {children}
     {error && <p className='text-sm text-red-400'>{error}</p>}
+    {success && <p className='text-sm text-green-400'>{success}</p>}
   </div>
 );
 
