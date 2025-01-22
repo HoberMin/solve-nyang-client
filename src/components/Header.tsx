@@ -71,7 +71,7 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ username }) => {
   };
 
   return (
-    <DropdownMenu disableScrollLock>
+    <DropdownMenu>
       <DropdownMenuTrigger
         className='relative inline-block bg-gradient-to-b from-blue-300 to-blue-500 bg-clip-text text-2xl text-transparent transition-transform duration-300 ease-in-out group-hover:scale-105 group-hover:from-blue-200 group-hover:to-blue-400'
         style={{
@@ -85,7 +85,6 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ username }) => {
         className='min-w-[120px] bg-gray-900 text-gray-100'
         align='end'
         sideOffset={5}
-        // portalled={false} // 포탈 비활성화
       >
         <DropdownMenuItem>
           <Link to='/profile' className='text-xl'>
