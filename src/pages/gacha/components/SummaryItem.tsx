@@ -1,6 +1,7 @@
 import { memo } from 'react';
 
 import { CAT_MAPPINGS, RARITY_TO_IMAGE } from '../constants/catMappings';
+import { RARITY_INFO } from '../constants/rarityInfo';
 import { SummaryItemProps } from '../hooks/usePreloader';
 
 interface RarityInfo {
