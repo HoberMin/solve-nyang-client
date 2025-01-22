@@ -14,7 +14,7 @@ const Layout = ({ children }: PropsWithChildren) => {
   }, []);
 
   const checkScreenSize = () => {
-    setIsMobile(window.innerWidth < 1024);
+    setIsMobile(window.innerWidth < 1280);
   };
 
   if (isMobile) {

@@ -23,39 +23,27 @@ export const MyAvatar = () => {
   return (
     <div className='rounded-xl border p-6'>
       <div className='mb-6 flex items-center justify-between'>
-        <h2 className='font-pixel text-lg text-blue-400'>MY FARM</h2>
-        <button
+        <h2 className='text-3xl text-blue-400'>MY FARM</h2>
+        <h3
           onClick={handleCopy}
-          className={`relative flex items-center gap-2 rounded-full px-6 py-2 text-sm font-bold text-white transition-all duration-300 ${isCopied ? 'bg-green-500' : 'bg-blue-500'} hover:bg-blue-600`}
-          style={{
-            boxShadow: isCopied
-              ? '0 0 10px rgba(72, 187, 120, 0.8)'
-              : '0 4px 6px rgba(0, 0, 0, 0.1)',
-          }}
+          className='flex items-center gap-2 rounded-lg bg-blue-500 px-6 py-2.5 text-xl font-bold text-white hover:bg-blue-600'
         >
           <Copy className='h-5 w-5' />
-          <span
-            className={`transition-transform ${
-              isCopied ? 'animate-bounce' : ''
-            }`}
-          >
-            {isCopied ? 'Copied!' : 'Copy Image Tag'}
-          </span>
-        </button>
+          {isCopied ? 'Copied!' : 'Copy Image Tag'}
+        </h3>
       </div>
 
-      <div className='max-h-[300px] overflow-hidden rounded-lg border'>
-        <div className='relative'>
-          <img
-            src={`domain/${userName}`}
-            alt='Farm Preview'
-            width={600}
-            height={300}
-            className='w-full'
-            style={{ objectFit: 'cover' }}
-          />
-        </div>
+      <div className='max-h-[300px] w-full overflow-hidden rounded-lg border'>
+        <img
+          src={`domain/${userName}`}
+          alt='Farm Preview'
+          width={800}
+          height={400}
+          className='w-full object-contain'
+        />
       </div>
     </div>
   );
 };
+
+export default MyAvatar;
