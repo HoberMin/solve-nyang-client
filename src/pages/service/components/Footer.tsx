@@ -41,7 +41,7 @@ export const Footer = () => {
     members: TeamMember[];
   }) => (
     <div>
-      <h4 className='mb-4 text-2xl font-bold text-white/90'>{title}</h4>
+      <h4 className='mb-4 text-lg font-bold text-white/90'>{title}</h4>
       <div className='grid gap-3'>
         {members.map((member, index) => (
           <motion.a
@@ -56,10 +56,10 @@ export const Footer = () => {
           >
             <Github size={16} />
             <div>
-              <div className='text-lg font-medium text-gray-400/90'>
+              <div className='text-sm font-medium text-gray-400/90'>
                 {member.role}
               </div>
-              <div className='text-base'>{member.name}</div>
+              <div className='text-xs'>{member.name}</div>
             </div>
           </motion.a>
         ))}
@@ -69,7 +69,9 @@ export const Footer = () => {
 
   const DesignerSection = () => (
     <div>
-      <h4 className='mb-4 text-2xl font-bold text-white/90'>Designer</h4>
+      <h4 className='mb-4 text-center text-lg font-bold text-white/90'>
+        Designer
+      </h4>
       <motion.a
         href={`mailto:${designer.email}`}
         className='flex items-center gap-3 rounded-lg p-2 text-gray-300/90 transition-all hover:bg-white/5 hover:text-white'
@@ -79,10 +81,8 @@ export const Footer = () => {
       >
         <Mail size={16} />
         <div>
-          <div className='text-lg font-medium text-gray-400/90'>
-            {designer.role}
-          </div>
-          <div className='text-base'>{designer.name}</div>
+          <div className='text-sm text-gray-400/90'>{designer.role}</div>
+          <div className='text-xs'>{designer.name}</div>
         </div>
       </motion.a>
     </div>
@@ -90,29 +90,27 @@ export const Footer = () => {
 
   return (
     <footer className='w-full border-t border-white/10 bg-black/20 py-8'>
-      <div className='mx-auto w-full max-w-7xl px-6'>
+      <div className='mx-auto w-full max-w-5xl px-6'>
         <div className='mb-8 grid gap-12 border-b border-white/10 pb-8 md:grid-cols-2'>
-          <div className='flex max-w-lg flex-col justify-center'>
-            <h3 className='mb-4 text-3xl font-bold text-white/90'>
+          <div className='flex max-w-sm flex-col justify-center'>
+            <h3 className='mb-4 text-2xl font-bold text-white/90'>
               About 솔브냥
             </h3>
-            <p className='text-2xl leading-relaxed text-gray-300/90'>
+            <p className='text-lg leading-relaxed text-gray-300/90'>
               솔브냥은 알고리즘 문제 해결을 통해 고양이 캐릭터를 수집하는 특별한
               서비스입니다. 문제를 해결하면 가챠를 통해 다양한 등급의 귀여운
               고양이 캐릭터를 얻을 수 있어요.
             </p>
             <div className='mt-8'>
-              <p className='text-2xl text-base text-gray-400/90'>
-                제작: Team 2EIS
-              </p>
+              <p className='text-base text-gray-400/90'>제작: Team 2EIS</p>
             </div>
           </div>
 
           <div>
-            <h3 className='mb-6 text-2xl font-bold text-white/90'>
+            <h3 className='mb-6 text-xl font-bold text-white/90'>
               개발팀 소개
             </h3>
-            <div className='flex gap-8'>
+            <div className='flex gap-6'>
               <TeamSection title='Backend Team' members={backendMembers} />
               <TeamSection title='Frontend Team' members={frontendMembers} />
               <DesignerSection />
@@ -121,7 +119,7 @@ export const Footer = () => {
         </div>
 
         <div className='flex flex-col items-center justify-between gap-4 text-center sm:flex-row sm:text-left'>
-          <div className='text-base text-gray-400/80'>
+          <div className='text-xs text-gray-400/80'>
             © 2025 솔브냥. All rights reserved.
           </div>
         </div>

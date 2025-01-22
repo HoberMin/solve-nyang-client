@@ -1,10 +1,11 @@
-// components/Login.tsx
 import { useState } from 'react';
-
-import { Button, Container, Input } from 'nes-ui-react';
 
 import { AuthRequest, useSignIn } from '@/apis/sign';
 import Layout from '@/components/Layout';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
 const Login = () => {
   const [authForm, setAuthForm] = useState<AuthRequest>({
@@ -14,10 +15,11 @@ const Login = () => {
 
   const { mutate: signIn, isPending } = useSignIn();
 
-  const handleInputChange = (value: string, fieldName: string) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
     setAuthForm(prev => ({
       ...prev,
-      [fieldName]: value,
+      [name]: value,
     }));
   };
 
@@ -28,73 +30,59 @@ const Login = () => {
 
   return (
     <Layout>
-      <div className='flex h-[calc(100vh-64px)] items-center justify-center'>
-        <Container
-          roundedCorners
-          className='w-[400px] bg-black bg-opacity-70 p-8'
-        >
-          <h3 className='mb-6 flex justify-center text-3xl text-white'>
-            Login
-          </h3>
-          <form className='flex flex-col items-center' onSubmit={submitForm}>
-            <div className='mb-4 flex w-full max-w-[300px] flex-col'>
-              <label className='mb-[-5px] mt-2 text-xl text-white'>
-                solved.ac 닉네임
-              </label>
-              <Input
-                type='text'
-                name='username'
-                value={authForm.username}
-                onChange={value => handleInputChange(value, 'username')}
-                className='w-full'
-                style={{
-                  backgroundColor: 'white',
-                  color: 'black',
-                  padding: '7px',
-                }}
+      <div className='flex min-h-[calc(100vh-64px)] items-center justify-center'>
+        <Card className='w-96 bg-black/70'>
+          <CardHeader>
+            <CardTitle className='text-center text-3xl text-white'>
+              Login
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={submitForm} className='space-y-6'>
+              <div className='space-y-1'>
+                <Label className='text-xl text-white'>solved.ac 닉네임</Label>
+                <Input
+                  type='text'
+                  name='username'
+                  value={authForm.username}
+                  onChange={handleInputChange}
+                  className='bg-white text-black'
+                  disabled={isPending}
+                />
+              </div>
+
+              <div className='space-y-1'>
+                <Label className='text-xl text-white'>비밀번호</Label>
+                <Input
+                  type='password'
+                  name='password'
+                  value={authForm.password}
+                  onChange={handleInputChange}
+                  className='bg-white text-black'
+                  disabled={isPending}
+                />
+              </div>
+
+              <Button
+                type='submit'
+                className='w-full p-3 bg-green-500 text-black hover:bg-green-600'
                 disabled={isPending}
-              />
+              >
+                {isPending ? '로그인 중...' : '로그인'}
+              </Button>
+            </form>
+
+            <div className='mt-4 flex justify-center gap-2'>
+              <p className='text-base text-white'>계정이 없으신가요?</p>
+              <a
+                href='/signup'
+                className='text-base text-blue-400 hover:text-blue-300'
+              >
+                회원가입
+              </a>
             </div>
-
-            <div className='mb-1 flex w-full max-w-[300px] flex-col'>
-              <label className='mb-[-5px] mt-2 text-xl text-white'>
-                비밀번호
-              </label>
-              <Input
-                type='password'
-                name='password'
-                value={authForm.password}
-                onChange={value => handleInputChange(value, 'password')}
-                className='w-full'
-                style={{
-                  backgroundColor: 'white',
-                  color: 'black',
-                  padding: '7px',
-                }}
-                disabled={isPending}
-              />
-            </div>
-
-            <Button
-              type='submit'
-              color='success'
-              style={{ color: '#000' }}
-              disabled={isPending}
-            >
-              {isPending ? '로그인 중...' : '로그인'}
-            </Button>
-          </form>
-
-          <div className='mt-4 flex justify-center gap-2'>
-            <p className='text-base text-white'>계정이 없으신가요?</p>
-            <a
-              href='/signup'
-              className='text-base text-blue-400 hover:text-blue-300'
-            >
-              회원가입
-            </a>
-          </div>
-        </Container>
+          </CardContent>
+        </Card>
       </div>
     </Layout>
   );

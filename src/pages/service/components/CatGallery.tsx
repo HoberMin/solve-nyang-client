@@ -26,7 +26,7 @@ const VISIBLE_CARDS = 5;
 
 const CharacterCard: React.FC<CharacterCardProps> = ({ name }) => {
   return (
-    <div className='group relative h-32 w-32 lg:h-40 lg:w-40 xl:h-48 xl:w-48 2xl:h-52 2xl:w-52'>
+    <div className='group relative h-32 w-32 lg:h-32 lg:w-32 xl:h-36 xl:w-36 2xl:h-40 2xl:w-40'>
       <img
         src={`/cats/${name}.svg`}
         alt={name}
@@ -39,7 +39,6 @@ const CharacterCard: React.FC<CharacterCardProps> = ({ name }) => {
           </span>
         </div>
       </div>
-      <span className='text-base font-medium text-white'>{name}</span>
     </div>
   );
 };
@@ -67,9 +66,9 @@ const RaritySection: React.FC<RaritySectionProps> = ({ title, characters }) => {
   const isCanGoForward = currentIndex + VISIBLE_CARDS < characters.length;
 
   return (
-    <div className='w-full rounded-lg bg-black/30 p-3 backdrop-blur-sm'>
+    <div className='w-full rounded-lg bg-black/30 p-2 backdrop-blur-sm'>
       <div
-        className={`mb-2 flex items-center justify-between rounded-lg bg-gradient-to-r ${rarityColors[title]} to-transparent px-6 py-3`}
+        className={`mb-2 flex items-center justify-between rounded-lg bg-gradient-to-r ${rarityColors[title]} to-transparent px-4 py-2`}
       >
         <div className='flex items-center gap-3'>
           <span
@@ -85,12 +84,12 @@ const RaritySection: React.FC<RaritySectionProps> = ({ title, characters }) => {
                       : 'bg-gray-500'
             }`}
           />
-          <h2 className='text-xl font-bold text-white'>
+          <h3 className='font-bold text-white'>
             {rarityTitles[title]}
-            <span className='ml-3 text-lg font-normal text-white/60'>
+            <span className='ml-3 font-normal text-white/60'>
               ({characters.length})
             </span>
-          </h2>
+          </h3>
         </div>
       </div>
 
@@ -141,18 +140,18 @@ const CharacterGallery: React.FC = () => {
 
   return (
     <div className='mb-[100px] hidden h-full items-center justify-center py-8 lg:flex'>
-      <div className='container mx-auto max-w-5xl px-4 lg:max-w-6xl xl:max-w-7xl'>
+      <div className='container mx-auto max-w-3xl px-4 lg:max-w-4xl xl:max-w-5xl'>
         <div className='mb-12 text-center'>
-          <h1 className='mb-4 text-5xl font-bold text-white'>고양이 도감</h1>
-          <p className='text-2xl text-gray-200'>
+          <h2 className='mb-4 font-bold text-white'>고양이 도감</h2>
+          <p className='text-gray-200'>
             알고리즘 문제를 풀고, 아래 고양이들을 획득해보세요!
           </p>
-          <div className='mt-3 text-2xl text-gray-400'>
+          <div className='mt-2 text-gray-400'>
             문제를 해결할 때마다 새로운 고양이 친구들을 만나볼 수 있어요
           </div>
         </div>
 
-        <div className='flex flex-col gap-4'>
+        <div className='flex flex-col gap-3'>
           {rarityOrder.map(
             rarity =>
               groupedCharacters[rarity] && (
