@@ -1,9 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
-
-interface ConfettiParticle {
-  element: HTMLDivElement;
-  animation: Animation;
-}
+import { useCallback, useEffect } from 'react';
 
 const Confetti = () => {
   const createConfetti = useCallback(() => {
