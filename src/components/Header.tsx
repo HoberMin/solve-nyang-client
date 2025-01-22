@@ -57,61 +57,6 @@ const RetroIcon = ({ children }: PropsWithChildren) => {
   );
 };
 
-interface UserDropdownProps {
-  username: string;
-}
-
-// 드롭다운
-const UserDropdown: React.FC<UserDropdownProps> = ({ username }) => {
-  // 로그아웃
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    toast.success('로그아웃 되었습니다.');
-    window.location.href = '/';
-  };
-
-  return (
-    <div className='static'>
-      <DropdownMenu>
-        <DropdownMenuTrigger className='group relative cursor-pointer bg-gray-900 outline-none'>
-          <div
-            className='absolute inset-0 -z-10 h-full w-full rounded opacity-0 blur transition-all duration-300 group-hover:opacity-30 group-hover:blur-md'
-            style={{
-              background:
-                'radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, transparent 70%)',
-            }}
-          />
-          <span
-            className='relative inline-block bg-gradient-to-b from-blue-300 to-blue-500 bg-clip-text text-xl text-transparent transition-transform duration-300 ease-in-out group-hover:scale-105 group-hover:from-blue-200 group-hover:to-blue-400'
-            style={{
-              textShadow: '0 0 5px rgba(59, 130, 246, 0.3)',
-              WebkitTextStroke: '1px rgba(59, 130, 246, 0.2)',
-            }}
-          >
-            {username}
-          </span>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent className='border-0 bg-gray-900 py-1' align='end'>
-          <DropdownMenuItem className='focus:bg-transparent'>
-            <Link
-              to='/profile'
-              className='w-full py-2 text-center text-xl text-white hover:text-gray-300'
-            >
-              내 정보
-            </Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            className='flex justify-center text-xl text-white hover:text-gray-300'
-            onClick={handleLogout}
-          >
-            로그아웃
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    </div>
-  );
-};
-
 const LoadingPulse = () => (
   <div className='flex space-x-1'>
     <div className='h-2 w-2 animate-pulse rounded-full bg-blue-400/50'></div>
@@ -160,9 +105,23 @@ const Header = () => {
           <RetroMenuItem href='/login'>로그인</RetroMenuItem>
         ) : (
           <>
-            <RetroMenuItem href='/gacha'>가챠</RetroMenuItem>
-            <RetroMenuItem href='/auction'>상점</RetroMenuItem>
-            <UserDropdown username={data?.username || 'User'} />
+            <div className='relative flex items-center'>
+              <div className='relative'>
+                <span
+                  className='bg-gradient-to-r from-blue-300 to-blue-500 bg-clip-text text-xl text-transparent'
+                  style={{
+                    textShadow: '0 0 5px rgba(59, 130, 246, 0.3)',
+                    WebkitTextStroke: '1px rgba(59, 130, 246, 0.2)',
+                  }}
+                >
+                  {data?.username}
+                </span>
+              </div>
+            </div>
+
+            <RetroMenuItem href='/gacha'>GACHA</RetroMenuItem>
+            <RetroMenuItem href='/auction'>AUCTION</RetroMenuItem>
+            <RetroMenuItem href='/profile'>MY PAGE</RetroMenuItem>
           </>
         )}
 
