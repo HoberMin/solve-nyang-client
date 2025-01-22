@@ -13,7 +13,7 @@ interface Designer {
 export const Footer = () => {
   const backendMembers: TeamMember[] = [
     { role: 'Backend', name: '이동규 팀장', github: 'leedongkyu0407' },
-    { role: 'Backend', name: '김지영', github: 'famo1245' },
+    // { role: 'Backend', name: '김지영', github: 'famo1245' },
     { role: 'Backend', name: '조성빈', github: 'Foxrain119' },
     { role: 'Backend', name: '박찬영', github: 'cygiraffe' },
   ];

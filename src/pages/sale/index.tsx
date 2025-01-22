@@ -209,11 +209,29 @@ export const AvatarSalePage = () => {
                   판매 확인
                 </DialogTitle>
                 <DialogDescription className='font-mono text-base text-gray-400'>
-                  {selectedAvatars.length}개의 아바타를 판매하시겠습니까?
-                  <br />
-                  <span className='mt-3 block text-lg text-blue-400'>
-                    획득 포인트: {totalPoints}P
-                  </span>
+                  <div className='space-y-4'>
+                    <p>
+                      {selectedAvatars.length}개의 아바타를 판매하시겠습니까?
+                    </p>
+
+                    <div className='rounded-lg border border-yellow-500/50 bg-yellow-500/10 p-4 text-yellow-400'>
+                      <p className='font-medium'>⚠️ 주의!</p>
+                      <p className='mt-2'>
+                        다음 업데이트에서 경매장 시스템이 등장할 예정입니다.
+                      </p>
+                      <p>
+                        지금 판매하시면 경매장에서 더 높은 가격에 판매할 기회를
+                        놓치실 수 있습니다.
+                      </p>
+                      <p className='mt-2 font-medium'>
+                        정말로 판매하시겠습니까?
+                      </p>
+                    </div>
+
+                    <span className='block text-lg text-blue-400'>
+                      획득 포인트: {totalPoints}P
+                    </span>
+                  </div>
                 </DialogDescription>
               </DialogHeader>
               <div className='flex justify-end gap-4 pt-4'>
