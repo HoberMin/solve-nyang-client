@@ -21,19 +21,19 @@ export const MyAvatar = () => {
   };
 
   return (
-    <div className='rounded-xl border p-6'>
-      <div className='mb-6 flex items-center justify-between'>
-        <h2 className='text-3xl text-blue-400'>MY FARM</h2>
-        <h3
+    <div className='rounded-xl border p-4'>
+      <div className='mb-4 flex items-center justify-between'>
+        <span className='text-lg font-bold text-blue-400'>MY FARM</span>
+        <button
           onClick={handleCopy}
-          className='flex items-center gap-2 rounded-lg bg-blue-500 px-6 py-2.5 text-xl font-bold text-white hover:bg-blue-600'
+          className='flex items-center gap-1.5 rounded-lg bg-blue-500 px-2.5 py-1 text-xs font-medium text-white transition-colors hover:bg-blue-600'
         >
-          <Copy className='h-5 w-5' />
+          <Copy className='h-3.5 w-3.5' />
           {isCopied ? 'Copied!' : 'Copy Image Tag'}
-        </h3>
+        </button>
       </div>
 
-      <div className='max-h-[300px] w-full overflow-hidden rounded-lg border'>
+      <div className='max-h-[250px] w-full overflow-hidden rounded-lg border'>
         <img
           src={`domain/${userName}`}
           alt='Farm Preview'

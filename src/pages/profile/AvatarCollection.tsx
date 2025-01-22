@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { Check } from 'lucide-react';
 
 import { useGetUserAvatar, useToggleAvatar } from '@/apis/user';
-import RetroLoading from '@/components/RetroLoading';
 import { cn } from '@/lib/utils';
 
 export type Rarity = 'S' | 'A' | 'B' | 'C' | 'D';
@@ -26,12 +25,8 @@ export const AvatarCollection = () => {
     D: { border: 'border-gray-400', text: 'text-gray-400' },
   };
   const [selectedFilter, setSelectedFilter] = useState<FilterType>('ALL');
-  const { data, isPending, isError } = useGetUserAvatar();
+  const { data, isError } = useGetUserAvatar();
   const mutate = useToggleAvatar();
-
-  if (isPending) {
-    return <RetroLoading />;
-  }
 
   if (isError) {
     throw new Error();
@@ -71,33 +66,31 @@ export const AvatarCollection = () => {
     });
 
   return (
-    <div className='rounded-xl border p-8'>
-      <div className='mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between'>
-        <div className='flex items-center gap-4'>
-          <h2 className='font-pixel text-xl text-blue-400'>
-            Avatar COLLECTION
-          </h2>
-          <div className='flex items-center gap-2 rounded-full px-4 py-2'>
-            <div className='flex items-baseline gap-1 text-2xl'>
-              <span className='text-lg font-medium text-blue-400'>
+    <div className='rounded-xl border p-6'>
+      <div className='mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between'>
+        <div className='flex items-center gap-3'>
+          <h3 className='text-lg text-blue-400'>Avatar COLLECTION</h3>
+          <div className='flex items-center gap-2 rounded-full px-3 py-1.5'>
+            <div className='flex items-baseline gap-1'>
+              <span className='text-base font-medium text-blue-400'>
                 {visibleCharacters.length}
               </span>
-              <span className='text-lg text-blue-400/70'>/</span>
-              <span className='text-lg text-blue-400/70'>20</span>
+              <span className='text-base text-blue-400/70'>/</span>
+              <span className='text-base text-blue-400/70'>20</span>
             </div>
           </div>
-          <span className='text-xl text-blue-400/70'>
+          <span className='text-sm text-blue-400/70'>
             {20 - visibleCharacters.length} slots remaining
           </span>
         </div>
 
-        <div className='flex flex-wrap gap-3'>
+        <div className='flex flex-wrap gap-2'>
           {(['ALL' as const, ...rarityOrder] as const).map(rarity => (
-            <div key={rarity} className='flex items-center gap-2'>
+            <div key={rarity} className='flex items-center gap-1.5'>
               <button
                 onClick={() => setSelectedFilter(rarity)}
                 className={cn(
-                  'rounded-full px-6 py-2 text-lg font-medium transition-all',
+                  'rounded-full px-4 py-1.5 text-sm font-medium transition-all',
                   selectedFilter === rarity
                     ? 'bg-blue-500 text-white'
                     : 'text-blue-400',
@@ -107,7 +100,7 @@ export const AvatarCollection = () => {
                 {rarity !== 'ALL' && (
                   <span
                     className={cn(
-                      'ml-2 text-base',
+                      'ml-1.5 text-xs',
                       selectedFilter === rarity
                         ? 'text-white'
                         : 'text-gray-500',
@@ -122,7 +115,7 @@ export const AvatarCollection = () => {
         </div>
       </div>
 
-      <div className='grid grid-cols-4 gap-4 md:grid-cols-6 lg:grid-cols-8'>
+      <div className='grid grid-cols-4 gap-3 md:grid-cols-5 lg:grid-cols-7'>
         {filteredCharacters.map(char => {
           const isSelected = char.visible;
           const rarity = rarityConfig[char.rarity];
@@ -141,23 +134,23 @@ export const AvatarCollection = () => {
               <img
                 src={`/cats/${char.name}.svg`}
                 alt={char.name}
-                className='aspect-square w-full rounded-lg object-contain p-3'
+                className='aspect-square w-full rounded-lg object-contain p-2.5'
               />
 
               <div
                 className={cn(
-                  'absolute right-2 top-2',
-                  'flex h-6 w-6 items-center justify-center rounded-full',
+                  'absolute right-1.5 top-1.5',
+                  'flex h-5 w-5 items-center justify-center rounded-full',
                   isSelected ? 'bg-blue-500' : 'bg-gray-600',
                 )}
               >
-                <Check className='h-[10px] w-[10px] text-white' />
+                <Check className='h-[8px] w-[8px] text-white' />
               </div>
 
               <div
                 className={cn(
-                  'absolute left-2 top-2',
-                  'rounded px-2 py-1 text-sm font-medium',
+                  'absolute left-1.5 top-1.5',
+                  'rounded px-1.5 py-0.5 text-xs font-medium',
                   rarity.text,
                 )}
               >
