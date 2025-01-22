@@ -46,7 +46,7 @@ export const CAT_MAPPINGS: Record<string, CatInfo> = {
   Navy: { korName: '네이비', engName: 'Navy' },
   Apricot: { korName: '살구', engName: 'Apricot' },
   Lemon: { korName: '레몬', engName: 'Lemon' },
-  Siam: { korName: '샴', engName: 'Siam' },
+  Siam: { korName: '시루', engName: 'Siam' },
   Cheese: { korName: '치즈', engName: 'Cheese' },
   Barcode: { korName: '바코드', engName: 'Barcode' },
   Vanilla: { korName: '바닐라', engName: 'Vanilla' },

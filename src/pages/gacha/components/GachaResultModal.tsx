@@ -2,6 +2,8 @@ import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 
 import { Avatar } from '@/apis/avatar';
 
+import { CAT_MAPPINGS } from '../constants/catMappings.ts';
+
 interface GachaResultModalProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
@@ -58,14 +60,17 @@ const SummaryItem = memo(({ result }: { result: Avatar }) => {
       <img
         src={capsuleImages.opened}
         alt={`${result.rarity} Capsule`}
-        className='h-64 w-64'
+        className='h-[250px] w-[250px]'
       />
+      <div className='absolute left-1/2 top-1/2 h-48 w-48 -translate-x-1/2 -translate-y-1/2 transform rounded-full bg-yellow-300/30 blur-xl' />
       <img
         src={`/cats/${result.name}.svg`}
         alt={result.name}
-        className='absolute left-1/2 top-1/2 h-36 w-36 -translate-x-1/2 -translate-y-1/2 transform'
+        className='absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 scale-[65%] transform'
       />
-      <p className='mt-0 text-center font-bold'>{result.name}</p>
+      <p className='text-center text-xl font-bold'>
+        {CAT_MAPPINGS[result.name]?.korName}
+      </p>
     </div>
   );
 });
@@ -299,8 +304,11 @@ export const GachaResultModal = memo(
           {/* 결과 표시 */}
           {isCompleteStep && (
             <div className='absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 scale-150 transform text-center'>
-              <img src={`/cats/${name}.svg`} alt={name} className='h-48 w-48' />
-              <div className='mt-4 text-2xl font-bold text-white'>{name}</div>
+              <div className='absolute left-1/2 top-1/2 h-48 w-48 -translate-x-1/2 -translate-y-1/2 transform rounded-full bg-yellow-300/30 blur-xl' />
+              <img src={`/cats/${name}.svg`} alt={name} className='scale-150' />
+              <div className='translate-y-5 text-2xl font-bold text-white'>
+                {CAT_MAPPINGS[name]?.korName}
+              </div>
             </div>
           )}
 
@@ -309,12 +317,20 @@ export const GachaResultModal = memo(
             <div className='absolute bottom-[-30%] left-1/2 -translate-x-1/2 transform'>
               <button
                 onClick={handleSkip}
-                className='bg-transparent text-white'
+                className='bg-transparent font-bold text-white underline'
               >
                 ▶ Skip
               </button>
             </div>
           )}
+
+          {/* Enter 안내 메시지 */}
+          <div className='absolute left-1/2 top-[-50px] w-full -translate-x-1/2 transform'>
+            <p className='animate-pulse text-center text-base font-semibold text-white'>
+              {/* {isAnimating ? 'Press Enter to skip' : 'Press Enter to continue'} */}
+              {'Press Enter'}
+            </p>
+          </div>
         </div>
       </div>
     );

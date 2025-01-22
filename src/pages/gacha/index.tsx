@@ -203,12 +203,13 @@ const Gacha = () => {
 
             <div className='relative z-50 mt-4 flex gap-2'>
               <Button
-                // style="padding:20px;"
+                // style={{ padding: '20px' }}
                 // color='primary'
+
                 onClick={() => handleConfirmDraw(1)}
                 disabled={isAnimating || point < 100}
               >
-                <div className='text-xl font-bold'>1회 뽑기</div>
+                <div className='text-xl font-bold'>ㅤ 1회 뽑기 ㅤ</div>
                 <div className='flex items-center justify-center gap-1'>
                   <img src={coinImg} alt='coin' className='w-8' />
                   <div className='text-lg'>100</div>
@@ -219,7 +220,7 @@ const Gacha = () => {
                 onClick={() => handleConfirmDraw(10)}
                 disabled={isAnimating || point < 1000}
               >
-                <div className='text-xl font-bold'>10회 뽑기</div>
+                <div className='text-xl font-bold'>ㅤ10회 뽑기ㅤ</div>
                 <div className='flex items-center justify-center gap-1'>
                   <img src={coinImg} alt='coin' className='w-8' />
                   <div className='text-lg'>1000</div>

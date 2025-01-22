@@ -122,7 +122,7 @@ export const AvatarCollection = () => {
         </div>
       </div>
 
-      <div className='grid grid-cols-4 gap-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10'>
+      <div className='grid grid-cols-4 gap-4 md:grid-cols-6 lg:grid-cols-8'>
         {filteredCharacters.map(char => {
           const isSelected = char.visible;
           const rarity = rarityConfig[char.rarity];
@@ -139,7 +139,7 @@ export const AvatarCollection = () => {
               )}
             >
               <img
-                src={'/cats/Apricot.svg'}
+                src={`/cats/${char.name}.svg`}
                 alt={char.name}
                 className='aspect-square w-full rounded-lg object-contain p-3'
               />
@@ -151,7 +151,7 @@ export const AvatarCollection = () => {
                   isSelected ? 'bg-blue-500' : 'bg-gray-600',
                 )}
               >
-                <Check className='h-4 w-4 text-white' />
+                <Check className='h-[10px] w-[10px] text-white' />
               </div>
 
               <div
