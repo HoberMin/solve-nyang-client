@@ -19,7 +19,7 @@ interface UserAvatarList {
 }
 
 interface UserInfo {
-  nickname: string;
+  username: string;
   point: number;
   solvedacStrick: number;
   solvedCount: number;

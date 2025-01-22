@@ -59,7 +59,7 @@ const LoadingPulse = () => (
 
 const Header = () => {
   const { data, isLoading } = useGetUserInfo();
-  const isAuthenticated = Boolean(data?.nickname);
+  const isAuthenticated = Boolean(data?.username);
 
   return (
     <header className='relative flex h-16 items-center justify-between bg-gray-900 px-6'>
@@ -106,7 +106,7 @@ const Header = () => {
                     WebkitTextStroke: '1px rgba(59, 130, 246, 0.2)',
                   }}
                 >
-                  {data?.nickname}
+                  {data?.username}
                 </span>
               </div>
             </div>
