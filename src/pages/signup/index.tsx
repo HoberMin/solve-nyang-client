@@ -1,6 +1,6 @@
 import { FormEvent, useEffect, useState } from 'react';
 
-import { Copy, ExternalLink, Eye, EyeOff } from 'lucide-react';
+import { Copy, ExternalLink, Eye, EyeOff, HelpCircle } from 'lucide-react';
 import { toast } from 'sonner';
 
 import { useGetEncryption } from '@/apis/encryption';
@@ -8,8 +8,21 @@ import { useSignUp } from '@/apis/sign';
 import Layout from '@/components/Layout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 
 // 타입 정의
 interface FormData {
@@ -36,7 +49,8 @@ interface ErrorMessages {
 const VALIDATION: ValidationRules = {
   PASSWORD_MIN_LENGTH: 8,
   PASSWORD_PATTERN:
-    /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
+    // /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
+    /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&^])[A-Za-z\d@$!%*#?&^]{8,}$/,
 };
 
 const INITIAL_FORM_STATE: FormData = {
@@ -138,9 +152,9 @@ const Signup = () => {
   const handleCopyEncryptionKey = async () => {
     try {
       await navigator.clipboard.writeText(encryptionKey);
-      toast.success('암호키가 클립보드에 복사되었습니다.');
+      toast.success('암호화키가 클립보드에 복사되었습니다.');
     } catch (err) {
-      toast.success('암호키 복사에 실패했습니다.');
+      toast.error('암호화키 복사에 실패했습니다.');
     }
   };
 
@@ -173,7 +187,63 @@ const Signup = () => {
     <Layout>
       <div className='flex min-h-[calc(100vh-64px)] flex-col items-center justify-center gap-16 px-4 lg:flex-row lg:px-8'>
         {/* Left Side - Auth Instructions */}
-        <div className='w-full max-w-sm lg:w-[30%]'>
+        {/* <Card className='p-10 border-zinc-800 bg-zinc-950/50'> */}
+        <div className='space-y-2 text-white'>
+          <div className='flex justify-center gap-3 text-center'>
+            <h3 className='mb-1 text-xl font-bold'>회원가입 방법</h3>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger>
+                  <Dialog>
+                    <DialogTrigger>
+                      <HelpCircle
+                        size={24}
+                        color='lightgreen'
+                        strokeWidth={1.5}
+                      />
+                    </DialogTrigger>
+                    <DialogContent className='sm:max-w-[500px]'>
+                      <DialogHeader>
+                        <DialogTitle className='text-base'>
+                          회원가입 상세 설명
+                        </DialogTitle>
+                      </DialogHeader>
+                      <div className='relative aspect-[3/4] w-full overflow-hidden rounded-lg'>
+                        <img
+                          className='object-fit h-full w-full'
+                          src='/signup_description.jpg'
+                          alt='회원가입 설명'
+                        />
+                      </div>
+                    </DialogContent>
+                  </Dialog>
+                  <TooltipContent>
+                    <p>자세한 설명을 원한다면 클릭하세요</p>
+                  </TooltipContent>
+                </TooltipTrigger>
+              </Tooltip>
+            </TooltipProvider>
+          </div>
+          <p>① solved.ac 닉네임 입력 후 키 발급 버튼 클릭</p>
+          <p>② 암호화키 복사</p>
+          <div className='flex gap-4'>
+            <p>③ solved.ac 로그인</p>
+            <a href='https://solved.ac/'>[바로가기]</a>
+          </div>
+          <p>④ 로그인 후 프로필 창 - '설정' 클릭</p>
+          <p>⑤ 개인정보 - 이름 항목에 암호화키 입력</p>
+          <p className='pl-4'>* 모국어와 영어 모두 작성해주세요 </p>
+          <p>⑥ 프로필에 이름 표시 ON</p>
+          <p>⑦ 회원가입 페이지로 돌아와 솔브냥 비밀번호 입력</p>
+          <p>⑧ 솔브냥 회원가입 버튼 클릭</p>
+          <p className='pl-4'>
+            * 회원가입 시 작성하는 비밀번호는 솔브냥의 비밀번호 입니다.
+          </p>
+        </div>
+        {/* </Card> */}
+
+        {/* 이미지 바로 보이기기 */}
+        {/* <div className='w-full max-w-sm lg:w-[30%]'>
           <Card className='border-zinc-800 bg-zinc-950/50'>
             <CardHeader className='flex flex-row items-center justify-between pb-4'>
               <CardTitle className='text-xl text-zinc-100'>
@@ -205,6 +275,8 @@ const Signup = () => {
             </CardContent>
           </Card>
         </div>
+         */}
+
         {/* Right Side - Sign Up Form */}
         <div className='w-full max-w-sm lg:w-[30%]'>
           <Card className='border-zinc-800 bg-zinc-950/50'>
