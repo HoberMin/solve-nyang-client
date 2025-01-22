@@ -1,4 +1,9 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  useMutation,
+  useQuery,
+  useQueryClient,
+  useSuspenseQuery,
+} from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
@@ -93,7 +98,7 @@ export const useGetUserInfo = () =>
   });
 
 export const useGetUserAvatar = () =>
-  useQuery({
+  useSuspenseQuery({
     queryKey: ['userAvatar'],
     queryFn: userAvatar,
   });

@@ -28,7 +28,7 @@ export const ServiceIntro = () => {
   return (
     <div className='flex min-h-screen items-center justify-center px-4 py-16'>
       <motion.div
-        className='relative max-w-6xl rounded-xl p-8'
+        className='relative max-w-4xl rounded-xl p-6'
         initial={{ scale: 0.9, opacity: 0 }}
         whileInView={{ scale: 1, opacity: 1 }}
         transition={{ duration: 0.5 }}
@@ -39,10 +39,10 @@ export const ServiceIntro = () => {
           transition={{ delay: 0.2 }}
           className='text-center'
         >
-          <h2 className='mb-10 text-5xl font-bold text-white'>
+          <h2 className='mb-10 font-bold text-white'>
             알고리즘 풀고, 키우는 나만의 고양이
           </h2>
-          <p className='mb-20 text-2xl text-gray-300'>
+          <p className='mb-20 text-gray-300'>
             알고리즘을 풀어서 포인트를 모으고,
             <br />
             귀여운 고양이 캐릭터를 뽑아 나만의 특별한 이미지를 만들어보세요!
@@ -53,16 +53,14 @@ export const ServiceIntro = () => {
           {features.map((feature, index) => (
             <motion.div
               key={feature.title}
-              className='rounded-lg bg-white/5 p-8 backdrop-blur-sm'
+              className='rounded-lg bg-white/5 p-6 backdrop-blur-sm'
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.3 + index * 0.1 }}
             >
               <div className='mb-4 text-blue-400'>{feature.icon}</div>
-              <h3 className='mb-3 text-2xl font-semibold text-white'>
-                {feature.title}
-              </h3>
-              <p className='text-lg text-gray-300'>{feature.description}</p>
+              <h3 className='mb-3 font-semibold text-white'>{feature.title}</h3>
+              <p className='text-sm text-gray-300'>{feature.description}</p>
             </motion.div>
           ))}
         </div>
@@ -72,7 +70,7 @@ export const ServiceIntro = () => {
             href='https://solved.ac'
             target='_blank'
             rel='noopener noreferrer'
-            className='rounded-lg bg-blue-500 px-8 py-4 text-xl font-semibold text-white transition-colors hover:bg-blue-600'
+            className='rounded-lg bg-blue-500 px-6 py-3 font-semibold text-white transition-colors hover:bg-blue-600'
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
@@ -80,7 +78,7 @@ export const ServiceIntro = () => {
           </motion.a>
           <motion.a
             href='/gacha'
-            className='rounded-lg border border-white/20 bg-white/5 px-8 py-4 text-xl font-semibold text-white backdrop-blur-sm transition-colors hover:bg-white/10'
+            className='rounded-lg border border-white/20 bg-white/5 px-6 py-3 font-semibold text-white backdrop-blur-sm transition-colors hover:bg-white/10'
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
@@ -88,7 +86,7 @@ export const ServiceIntro = () => {
           </motion.a>
           <motion.a
             href='/profile'
-            className='rounded-lg border border-white/20 bg-white/5 px-8 py-4 text-xl font-semibold text-white backdrop-blur-sm transition-colors hover:bg-white/10'
+            className='rounded-lg border border-white/20 bg-white/5 px-6 py-3 font-semibold text-white backdrop-blur-sm transition-colors hover:bg-white/10'
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
