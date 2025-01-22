@@ -23,24 +23,24 @@ type AnimationStep = (typeof ANIMATION_STEPS)[keyof typeof ANIMATION_STEPS];
 
 const RARITY_TO_IMAGE = {
   S: {
-    capsule: 'public/cats/ball/S1-3.svg',
-    opened: 'public/cats/ball/S1-4.svg',
+    capsule: '/cats/ball/S1-3.svg',
+    opened: '/cats/ball/S1-4.svg',
   },
   A: {
-    capsule: 'public/cats/ball/A1-3.svg',
-    opened: 'public/cats/ball/A1-4.svg',
+    capsule: '/cats/ball/A1-3.svg',
+    opened: '/cats/ball/A1-4.svg',
   },
   B: {
-    capsule: 'public/cats/ball/B1-3.svg',
-    opened: 'public/cats/ball/B1-4.svg',
+    capsule: '/cats/ball/B1-3.svg',
+    opened: '/cats/ball/B1-4.svg',
   },
   C: {
-    capsule: 'public/cats/ball/C1-3.svg',
-    opened: 'public/cats/ball/C1-4.svg',
+    capsule: '/cats/ball/C1-3.svg',
+    opened: '/cats/ball/C1-4.svg',
   },
   D: {
-    capsule: 'public/cats/ball/D1-3.svg',
-    opened: 'public/cats/ball/D1-4.svg',
+    capsule: '/cats/ball/D1-3.svg',
+    opened: '/cats/ball/D1-4.svg',
   },
 } as const;
 

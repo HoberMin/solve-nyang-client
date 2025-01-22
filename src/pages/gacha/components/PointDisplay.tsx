@@ -1,4 +1,4 @@
-import coinImg from '/public/coin.svg';
+import coinImg from '/coin.svg';
 
 interface PointDisplayProps {
   point: number;

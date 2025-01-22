@@ -23,7 +23,7 @@ import blueBallImageUrl from '/assets/gacha-ball-6.svg';
 import yellowBallImageUrl from '/assets/gacha-ball-7.svg';
 import machineImageUrl from '/assets/gacha-machine.svg';
 import handleImageUrl from '/assets/handle.svg';
-import coinImg from '/public/coin.svg';
+import coinImg from '/coin.svg';
 
 interface BallPosition {
   left: string;
@@ -203,9 +203,6 @@ const Gacha = () => {
 
             <div className='relative z-50 mt-4 flex gap-2'>
               <Button
-                // style={{ padding: '20px' }}
-                // color='primary'
-
                 onClick={() => handleConfirmDraw(1)}
                 disabled={isAnimating || point < 100}
               >
