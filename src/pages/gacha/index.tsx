@@ -14,6 +14,7 @@ import { GachaDropRateInfo } from '@/pages/gacha/components/GachaDropRateInfo';
 import { GachaResultModal } from '@/pages/gacha/components/GachaResultModal';
 import { PointDisplay } from '@/pages/gacha/components/PointDisplay';
 
+import useImagePreloader from './hooks/usePreloader';
 import greenBallImageUrl from '/assets/gacha-ball-1.svg';
 import orangeBallImageUrl from '/assets/gacha-ball-2.svg';
 import skyblueBallImageUrl from '/assets/gacha-ball-3.svg';
@@ -45,6 +46,8 @@ const BALL_IMAGES = [
   yellowBallImageUrl,
 ];
 
+const ALL_IMAGES = [...BALL_IMAGES, machineImageUrl, handleImageUrl, coinImg];
+
 const INITIAL_BALL_POSITIONS: BallPosition[] = Array.from(
   { length: 7 },
   (_, index) => {
@@ -63,6 +66,8 @@ const Gacha = () => {
   const getGacha = useGachaAvatarApi();
   const { data: userData, isPending } = useGetUserInfo();
   const rotationRef = useRef<number>(0);
+
+  const isImageLoaded = useImagePreloader(ALL_IMAGES);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
@@ -91,7 +96,7 @@ const Gacha = () => {
     }
   }, [userData, isPending, navigate]);
 
-  if (isPending) {
+  if (isPending || !isImageLoaded) {
     return <RetroLoading />;
   }
 
@@ -213,7 +218,6 @@ const Gacha = () => {
                 </div>
               </Button>
               <Button
-                // color='primary'
                 onClick={() => handleConfirmDraw(10)}
                 disabled={isAnimating || point < 1000}
               >
