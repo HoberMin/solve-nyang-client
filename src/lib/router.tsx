@@ -3,6 +3,7 @@ import { createBrowserRouter } from 'react-router-dom';
 
 import RetroError from '@/components/ErrorBoundary';
 import Root from '@/components/Root';
+import Contest from '@/pages/contest';
 import Gacha from '@/pages/gacha';
 // import Login from '@/pages/Login';
 // import Signup from '@/pages/Signup';
@@ -43,6 +44,10 @@ export const router = createBrowserRouter([
       {
         path: 'login',
         element: <Login />,
+      },
+      {
+        path: 'contest',
+        element: <Contest />,
       },
       {
         path: '*',
