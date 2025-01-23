@@ -1,10 +1,12 @@
 import { FormEvent, useEffect, useState } from 'react';
 
 import { Copy, Eye, EyeOff, HelpCircle } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
 import { useGetEncryption } from '@/apis/encryption';
 import { useSignUp } from '@/apis/sign';
+import { useGetUserInfo } from '@/apis/user';
 import Layout from '@/components/Layout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -72,6 +74,17 @@ const ERROR_MESSAGES: ErrorMessages = {
 const Signup = () => {
   const signUpMutation = useSignUp();
   const getEncryptionMutation = useGetEncryption();
+  const navigate = useNavigate();
+
+  // 사용자 정보 조회
+  const { data: userInfo } = useGetUserInfo();
+
+  // 이미 로그인된 사용자 리다이렉트
+  useEffect(() => {
+    if (userInfo) {
+      navigate('/');
+    }
+  }, [userInfo, navigate]);
 
   const [formData, setFormData] = useState<FormData>(INITIAL_FORM_STATE);
   const [errors, setErrors] = useState<Record<string, string>>({});
