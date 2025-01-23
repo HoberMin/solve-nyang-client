@@ -28,7 +28,7 @@ const Confetti = () => {
       // 각도를 0-360도 사이에서 랜덤하게 설정
       const angle = Math.random() * 360 * (Math.PI / 180);
       // 거리를 0-400px 사이에서 랜덤하게 설정 (더 멀리 퍼지도록)
-      const distance = Math.random() * 400;
+      const distance = Math.random() * 700;
 
       confetti.style.position = 'absolute';
       confetti.style.left = `${centerX}px`;
