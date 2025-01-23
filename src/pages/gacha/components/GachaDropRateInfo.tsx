@@ -13,17 +13,17 @@ const RARITY_INFO: RarityInfo[] = [
 ];
 
 export const GachaDropRateInfo = () => (
-  <div className='w-48 rounded-lg bg-white/10 px-6 py-4 shadow-md backdrop-blur-sm'>
-    <div className='mb-2 text-center text-xl font-bold text-white'>
+  <div className='w-40 rounded-lg bg-white/10 px-6 py-4 shadow-md backdrop-blur-sm'>
+    <div className='mb-2 text-center text-lg font-bold text-white'>
       획득 확률
     </div>
     <hr className='mb-4' />
     {RARITY_INFO.map(({ rarity, dropRate, color }) => (
       <div key={rarity} className='mb-1 flex items-center gap-4'>
-        <span className='text-lg font-bold' style={{ color: color }}>
+        <span className='text-base font-bold' style={{ color: color }}>
           {rarity}
         </span>
-        <span className='text-lg text-white'>{dropRate}%</span>
+        <span className='text-base text-white'>{dropRate}%</span>
       </div>
     ))}
   </div>
