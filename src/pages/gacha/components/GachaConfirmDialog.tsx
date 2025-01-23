@@ -34,7 +34,7 @@ export const GachaConfirmDialog = ({
         onKeyUp={handleEnterKey}
       >
         {pendingDraw &&
-          `${pendingDraw.cost} 코인을 사용해서 ${pendingDraw.count}회 뽑기를 할까요?`}
+          `${pendingDraw.cost}냥을 사용해서 ${pendingDraw.count}회 뽑기를 할까요?`}
         <AlertDialogFooter>
           <AlertDialogAction onClick={onConfirm}>확인</AlertDialogAction>
           <AlertDialogCancel>취소</AlertDialogCancel>
