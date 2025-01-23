@@ -10,8 +10,8 @@ export const ServiceIntro = () => {
     },
     {
       icon: <Coins className='h-8 w-8' />,
-      title: '포인트 적립',
-      description: '문제 해결로 획득한 포인트로 가챠를 돌려보세요',
+      title: '냥코인 적립',
+      description: '문제 해결로 획득한 냥코인으로 가챠를 돌려보세요',
     },
     {
       icon: <Cat className='h-8 w-8' />,
@@ -43,7 +43,7 @@ export const ServiceIntro = () => {
             알고리즘 풀고, 키우는 나만의 고양이
           </h2>
           <p className='mb-20 text-gray-300'>
-            알고리즘을 풀어서 포인트를 모으고,
+            알고리즘을 풀어서 냥코인을 모으고,
             <br />
             귀여운 고양이 캐릭터를 뽑아 나만의 특별한 이미지를 만들어보세요!
           </p>

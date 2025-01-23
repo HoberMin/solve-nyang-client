@@ -22,24 +22,24 @@ const Layout = ({ children }: PropsWithChildren) => {
   }
 
   return (
-    <div
-      className='relative min-h-screen w-full overflow-x-hidden bg-black font-neo'
-      style={{
-        backgroundImage: 'url("/solve-nyang-bg.png")',
-        backgroundSize: '1200px', // 또는 실제 이미지 크기에 맞게 조정
-        backgroundRepeat: 'repeat',
-        backgroundPosition: 'top',
-      }}
-    >
-      <div className='fixed top-0 z-50 w-full'>
-        <Header />
-      </div>
-      <main className='min-h-screen w-full pt-16'>
-        <div className='mx-auto max-w-full'>
-          <Suspense fallback={<RetroLoading />}>{children}</Suspense>
+    <Suspense fallback={<RetroLoading />}>
+      <div
+        className='relative min-h-screen w-full overflow-x-hidden bg-black font-neo'
+        style={{
+          backgroundImage: 'url("/solve-nyang-bg.png")',
+          backgroundSize: '1200px', // 또는 실제 이미지 크기에 맞게 조정
+          backgroundRepeat: 'repeat',
+          backgroundPosition: 'top',
+        }}
+      >
+        <div className='w-full'>
+          <Header />
         </div>
-      </main>
-    </div>
+        <main className='min-h-screen w-full pt-16'>
+          <div className='mx-auto max-w-full'>{children}</div>
+        </main>
+      </div>
+    </Suspense>
   );
 };
 

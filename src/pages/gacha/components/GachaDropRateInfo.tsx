@@ -4,7 +4,7 @@ interface RarityInfo {
   color: string;
 }
 
-const RARITY_INFO: RarityInfo[] = [
+export const RARITY_INFO: RarityInfo[] = [
   { rarity: 'S', dropRate: '1', color: '#f74600' },
   { rarity: 'A', dropRate: '4', color: '#ffc337' },
   { rarity: 'B', dropRate: '30', color: '#7abf16' },

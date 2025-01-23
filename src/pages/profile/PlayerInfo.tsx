@@ -56,21 +56,21 @@ export const PlayerInfo = () => {
       </div>
 
       <div className='grid gap-2'>
-        <div className='rounded-xl bg-gray-800/80 p-2.5 transition-all hover:bg-gray-800/90'>
+        <div className='rounded-xl bg-gray-800/80 p-2.5 py-4 transition-all hover:bg-gray-800/90'>
           <div className='flex items-center gap-2'>
             <Trophy className='h-4 w-4 text-yellow-400' />
             <div className='flex-1'>
-              <p className='text-xs text-gray-300'>포인트</p>
+              <p className='text-gray-300'>냥코인</p>
               <p className='text-sm font-bold text-yellow-300'>{point}</p>
             </div>
           </div>
         </div>
 
-        <div className='rounded-xl bg-gray-800/80 p-2.5 transition-all hover:bg-gray-800/90'>
+        <div className='rounded-xl bg-gray-800/80 p-2.5 py-4 transition-all hover:bg-gray-800/90'>
           <div className='flex items-center gap-2'>
             <Star className={`h-4 w-4 ${tierInfo.color}`} />
             <div className='flex-1'>
-              <p className='text-xs text-gray-300'>티어</p>
+              <p className='text-gray-300'>티어</p>
               <p className={`text-sm font-bold ${tierInfo.color}`}>
                 {tierInfo.name}
               </p>
@@ -78,11 +78,11 @@ export const PlayerInfo = () => {
           </div>
         </div>
 
-        <div className='rounded-xl bg-gray-800/80 p-2.5 transition-all hover:bg-gray-800/90'>
+        <div className='rounded-xl bg-gray-800/80 p-2.5 py-4 transition-all hover:bg-gray-800/90'>
           <div className='flex items-center gap-2'>
             <BookOpen className='h-4 w-4 text-green-400' />
             <div className='flex-1'>
-              <p className='text-xs text-gray-300'>해결한 문제</p>
+              <p className='text-gray-300'>해결한 문제</p>
               <p className='text-sm font-bold text-green-300'>
                 {solvedCount}개
               </p>
@@ -90,11 +90,11 @@ export const PlayerInfo = () => {
           </div>
         </div>
 
-        <div className='rounded-xl bg-gray-800/80 p-2.5 transition-all hover:bg-gray-800/90'>
+        <div className='rounded-xl bg-gray-800/80 p-2.5 py-4 transition-all hover:bg-gray-800/90'>
           <div className='flex items-center gap-2'>
             <Flame className='h-4 w-4 text-red-400' />
             <div className='flex-1'>
-              <p className='text-xs text-gray-300'>최대 스트릭</p>
+              <p className='text-gray-300'>최대 스트릭</p>
               <p className='text-sm font-bold text-red-300'>
                 {solvedacStrick}일
               </p>
