@@ -55,11 +55,11 @@ const RaritySection: React.FC<RaritySectionProps> = ({ title, characters }) => {
   };
 
   const rarityColors = {
-    S: 'from-yellow-500/20',
-    A: 'from-purple-500/20',
-    B: 'from-blue-500/20',
-    C: 'from-green-500/20',
-    D: 'from-gray-500/20',
+    S: `from-[#f74600]/80`,
+    A: `from-[#ffc337]/80`,
+    B: `from-[#7abf16]/80`,
+    C: `from-[#108df1]/80`,
+    D: `from-[#a663ee]`,
   };
 
   const isCanGoBack = currentIndex > 0;
@@ -74,14 +74,14 @@ const RaritySection: React.FC<RaritySectionProps> = ({ title, characters }) => {
           <span
             className={`inline-block h-3 w-3 rounded-full ${
               title === 'S'
-                ? 'bg-yellow-500'
+                ? 'bg-[#f74600]'
                 : title === 'A'
-                  ? 'bg-purple-500'
+                  ? 'bg-[#ffc337]'
                   : title === 'B'
-                    ? 'bg-blue-500'
+                    ? 'bg-[#7abf16]'
                     : title === 'C'
-                      ? 'bg-green-500'
-                      : 'bg-gray-500'
+                      ? 'bg-[#108df1]'
+                      : 'bg-[#a663ee]'
             }`}
           />
           <h3 className='font-bold text-white'>

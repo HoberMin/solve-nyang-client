@@ -18,16 +18,30 @@ const POINT_PER_AVATAR = 30;
 
 type Rarity = 'S' | 'A' | 'B' | 'C' | 'D';
 
+interface RarityStyle {
+  border: string;
+  text: string;
+}
+
+const rarityConfig: Record<Rarity, RarityStyle> = {
+  S: { border: 'border-[#f74600]', text: 'text-[#f74600]' },
+  A: { border: 'border-[#ffc337]', text: 'text-[#ffc337]' },
+  B: { border: 'border-[#7abf16]', text: 'text-[#7abf16]' },
+  C: { border: 'border-[#108df1]', text: 'text-[#108df1]' },
+  D: { border: 'border-[#a663ee]', text: 'text-[#a663ee]' },
+};
+
+const rarityOrder: Rarity[] = ['S', 'A', 'B', 'C', 'D'];
+
 export const AvatarSalePage = () => {
   const [selectedAvatars, setSelectedAvatars] = useState<UserAvatar[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [selectedRarity, setSelectedRarity] = useState<Rarity | 'All'>('All');
+  const [selectedRarity, setSelectedRarity] = useState<'ALL' | Rarity>('ALL');
 
   const { data, isPending: isLoading } = useGetUserAvatar();
   const { mutate: saleAvatars } = useSaleAvatar();
 
   const totalPoints = selectedAvatars.length * POINT_PER_AVATAR;
-
   const isCanSale = selectedAvatars.length > 0;
 
   const handleAvatarSelect = (avatar: UserAvatar) => {
@@ -42,13 +56,21 @@ export const AvatarSalePage = () => {
     saleAvatars({ avatars: selectedAvatars });
   };
 
-  const filteredAvatars =
-    data?.avatars.filter(avatar =>
-      selectedRarity === 'All' ? true : avatar.rarity === selectedRarity,
-    ) || [];
+  if (isLoading || !data) return <div>Loading...</div>;
 
-  if (isLoading) return <div>Loading...</div>;
-  if (!data) return null;
+  const rarityCounts = rarityOrder.reduce(
+    (counts, rarity) => {
+      counts[rarity] = data.avatars.filter(
+        char => char.rarity === rarity,
+      ).length;
+      return counts;
+    },
+    {} as Record<Rarity, number>,
+  );
+
+  const filteredAvatars = data.avatars.filter(avatar =>
+    selectedRarity === 'ALL' ? true : avatar.rarity === selectedRarity,
+  );
 
   return (
     <Layout>
@@ -60,28 +82,42 @@ export const AvatarSalePage = () => {
               아바타 판매
             </div>
             <p className='text-lg text-gray-400'>
-              아바타 한개당 {POINT_PER_AVATAR}포인트를 획득할 수 있습니다
+              아바타 한개당 {POINT_PER_AVATAR}냥코인을 획득할 수 있습니다
             </p>
-            <div className='mt-8'>
-              <span className='text-base text-gray-400'>획득 포인트: </span>
-              <span className='text-base text-blue-400'>{totalPoints}</span>
+            <div className='mt-8 text-xl'>
+              <span className='text-gray-400'>획득 냥코인: </span>
+              <span className='text-blue-400'>{totalPoints}</span>
             </div>
           </div>
 
           {/* 등급 필터 */}
           <div className='mb-4 flex cursor-pointer justify-center gap-2'>
-            {['All', 'S', 'A', 'B', 'C', 'D'].map(rarity => (
+            {(['ALL' as const, ...rarityOrder] as const).map(rarity => (
               <span
                 key={rarity}
-                onClick={() => setSelectedRarity(rarity as Rarity | 'All')}
+                onClick={() => setSelectedRarity(rarity)}
                 className={cn(
-                  'rounded px-3 py-1 text-base transition-all',
+                  'rounded-md border-gray-200 px-3 py-1 transition-all',
                   selectedRarity === rarity
-                    ? 'bg-blue-400 text-gray-900'
-                    : 'bg-gray-800 text-gray-400 hover:bg-gray-700',
+                    ? rarity === 'ALL'
+                      ? 'bg-black text-white'
+                      : `bg-${rarityConfig[rarity].text.split('-')[1]} text-white`
+                    : 'text-blue-400',
                 )}
               >
                 {rarity}
+                {rarity !== 'ALL' && (
+                  <span
+                    className={cn(
+                      'ml-1',
+                      selectedRarity === rarity
+                        ? 'text-white'
+                        : 'text-gray-500',
+                    )}
+                  >
+                    ({rarityCounts[rarity] || 0})
+                  </span>
+                )}
               </span>
             ))}
           </div>
@@ -94,29 +130,15 @@ export const AvatarSalePage = () => {
               const isSelected = selectedAvatars.some(
                 item => item.ownedAvatarId === avatar.ownedAvatarId,
               );
+              const rarity = rarityConfig[avatar.rarity];
 
               return (
                 <div
                   key={avatar.ownedAvatarId}
                   onClick={() => handleAvatarSelect(avatar)}
                   className={cn(
-                    'relative cursor-pointer rounded-lg border p-1.5 transition-all hover:scale-105',
-                    isSelected && 'border-blue-400 bg-blue-400/10',
-                    !isSelected &&
-                      avatar.rarity === 'S' &&
-                      'border-yellow-300/50 bg-yellow-300/5',
-                    !isSelected &&
-                      avatar.rarity === 'A' &&
-                      'border-rose-300/50 bg-rose-300/5',
-                    !isSelected &&
-                      avatar.rarity === 'B' &&
-                      'border-blue-400/50 bg-blue-400/5',
-                    !isSelected &&
-                      avatar.rarity === 'C' &&
-                      'border-green-400/50 bg-green-400/5',
-                    !isSelected &&
-                      avatar.rarity === 'D' &&
-                      'border-gray-700 bg-gray-800/50',
+                    'relative cursor-pointer rounded-lg border-2 p-1.5 transition-all hover:scale-105',
+                    rarity.border, // 선택 여부와 관계없이 등급별 테두리 색상 적용
                   )}
                 >
                   <div className='relative aspect-square overflow-hidden rounded-md'>
@@ -127,7 +149,7 @@ export const AvatarSalePage = () => {
                     />
                     {isSelected && (
                       <div className='absolute inset-0 flex flex-col items-center justify-center bg-black/50'>
-                        <span className='text-base text-blue-400'>
+                        <span className={cn('text-base', rarity.text)}>
                           +{POINT_PER_AVATAR}P
                         </span>
                       </div>
@@ -137,11 +159,8 @@ export const AvatarSalePage = () => {
                     <p
                       className={cn(
                         'text-sm',
-                        avatar.rarity === 'S' && 'font-bold text-yellow-300',
-                        avatar.rarity === 'A' && 'text-rose-300',
-                        avatar.rarity === 'B' && 'text-blue-400',
-                        avatar.rarity === 'C' && 'text-green-400',
-                        avatar.rarity === 'D' && 'text-gray-400',
+                        rarity.text,
+                        avatar.rarity === 'S' && 'font-bold',
                       )}
                     >
                       {getCatKorName(avatar.name)}
@@ -149,11 +168,8 @@ export const AvatarSalePage = () => {
                     <p
                       className={cn(
                         'text-xs',
-                        avatar.rarity === 'S' && 'font-bold text-yellow-300',
-                        avatar.rarity === 'A' && 'text-rose-300',
-                        avatar.rarity === 'B' && 'text-blue-400',
-                        avatar.rarity === 'C' && 'text-green-400',
-                        avatar.rarity === 'D' && 'text-gray-400',
+                        rarity.text,
+                        avatar.rarity === 'S' && 'font-bold',
                       )}
                     >
                       {avatar.rarity}등급
@@ -169,15 +185,13 @@ export const AvatarSalePage = () => {
         <div className='fixed bottom-0 left-0 right-0 flex justify-center gap-4 border-t border-gray-800 bg-gray-900/95 px-6 py-4 backdrop-blur-sm'>
           <span
             role='button'
-            tabIndex={0}
-            onClick={() => setSelectedAvatars([])}
             onKeyDown={e => {
               if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault();
                 setSelectedAvatars([]);
               }
             }}
-            className='cursor-pointer rounded-full border border-gray-700 bg-gray-800 px-4 py-2 text-base text-gray-400 transition-colors hover:border-red-500 hover:text-red-500'
+            className='cursor-pointer rounded-full border-2 border-red-500 bg-gray-800 px-4 py-2 text-base text-red-500 transition-colors hover:bg-red-500 hover:text-white'
           >
             초기화
           </span>
@@ -229,7 +243,7 @@ export const AvatarSalePage = () => {
                     </div>
 
                     <span className='block text-lg text-blue-400'>
-                      획득 포인트: {totalPoints}P
+                      획득 냥코인: {totalPoints}P
                     </span>
                   </div>
                 </DialogDescription>

@@ -191,7 +191,7 @@ const Signup = () => {
         <div className='space-y-2 text-white'>
           <div className='flex justify-center gap-3 text-center'>
             <h3 className='mb-1 text-xl font-bold'>회원가입 방법</h3>
-            <TooltipProvider>
+            <TooltipProvider delayDuration={100}>
               <Tooltip>
                 <Dialog>
                   <DialogTrigger asChild>
@@ -220,8 +220,9 @@ const Signup = () => {
                   </DialogContent>
                 </Dialog>
                 <TooltipContent
-                  side='top' // 위쪽으로 표시
-                  align='center' // 중앙 정렬
+                  side='top'
+                  align='center'
+                  sideOffset={40}
                   className='rounded border border-gray-200 bg-white p-2 text-black shadow-md'
                 >
                   <p>자세한 설명을 원한다면 클릭하세요</p>

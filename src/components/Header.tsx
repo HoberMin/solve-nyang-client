@@ -10,6 +10,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuPortal,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
@@ -61,7 +62,6 @@ interface UserDropdownProps {
   username: string;
 }
 
-// 드롭다운
 const UserDropdown: React.FC<UserDropdownProps> = ({ username }) => {
   // 로그아웃
   const handleLogout = () => {
@@ -71,44 +71,41 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ username }) => {
   };
 
   return (
-    <div className='static'>
-      <DropdownMenu>
-        <DropdownMenuTrigger className='group relative cursor-pointer bg-gray-900 outline-none'>
-          <div
-            className='absolute inset-0 -z-10 h-full w-full rounded opacity-0 blur transition-all duration-300 group-hover:opacity-30 group-hover:blur-md'
-            style={{
-              background:
-                'radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, transparent 70%)',
-            }}
-          />
-          <span
-            className='relative inline-block bg-gradient-to-b from-blue-300 to-blue-500 bg-clip-text text-xl text-transparent transition-transform duration-300 ease-in-out group-hover:scale-105 group-hover:from-blue-200 group-hover:to-blue-400'
-            style={{
-              textShadow: '0 0 5px rgba(59, 130, 246, 0.3)',
-              WebkitTextStroke: '1px rgba(59, 130, 246, 0.2)',
-            }}
-          >
-            {username}
-          </span>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent className='border-0 bg-gray-900 py-1' align='end'>
-          <DropdownMenuItem className='focus:bg-transparent'>
+    <DropdownMenu>
+      <DropdownMenuTrigger className='cursor-pointer bg-gray-900 outline-none ring-0 focus:outline-none focus:ring-0 focus:ring-offset-0 active:outline-none active:ring-0'>
+        <span
+          className='relative inline-block bg-gradient-to-b from-blue-300 to-blue-500 bg-clip-text text-xl text-transparent'
+          style={{
+            textShadow: '0 0 5px rgba(59, 130, 246, 0.3)',
+            WebkitTextStroke: '1px rgba(59, 130, 246, 0.2)',
+          }}
+        >
+          {username}
+        </span>
+      </DropdownMenuTrigger>
+      <DropdownMenuPortal>
+        <DropdownMenuContent
+          className='z-50 border-0 bg-gray-900 py-1'
+          side='bottom'
+          align='start'
+        >
+          <DropdownMenuItem asChild className='focus:bg-gray-800'>
             <Link
               to='/profile'
-              className='w-full py-2 text-center text-xl text-white hover:text-gray-300'
+              className='text-xl text-white hover:text-gray-300'
             >
               내 정보
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem
-            className='flex justify-center text-xl text-white hover:text-gray-300'
+            className='text-xl text-white hover:text-gray-300 focus:bg-gray-800'
             onClick={handleLogout}
           >
             로그아웃
           </DropdownMenuItem>
         </DropdownMenuContent>
-      </DropdownMenu>
-    </div>
+      </DropdownMenuPortal>
+    </DropdownMenu>
   );
 };
 
@@ -125,7 +122,7 @@ const Header = () => {
   const isAuthenticated = Boolean(data?.username);
 
   return (
-    <header className='relative flex h-16 items-center justify-between bg-gray-900 px-6'>
+    <header className='relative z-10 flex h-16 items-center justify-between bg-gray-900 px-6'>
       <div
         className='absolute inset-0 opacity-5'
         style={{
@@ -137,22 +134,31 @@ const Header = () => {
           animation: 'backgroundScroll 20s linear infinite',
         }}
       />
-
-      <div className='group cursor-pointer'>
-        <Link to='/'>
-          <span
-            className='relative bg-gradient-to-r from-blue-400 via-blue-500 to-blue-400 bg-clip-text text-2xl text-transparent transition-all duration-300 group-hover:from-blue-300 group-hover:via-blue-400 group-hover:to-blue-300'
-            style={{
-              textShadow: '0 0 10px rgba(59, 130, 246, 0.4)',
-              WebkitTextStroke: '1px rgba(59, 130, 246, 0.2)',
-            }}
-          >
-            솔브냥
-          </span>
-        </Link>
-        <div className='absolute -bottom-1 left-0 h-px w-0 bg-gradient-to-r from-blue-400/50 to-blue-300/50 transition-all duration-300 group-hover:w-full' />
+      <div className='flex items-center gap-4'>
+        <div className='group cursor-pointer'>
+          <Link to='/'>
+            <span
+              className='relative bg-gradient-to-r from-blue-400 via-blue-500 to-blue-400 bg-clip-text text-2xl text-transparent transition-all duration-300 group-hover:from-blue-300 group-hover:via-blue-400 group-hover:to-blue-300'
+              style={{
+                textShadow: '0 0 10px rgba(59, 130, 246, 0.4)',
+                WebkitTextStroke: '1px rgba(59, 130, 246, 0.2)',
+              }}
+            >
+              솔브냥
+            </span>
+          </Link>
+          <div className='absolute -bottom-1 left-0 h-px w-0 bg-gradient-to-r from-blue-400/50 to-blue-300/50 transition-all duration-300 group-hover:w-full' />
+        </div>
+        <a
+          href='https://github.com/solve-nyang/solve-nyang-client'
+          target='_blank'
+          rel='noopener noreferrer'
+        >
+          <RetroIcon>
+            <Github className='h-6 w-6 text-blue-400' /> {/* 사이즈 조정 */}
+          </RetroIcon>
+        </a>
       </div>
-
       <nav className='relative z-10 flex items-center gap-8'>
         {isLoading ? (
           <LoadingPulse />
@@ -165,18 +171,7 @@ const Header = () => {
             <UserDropdown username={data?.username || 'User'} />
           </>
         )}
-
-        <a
-          href='https://github.com/solve-nyang/solve-nyang-client'
-          target='_blank'
-          rel='noopener noreferrer'
-        >
-          <RetroIcon>
-            <Github className='h-8 w-8 text-blue-400' />
-          </RetroIcon>
-        </a>
       </nav>
-
       <div
         className='animate-scanline opacity-3 pointer-events-none absolute inset-0'
         style={{
@@ -185,7 +180,6 @@ const Header = () => {
           backgroundSize: '4px 4px',
         }}
       />
-
       <div className='absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-blue-400/30 to-transparent opacity-30' />
     </header>
   );

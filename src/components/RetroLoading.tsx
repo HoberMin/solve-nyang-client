@@ -39,7 +39,7 @@ const RetroLoading = () => {
               </span>
             </div>
             <div className='mt-4 text-center text-base leading-relaxed text-slate-300'>
-              백준 문제를 풀어 포인트를 획득하고
+              백준 문제를 풀어 냥코인을 획득하고
               <br />
               특별한 아바타를 수집해보세요!
             </div>
