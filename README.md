@@ -1,50 +1,43 @@
-# React + TypeScript + Vite
+<div align="center">
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 솔브냥(solve-nyang)😺
 
-Currently, two official plugins are available:
+알고리즘을 풀어서 포인트를 모으고, 귀여운 고양이 캐릭터를 뽑아 나만의 특별한 이미지를 만들어보세요!
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+[🐾 솔브냥 바로가기](https://www.solve-nyang.com/)
 
-## Expanding the ESLint configuration
+</div>
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+---
 
-- Configure the top-level `parserOptions` property like this:
+### 🎯 서비스 목표
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-});
-```
+- 알고리즘 학습을 재미있게 지속할 수 있도록 동기를 제공합니다.
+- 귀여운 고양이 캐릭터를 통해 게이미피케이션의 즐거움을 선사합니다.
+- 알고리즘 풀이 실력을 높이고 성취감을 느낄 수 있도록 돕습니다.
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+</br>
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react';
+### 💡 서비스 상세 소개
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-});
-```
+#### 1. 포인트 적립
+
+- `solved.ac`의 다양한 알고리즘 문제를 풀어 **냥코인**을 적립하세요.
+- 문제 난이도가 높을수록 더 많은 냥코인을 획득할 수 있습니다.
+
+#### 2. 고양이 수집
+
+- **가챠**에서 모은 냥코인으로 귀여운 고양이 캐릭터를 뽑아보세요.
+- 내가 뽑은 고양이는 **내 정보** 페이지에서 확인할 수 있습니다.
+- 고양이는 희귀도별로 다양한 종류가 준비되어 있습니다.
+
+#### 3. 고양이 판매
+
+- **상점**에서 내가 모은 고양이를 판매하고 추가 냥코인을 적립하세요.
+- 판매한 냥코인으로 더 귀여운 고양이를 모아보세요!
+
+#### 4. GitHub README 꾸미기
+
+- **내 정보** 페이지에서 모은 고양이 링크를 복사해 나만의 **GitHub README**를 꾸며보세요.
+- 나만의 고양이 컬렉션을 자랑하고 특별한 개성을 표현해보세요!
+  ![리드미 화면 예시](public/github_readme.png)
