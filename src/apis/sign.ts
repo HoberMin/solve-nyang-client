@@ -98,7 +98,7 @@ export const useSignUp = () => {
       navigate('/login');
     },
     onError: () => {
-      toast.error('회원가입에 실패했습니다. 다시 시도해주세요.');
+      toast.error('회원가입에 실패했습니다. solved.ac 인증을 확인하세요.');
     },
   });
 
