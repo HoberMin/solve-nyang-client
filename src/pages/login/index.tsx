@@ -1,11 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import { KeyRound, User } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
 import { AuthRequest, useSignIn } from '@/apis/sign';
-import { useGetUserInfo } from '@/apis/user';
 import Layout from '@/components/Layout';
 import { Button } from '@/components/ui/button';
 import {
@@ -19,21 +17,10 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
 const Login = () => {
-  const navigate = useNavigate();
   const [authForm, setAuthForm] = useState<AuthRequest>({
     username: '',
     password: '',
   });
-
-  // 사용자 정보 조회
-  const { data: userInfo } = useGetUserInfo();
-
-  // 이미 로그인된 사용자 리다이렉트
-  useEffect(() => {
-    if (userInfo) {
-      navigate('/');
-    }
-  }, [userInfo, navigate]);
 
   const { mutate: signIn, isPending } = useSignIn();
 
