@@ -1,15 +1,38 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { Copy } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
+import { useGetUserAvatar, useGetUserInfo } from '@/apis/user';
+
 export const MyAvatar = () => {
-  const userName = 'sonhomin98';
   const [isCopied, setCopied] = useState(false);
+
+  const navigate = useNavigate();
+  const { data, isPending } = useGetUserInfo();
+  const { data: avatarList } = useGetUserAvatar();
+
+  useEffect(() => {
+    if (!isPending && !data?.username) {
+      toast.error('로그인이 필요한 서비스입니다.', {
+        description: '로그인 페이지로 이동합니다.',
+        action: {
+          label: '확인',
+          onClick: () => navigate('/login'),
+        },
+      });
+      navigate('/login');
+    }
+  }, [data, isPending, navigate]);
+
+  if (!data?.username) {
+    return null;
+  }
 
   const handleCopy = async () => {
     try {
-      const imgTag = `<img src="domain/${userName}" />`;
+      const imgTag = `<img src="https://api.solve-nyang.com/compose/${data.username}" width="600" height="300"/>" />`;
       await navigator.clipboard.writeText(imgTag);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
@@ -32,14 +55,11 @@ export const MyAvatar = () => {
           {isCopied ? 'Copied!' : 'Copy Image Tag'}
         </button>
       </div>
-
-      <div className='max-h-[250px] w-full overflow-hidden rounded-lg border'>
+      <div className='aspect-[2/1] w-full max-w-2xl overflow-hidden rounded-lg border'>
         <img
-          src={`domain/${userName}`}
+          src={`https://api.solve-nyang.com/compose/${data.username}?t=${avatarList.avatars.filter(e => e.visible).length}`}
           alt='Farm Preview'
-          width={800}
-          height={400}
-          className='w-full object-contain'
+          className='h-full w-full object-contain'
         />
       </div>
     </div>

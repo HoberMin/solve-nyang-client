@@ -114,6 +114,7 @@ export const useToggleAvatar = () => {
   const { mutate } = useMutation({
     mutationFn: (ownedAvatarId: string) => userCharacterSelecte(ownedAvatarId),
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['userInfo'] });
       queryClient.invalidateQueries({ queryKey: ['userAvatar'] });
     },
   });
