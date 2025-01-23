@@ -166,7 +166,8 @@ const Header = () => {
           <RetroMenuItem href='/login'>로그인</RetroMenuItem>
         ) : (
           <>
-            <RetroMenuItem href='/gacha'>가챠</RetroMenuItem>
+            <RetroMenuItem href='/contest'>공모전</RetroMenuItem>
+            <RetroMenuItem href='/gacha'>뽑기 </RetroMenuItem>
             <RetroMenuItem href='/auction'>상점</RetroMenuItem>
             <UserDropdown username={data?.username || 'User'} />
           </>
