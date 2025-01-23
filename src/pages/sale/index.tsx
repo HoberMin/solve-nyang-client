@@ -1,6 +1,11 @@
 import { useState } from 'react';
 
-import { UserAvatar, useGetUserAvatar, useSaleAvatar } from '@/apis/user';
+import {
+  UserAvatar,
+  useGetUserAvatar,
+  useGetUserInfo,
+  useSaleAvatar,
+} from '@/apis/user';
 import Layout from '@/components/Layout';
 import {
   Dialog,
@@ -12,6 +17,7 @@ import {
 } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
 
+import { PointDisplay } from '../gacha/components/PointDisplay';
 import { getCatKorName } from '../gacha/constants/catMappings';
 
 const POINT_PER_AVATAR = 30;
@@ -21,6 +27,14 @@ type Rarity = 'S' | 'A' | 'B' | 'C' | 'D';
 interface RarityStyle {
   border: string;
   text: string;
+}
+
+interface HeaderSectionProps {
+  point: number;
+  totalPoints: number;
+  selectedRarity: 'ALL' | Rarity;
+  setSelectedRarity: (rarity: 'ALL' | Rarity) => void;
+  rarityCounts: Record<Rarity, number>;
 }
 
 const rarityConfig: Record<Rarity, RarityStyle> = {
@@ -33,12 +47,78 @@ const rarityConfig: Record<Rarity, RarityStyle> = {
 
 const rarityOrder: Rarity[] = ['S', 'A', 'B', 'C', 'D'];
 
+const HeaderSection: React.FC<HeaderSectionProps> = ({
+  point,
+  totalPoints,
+  selectedRarity,
+  setSelectedRarity,
+  rarityCounts,
+}) => {
+  return (
+    <div className='sticky top-0 z-10 bg-gray-900/95 py-4 backdrop-blur-sm'>
+      <div className='flex items-start justify-between px-6'>
+        <div className='flex-1'>
+          <div className='mb-6 mt-8'>
+            <div className='mb-2 text-2xl font-bold text-blue-400 shadow-blue-400/50 drop-shadow-lg'>
+              아바타 판매
+            </div>
+            <p className='text-lg text-gray-400'>
+              아바타 한개당 {POINT_PER_AVATAR}냥코인을 획득할 수 있습니다
+            </p>
+            <div className='mt-8 text-xl'>
+              <span className='text-gray-400'>획득 냥코인: </span>
+              <span className='text-blue-400'>{totalPoints}</span>
+            </div>
+          </div>
+
+          <div className='flex cursor-pointer gap-2'>
+            {(['ALL' as const, ...rarityOrder] as const).map(rarity => (
+              <span
+                key={rarity}
+                onClick={() => setSelectedRarity(rarity)}
+                className={cn(
+                  'rounded-md border-gray-200 px-3 py-1 transition-all',
+                  selectedRarity === rarity
+                    ? rarity === 'ALL'
+                      ? 'bg-black text-white'
+                      : `bg-${rarityConfig[rarity as Rarity].text.split('-')[1]} text-white`
+                    : 'text-blue-400',
+                )}
+              >
+                {rarity}
+                {rarity !== 'ALL' && (
+                  <span
+                    className={cn(
+                      'ml-1',
+                      selectedRarity === rarity
+                        ? 'text-white'
+                        : 'text-gray-500',
+                    )}
+                  >
+                    ({rarityCounts[rarity as Rarity] || 0})
+                  </span>
+                )}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        <div className='mt-8'>
+          <PointDisplay point={point} />
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export const AvatarSalePage = () => {
   const [selectedAvatars, setSelectedAvatars] = useState<UserAvatar[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedRarity, setSelectedRarity] = useState<'ALL' | Rarity>('ALL');
 
-  const { data, isPending: isLoading } = useGetUserAvatar();
+  const { data } = useGetUserAvatar();
+  const { data: userInfo } = useGetUserInfo();
+  const { point } = userInfo ?? { point: 0 };
   const { mutate: saleAvatars } = useSaleAvatar();
 
   const totalPoints = selectedAvatars.length * POINT_PER_AVATAR;
@@ -54,13 +134,13 @@ export const AvatarSalePage = () => {
 
   const handleSale = () => {
     saleAvatars({ avatars: selectedAvatars });
+    setIsDialogOpen(false);
+    setSelectedAvatars([]);
   };
 
-  if (isLoading || !data) return <div>Loading...</div>;
-
-  const rarityCounts = rarityOrder.reduce(
+  const rarityCounts = rarityOrder.reduce<Record<Rarity, number>>(
     (counts, rarity) => {
-      counts[rarity] = data.avatars.filter(
+      counts[rarity] = (data?.avatars ?? []).filter(
         char => char.rarity === rarity,
       ).length;
       return counts;
@@ -68,60 +148,20 @@ export const AvatarSalePage = () => {
     {} as Record<Rarity, number>,
   );
 
-  const filteredAvatars = data.avatars.filter(avatar =>
+  const filteredAvatars = (data?.avatars ?? []).filter(avatar =>
     selectedRarity === 'ALL' ? true : avatar.rarity === selectedRarity,
   );
 
   return (
     <Layout>
       <div className='relative mx-auto flex h-full w-full max-w-7xl flex-col'>
-        {/* 헤더 섹션 */}
-        <div className='sticky top-0 z-10 py-4'>
-          <div className='mb-6 mt-8 text-center'>
-            <div className='mb-2 text-2xl font-bold text-blue-400 shadow-blue-400/50 drop-shadow-lg'>
-              아바타 판매
-            </div>
-            <p className='text-lg text-gray-400'>
-              아바타 한개당 {POINT_PER_AVATAR}냥코인을 획득할 수 있습니다
-            </p>
-            <div className='mt-8 text-xl'>
-              <span className='text-gray-400'>획득 냥코인: </span>
-              <span className='text-blue-400'>{totalPoints}</span>
-            </div>
-          </div>
-
-          {/* 등급 필터 */}
-          <div className='mb-4 flex cursor-pointer justify-center gap-2'>
-            {(['ALL' as const, ...rarityOrder] as const).map(rarity => (
-              <span
-                key={rarity}
-                onClick={() => setSelectedRarity(rarity)}
-                className={cn(
-                  'rounded-md border-gray-200 px-3 py-1 transition-all',
-                  selectedRarity === rarity
-                    ? rarity === 'ALL'
-                      ? 'bg-black text-white'
-                      : `bg-${rarityConfig[rarity].text.split('-')[1]} text-white`
-                    : 'text-blue-400',
-                )}
-              >
-                {rarity}
-                {rarity !== 'ALL' && (
-                  <span
-                    className={cn(
-                      'ml-1',
-                      selectedRarity === rarity
-                        ? 'text-white'
-                        : 'text-gray-500',
-                    )}
-                  >
-                    ({rarityCounts[rarity] || 0})
-                  </span>
-                )}
-              </span>
-            ))}
-          </div>
-        </div>
+        <HeaderSection
+          point={point}
+          totalPoints={totalPoints}
+          selectedRarity={selectedRarity}
+          setSelectedRarity={setSelectedRarity}
+          rarityCounts={rarityCounts}
+        />
 
         {/* 아바타 그리드 */}
         <div className='flex-1 overflow-y-auto px-1 pb-32 pt-16'>
@@ -138,7 +178,7 @@ export const AvatarSalePage = () => {
                   onClick={() => handleAvatarSelect(avatar)}
                   className={cn(
                     'relative cursor-pointer rounded-lg border-2 p-1.5 transition-all hover:scale-105',
-                    rarity.border, // 선택 여부와 관계없이 등급별 테두리 색상 적용
+                    rarity.border,
                   )}
                 >
                   <div className='relative aspect-square overflow-hidden rounded-md'>
@@ -185,6 +225,8 @@ export const AvatarSalePage = () => {
         <div className='fixed bottom-0 left-0 right-0 flex justify-center gap-4 border-t border-gray-800 bg-gray-900/95 px-6 py-4 backdrop-blur-sm'>
           <span
             role='button'
+            tabIndex={0}
+            onClick={() => setSelectedAvatars([])}
             onKeyDown={e => {
               if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault();

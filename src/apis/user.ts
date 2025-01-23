@@ -1,10 +1,8 @@
 import {
   useMutation,
-  useQuery,
   useQueryClient,
   useSuspenseQuery,
 } from '@tanstack/react-query';
-import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
 import { Rarity } from '@/pages/profile/AvatarCollection';
@@ -75,7 +73,7 @@ const userAvatar = async () => {
 };
 
 const saleAvatar = async (avatarList: UserAvatarList) => {
-  const response = await fetch(`${domain}/gacha/sale`, {
+  await fetch(`${domain}/gacha/sale`, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
@@ -89,16 +87,10 @@ const saleAvatar = async (avatarList: UserAvatarList) => {
       }),
     }),
   });
-
-  if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`);
-  }
-
-  return await response.json();
 };
 
 export const useGetUserInfo = () =>
-  useQuery<UserInfo>({
+  useSuspenseQuery<UserInfo>({
     queryKey: ['userInfo'],
     queryFn: userInfo,
   });
@@ -124,15 +116,13 @@ export const useToggleAvatar = () => {
 
 export const useSaleAvatar = () => {
   const queryClient = useQueryClient();
-  const navigate = useNavigate();
 
   return useMutation({
     mutationFn: (avatarList: UserAvatarList) => saleAvatar(avatarList),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['userInfo'] });
-      queryClient.invalidateQueries({ queryKey: ['avatars'] });
+      queryClient.invalidateQueries({ queryKey: ['userAvatar'] });
       toast.success('아바타가 성공적으로 판매되었습니다.');
-      navigate('/profile');
     },
     onError: error => {
       toast.error('판매 중 오류가 발생했습니다.');

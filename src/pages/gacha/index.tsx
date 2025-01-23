@@ -7,6 +7,12 @@ import { Avatar, useGachaAvatarApi } from '@/apis/avatar';
 import { useGetUserInfo } from '@/apis/user';
 import Layout from '@/components/Layout';
 import RetroLoading from '@/components/RetroLoading';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 import { queryClient } from '@/lib/queryClient';
 import { GachaConfirmDialog } from '@/pages/gacha/components/GachaConfirmDialog';
 import { GachaDropRateInfo } from '@/pages/gacha/components/GachaDropRateInfo';
@@ -60,6 +66,56 @@ const INITIAL_BALL_POSITIONS: BallPosition[] = Array.from(
   },
 );
 
+interface DrawButtonProps {
+  count: number;
+  cost: number;
+  point: number;
+  isAnimating: boolean;
+  onDraw: (count: number) => void;
+}
+
+const DrawButton = ({
+  count,
+  cost,
+  point,
+  isAnimating,
+  onDraw,
+}: DrawButtonProps) => {
+  const button = (
+    <button
+      className='w-32 bg-white p-1 text-black hover:scale-105 disabled:cursor-not-allowed disabled:bg-gray-400'
+      onClick={() => onDraw(count)}
+      disabled={isAnimating || point < cost}
+    >
+      <div className='text-lg font-bold'>{count}회 뽑기</div>
+      <div className='flex items-center justify-center gap-1'>
+        <img src={coinImg} alt='coin' className='w-6' />
+        <div className='text-sm'>{cost}냥</div>
+      </div>
+    </button>
+  );
+
+  if (point < cost) {
+    return (
+      <TooltipProvider delayDuration={100}>
+        <Tooltip>
+          <TooltipTrigger asChild>{button}</TooltipTrigger>
+          <TooltipContent
+            sideOffset={20}
+            alignOffset={20}
+            side={count === 1 ? 'left' : 'right'}
+          >
+            <p className='border border-red-900/50 bg-red-950/30 px-4 py-2 text-red-400'>
+              포인트가 부족합니다
+            </p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+    );
+  }
+
+  return button;
+};
 const Gacha = () => {
   const navigate = useNavigate();
   const getGacha = useGachaAvatarApi();
@@ -206,28 +262,20 @@ const Gacha = () => {
             </div>
 
             <div className='relative z-50 mt-4 flex gap-4'>
-              <button
-                className='w-32 bg-white p-1 text-black hover:scale-105 disabled:bg-gray-400'
-                onClick={() => handleConfirmDraw(1)}
-                disabled={isAnimating || point < 100}
-              >
-                <div className='text-lg font-bold'>1회 뽑기</div>
-                <div className='flex items-center justify-center gap-1'>
-                  <img src={coinImg} alt='coin' className='w-6' />
-                  <div className='text-sm'>100냥</div>
-                </div>
-              </button>
-              <button
-                className='w-32 bg-white p-1 text-black hover:scale-105 disabled:bg-gray-400'
-                onClick={() => handleConfirmDraw(10)}
-                disabled={isAnimating || point < 1000}
-              >
-                <div className='text-lg font-bold'>10회 뽑기</div>
-                <div className='flex items-center justify-center gap-1'>
-                  <img src={coinImg} alt='coin' className='w-6' />
-                  <div className='text-sm'>1000냥</div>
-                </div>
-              </button>
+              <DrawButton
+                count={1}
+                cost={100}
+                point={point}
+                isAnimating={isAnimating}
+                onDraw={handleConfirmDraw}
+              />
+              <DrawButton
+                count={10}
+                cost={1000}
+                point={point}
+                isAnimating={isAnimating}
+                onDraw={handleConfirmDraw}
+              />
             </div>
           </div>
         </div>
