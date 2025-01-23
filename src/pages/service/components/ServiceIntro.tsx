@@ -74,7 +74,7 @@ export const ServiceIntro = () => {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            문제풀러 가기
+            문제풀고, 포인트 획득하기
           </motion.a>
           <motion.a
             href='/gacha'
