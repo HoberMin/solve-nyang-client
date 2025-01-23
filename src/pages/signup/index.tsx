@@ -69,6 +69,12 @@ const ERROR_MESSAGES: ErrorMessages = {
   PASSWORD_CHECK: '비밀번호를 확인해주세요.',
 };
 
+const FEEDBACK_MESSAGES = {
+  INVALID_NICKNAME: '유효한 닉네임을 입력하세요.',
+  ENCRYPTION_GUIDE: '암호화키를 solved.ac 내정보-이름에 입력하세요.',
+  INCOMPLETE_FORM: '가입정보를 입력하세요.',
+};
+
 const Signup = () => {
   const signUpMutation = useSignUp();
   const getEncryptionMutation = useGetEncryption();
@@ -125,7 +131,7 @@ const Signup = () => {
           setErrors(prev => ({
             ...prev,
             passwordConfirm: '',
-            passwordSuccess: '비밀번호가 일치합니다',
+            passwordSuccess: '비밀번호가 일치합니다.',
           }));
         }
     }
@@ -145,6 +151,10 @@ const Signup = () => {
         setEncryptionKey(data.verificationCode);
         setIsKeyIssued(true);
         setErrors(prev => ({ ...prev, encryption: '', username: '' }));
+        toast.success(FEEDBACK_MESSAGES.ENCRYPTION_GUIDE);
+      },
+      onError: () => {
+        toast.error(FEEDBACK_MESSAGES.INVALID_NICKNAME);
       },
     });
   };
@@ -352,7 +362,7 @@ const Signup = () => {
                         handleInputChange(e.target.value, 'password')
                       }
                       className='h-10 bg-zinc-900 pr-10 text-zinc-100'
-                      placeholder='비밀번호를 입력하세요'
+                      placeholder='비밀번호를 입력하세요.'
                     />
                     {isShowPassword ? (
                       <EyeOff
@@ -382,7 +392,7 @@ const Signup = () => {
                       handleInputChange(e.target.value, 'passwordConfirm')
                     }
                     className='h-10 bg-zinc-900 text-zinc-100'
-                    placeholder='비밀번호를 다시 입력하세요'
+                    placeholder='비밀번호를 다시 입력하세요.'
                   />
                   {errors.passwordConfirm && (
                     <p className='text-sm text-red-500'>
@@ -395,14 +405,47 @@ const Signup = () => {
                     </p>
                   )}
                 </div>
+                <TooltipProvider>
+                  {!isValid && (
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <span className='inline-block w-full'>
+                          <Button
+                            type='submit'
+                            disabled={true}
+                            className='mt-6 h-10 w-full bg-blue-600 hover:bg-blue-700'
+                          >
+                            회원가입
+                          </Button>
+                        </span>
+                      </TooltipTrigger>
+                      <TooltipContent
+                        side='bottom'
+                        sideOffset={28}
+                        className='bg-white px-8 text-black'
+                      >
+                        <p>{FEEDBACK_MESSAGES.INCOMPLETE_FORM}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  )}
+                  {isValid && (
+                    <Button
+                      type='submit'
+                      className='mt-6 h-10 w-full bg-blue-600 hover:bg-blue-700'
+                    >
+                      회원가입
+                    </Button>
+                  )}
+                </TooltipProvider>
 
-                <Button
+                {/* <Button
                   type='submit'
                   disabled={!isValid}
                   className='mt-6 h-10 w-full bg-blue-600 hover:bg-blue-700'
+                  title={!isValid ? FEEDBACK_MESSAGES.INCOMPLETE_FORM : ''}
                 >
                   회원가입
-                </Button>
+                </Button> */}
               </form>
             </CardContent>
           </Card>
