@@ -233,7 +233,9 @@ const Signup = () => {
           <p>② 암호화키 복사</p>
           <div className='flex gap-4'>
             <p>③ solved.ac 로그인</p>
-            <a href='https://solved.ac/'>[바로가기]</a>
+            <a href='https://solved.ac/' target='_blank'>
+              [바로가기]
+            </a>
           </div>
           <p>④ 로그인 후 프로필 창 - '설정' 클릭</p>
           <p>⑤ 개인정보 - 이름 항목에 암호화키 입력</p>
