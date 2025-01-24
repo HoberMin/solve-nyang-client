@@ -22,7 +22,7 @@ import { getCatKorName } from '../gacha/constants/catMappings';
 
 const POINT_PER_AVATAR = 30;
 
-type Rarity = 'S' | 'A' | 'B' | 'C' | 'D';
+type Rarity = 'H' | 'S' | 'A' | 'B' | 'C' | 'D';
 
 interface RarityStyle {
   border: string;
@@ -37,15 +37,16 @@ interface HeaderSectionProps {
   rarityCounts: Record<Rarity, number>;
 }
 
+const rarityOrder: Rarity[] = ['H', 'S', 'A', 'B', 'C', 'D'];
+
 const rarityConfig: Record<Rarity, RarityStyle> = {
+  H: { border: 'border-[#26ffc9]', text: 'text-[#26ffc9]' },
   S: { border: 'border-[#f74600]', text: 'text-[#f74600]' },
   A: { border: 'border-[#ffc337]', text: 'text-[#ffc337]' },
   B: { border: 'border-[#7abf16]', text: 'text-[#7abf16]' },
   C: { border: 'border-[#108df1]', text: 'text-[#108df1]' },
   D: { border: 'border-[#a663ee]', text: 'text-[#a663ee]' },
 };
-
-const rarityOrder: Rarity[] = ['S', 'A', 'B', 'C', 'D'];
 
 const HeaderSection: React.FC<HeaderSectionProps> = ({
   point,

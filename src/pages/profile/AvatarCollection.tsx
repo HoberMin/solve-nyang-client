@@ -6,7 +6,7 @@ import { useGetUserAvatar, useToggleAvatar } from '@/apis/user';
 import { cn } from '@/lib/utils';
 import { getCatKorName } from '@/pages/gacha/constants/catMappings';
 
-export type Rarity = 'S' | 'A' | 'B' | 'C' | 'D';
+export type Rarity = 'H' | 'S' | 'A' | 'B' | 'C' | 'D';
 
 export interface RarityStyle {
   border: string;
@@ -16,9 +16,10 @@ export interface RarityStyle {
 export type FilterType = 'ALL' | Rarity;
 
 export const AvatarCollection = () => {
-  const rarityOrder: Rarity[] = ['S', 'A', 'B', 'C', 'D'];
+  const rarityOrder: Rarity[] = ['H', 'S', 'A', 'B', 'C', 'D'];
 
   const rarityConfig: Record<Rarity, RarityStyle> = {
+    H: { border: 'border-[#26ffc9]', text: 'text-[#26ffc9]' },
     S: { border: 'border-[#f74600]', text: 'text-[#f74600]' },
     A: { border: 'border-[#ffc337]', text: 'text-[#ffc337]' },
     B: { border: 'border-[#7abf16]', text: 'text-[#7abf16]' },
