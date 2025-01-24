@@ -24,9 +24,9 @@ interface UserAvatarList {
 interface UserInfo {
   username: string;
   point: number;
-  solvedacStrick: number;
-  solvedCount: number;
-  solvedacTier: number;
+  // solvedacStrick: number;
+  // solvedCount: number;
+  // solvedacTier: number;
 }
 
 const userInfo = async () => {
@@ -106,7 +106,6 @@ export const useToggleAvatar = () => {
   const { mutate } = useMutation({
     mutationFn: (ownedAvatarId: string) => userCharacterSelecte(ownedAvatarId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['userInfo'] });
       queryClient.invalidateQueries({ queryKey: ['userAvatar'] });
     },
   });
