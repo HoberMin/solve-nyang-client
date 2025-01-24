@@ -32,7 +32,7 @@ export const MyAvatar = () => {
 
   const handleCopy = async () => {
     try {
-      const imgTag = `<img src="https://api.solve-nyang.com/compose/${data.username}" width="600" height="300"/>`;
+      const imgTag = `<a href="https://www.solve-nyang.com"><img src="https://api.solve-nyang.com/compose/${data.username}" width="600" height="300"/></a>`;
       await navigator.clipboard.writeText(imgTag);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
