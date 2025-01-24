@@ -1,6 +1,5 @@
 import { PropsWithChildren } from 'react';
 
-import { Github } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { toast } from 'sonner';
 
@@ -43,20 +42,20 @@ const RetroMenuItem = ({ children, href }: RetroMenuItemProps) => {
   );
 };
 
-const RetroIcon = ({ children }: PropsWithChildren) => {
-  return (
-    <div className='group cursor-pointer'>
-      <div className='relative transition-all duration-300 hover:scale-105'>
-        <div className='absolute inset-0 animate-pulse opacity-0 blur-sm transition-opacity duration-300 group-hover:opacity-50'>
-          <div className='animate-spin-slow absolute inset-0'>{children}</div>
-        </div>
-        <div className='relative transition-all duration-150 group-hover:-translate-y-0.5'>
-          {children}
-        </div>
-      </div>
-    </div>
-  );
-};
+// const RetroIcon = ({ children }: PropsWithChildren) => {
+//   return (
+//     <div className='group cursor-pointer'>
+//       <div className='relative transition-all duration-300 hover:scale-105'>
+//         <div className='absolute inset-0 animate-pulse opacity-0 blur-sm transition-opacity duration-300 group-hover:opacity-50'>
+//           <div className='animate-spin-slow absolute inset-0'>{children}</div>
+//         </div>
+//         <div className='relative transition-all duration-150 group-hover:-translate-y-0.5'>
+//           {children}
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
 
 interface UserDropdownProps {
   username: string;
@@ -90,15 +89,12 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ username }) => {
           align='start'
         >
           <DropdownMenuItem asChild className='focus:bg-gray-800'>
-            <Link
-              to='/profile'
-              className='text-xl text-white hover:text-gray-300'
-            >
+            <Link to='/profile' className='text-xl text-white hover:text-white'>
               내 정보
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem
-            className='text-xl text-white hover:text-gray-300 focus:bg-gray-800'
+            className='text-xl text-white focus:bg-gray-800'
             onClick={handleLogout}
           >
             로그아웃
@@ -149,15 +145,6 @@ const Header = () => {
           </Link>
           <div className='absolute -bottom-1 left-0 h-px w-0 bg-gradient-to-r from-blue-400/50 to-blue-300/50 transition-all duration-300 group-hover:w-full' />
         </div>
-        <a
-          href='https://github.com/solve-nyang/solve-nyang-client'
-          target='_blank'
-          rel='noopener noreferrer'
-        >
-          <RetroIcon>
-            <Github className='h-6 w-6 text-blue-400' /> {/* 사이즈 조정 */}
-          </RetroIcon>
-        </a>
       </div>
       <nav className='relative z-10 flex items-center gap-8'>
         {isLoading ? (

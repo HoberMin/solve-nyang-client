@@ -229,9 +229,9 @@ const Gacha = () => {
         <GachaDropRateInfo />
       </div>
 
-      <div className='mt-[30px] flex items-center justify-center'>
+      <div className='flex items-center justify-center pt-[30px]'>
         <div className='px-4'>
-          <div className='mx-auto flex max-w-[35%] flex-col items-center'>
+          <div className='mx-auto flex max-w-[30%] flex-col items-center'>
             <div className='relative w-full'>
               <img
                 src={machineImageUrl}

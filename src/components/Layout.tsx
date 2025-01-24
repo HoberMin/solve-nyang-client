@@ -35,7 +35,7 @@ const Layout = ({ children }: PropsWithChildren) => {
         <div className='w-full'>
           <Header />
         </div>
-        <main className='min-h-screen w-full pt-16'>
+        <main className='min-h-[calc(100vh-64px)] w-full'>
           <div className='mx-auto max-w-full'>{children}</div>
         </main>
       </div>
