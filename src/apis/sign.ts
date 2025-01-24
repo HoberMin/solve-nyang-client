@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
@@ -8,6 +8,10 @@ import { domain } from './avatar';
 export interface AuthRequest {
   username: string;
   password: string;
+}
+
+interface ErrorResponse {
+  message: string;
 }
 
 const axiosInstance = axios.create({
@@ -97,8 +101,8 @@ export const useSignUp = () => {
       toast.success('회원가입이 완료되었습니다.');
       navigate('/login');
     },
-    onError: () => {
-      toast.error('회원가입에 실패했습니다. solved.ac 인증을 확인하세요.');
+    onError: (error: AxiosError<ErrorResponse>) => {
+      toast.error(`회원가입에 실패했습니다. ${error.response?.data.message}`);
     },
   });
 
