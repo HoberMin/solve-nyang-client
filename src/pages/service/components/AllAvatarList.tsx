@@ -1,13 +1,12 @@
 import _ from 'lodash';
 
-import { RarityType, useGetAvatarList } from '@/apis/avatar';
-
-import RaritySection from './ServiceRaritySection';
+import { useGetAvatarList } from '@/apis/avatar';
+import RaritySection from '@/pages/catCollection/components/RaritySection';
 
 export interface Character {
   id: string;
   name: string;
-  rarity: RarityType;
+  rarity: 'S' | 'A' | 'B' | 'C' | 'D';
 }
 
 const AllAvatarList = () => {
