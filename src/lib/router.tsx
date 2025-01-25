@@ -2,13 +2,10 @@ import { createBrowserRouter } from 'react-router-dom';
 
 import RetroError from '@/components/ErrorBoundary';
 import Root from '@/components/Root';
-import ChangePassword from '@/pages/changePassword';
+import CatCollection from '@/pages/catCollection';
 import Contest from '@/pages/contest';
-import EventPage from '@/pages/event';
-import FindPassword from '@/pages/findPassword';
 import Gacha from '@/pages/gacha';
 import Login from '@/pages/login';
-import AvatarImagePage from '@/pages/myAvatarImage';
 import NotFoundPage from '@/pages/notFound';
 import SalePage from '@/pages/sale';
 import Service from '@/pages/service';
@@ -45,25 +42,9 @@ export const router = createBrowserRouter([
         element: <Contest />,
       },
       {
-        path: 'find',
-        element: <FindPassword />,
+        path: 'gallery',
+        element: <CatCollection />,
       },
-      {
-        path: 'change',
-        element: <ChangePassword />,
-      },
-      {
-        path: 'image',
-        element: <AvatarImagePage />,
-      },
-      {
-        path: 'event',
-        element: <EventPage />,
-      },
-      // {
-      //   path: 'gallery',
-      //   element: <Gallery />,
-      // },
     ],
   },
   {
