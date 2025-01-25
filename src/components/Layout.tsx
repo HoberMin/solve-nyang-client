@@ -27,7 +27,7 @@ const Layout = ({ children }: PropsWithChildren) => {
         className='relative min-h-screen w-full overflow-x-hidden bg-black font-neo'
         style={{
           backgroundImage: 'url("/solve-nyang-bg.png")',
-          backgroundSize: '1200px', // 또는 실제 이미지 크기에 맞게 조정
+          backgroundSize: '1200px',
           backgroundRepeat: 'repeat',
           backgroundPosition: 'top',
         }}

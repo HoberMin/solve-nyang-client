@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import { toast } from 'sonner';
 
 import { useGetUserInfo } from '@/apis/user';
-// shadcn 드롭다운 메뉴 컴포넌트 import 추가
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -62,7 +61,6 @@ interface UserDropdownProps {
 }
 
 const UserDropdown: React.FC<UserDropdownProps> = ({ username }) => {
-  // 로그아웃
   const handleLogout = () => {
     localStorage.removeItem('token');
     toast.success('로그아웃 되었습니다.');
@@ -90,7 +88,12 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ username }) => {
         >
           <DropdownMenuItem asChild className='focus:bg-gray-800'>
             <Link to='/profile' className='text-xl text-white hover:text-white'>
-              내 정보
+              프로필
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild className='focus:bg-gray-800'>
+            <Link to='/gallery' className='text-xl text-white hover:text-white'>
+              고양이도감
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem
