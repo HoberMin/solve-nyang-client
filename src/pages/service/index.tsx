@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 
 import Layout from '@/components/Layout';
 
-import CatGallery from './components/CatGallery';
+import CatGallery from './components/AllAvatarList';
 import { Footer } from './components/Footer';
 import { ServiceIntro } from './components/ServiceIntro';
 

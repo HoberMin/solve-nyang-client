@@ -1,12 +1,9 @@
-import { AlertCircle, Settings } from 'lucide-react';
-
 import Layout from './Layout';
 
 const MaintenancePage = () => {
   return (
     <Layout>
       <div className='flex min-h-[calc(100vh-4rem)] w-full flex-col items-center justify-center p-4'>
-        {/* 격자 패턴 배경 */}
         <div
           className='absolute inset-0 opacity-5'
           style={{
@@ -18,16 +15,8 @@ const MaintenancePage = () => {
           }}
         />
 
-        {/* 메인 콘텐츠 */}
-        <div className='relative flex flex-col items-center gap-12'>
-          {/* 아이콘 */}
-          <div className='flex items-center gap-6'>
-            <Settings className='animate-spin-slow h-16 w-16 text-blue-400' />
-            <AlertCircle className='h-16 w-16 animate-pulse text-blue-400' />
-          </div>
-
-          {/* 메인 텍스트 */}
-          <div className='flex flex-col items-center gap-6 text-center'>
+        <div className='relative flex flex-col items-center gap-8'>
+          <div className='flex flex-col items-center gap-4'>
             <h1
               className='bg-gradient-to-r from-blue-400 via-blue-500 to-blue-400 bg-clip-text text-5xl font-bold text-transparent'
               style={{
@@ -44,11 +33,79 @@ const MaintenancePage = () => {
                 textShadow: '0 0 5px rgba(59, 130, 246, 0.3)',
               }}
             >
-              1월 31일 정상화 예정
+              서비스 준비중입니다
             </p>
           </div>
 
-          {/* 추가 메시지 */}
+          <div className='relative'>
+            <svg
+              width='120'
+              height='100'
+              viewBox='0 0 120 100'
+              className='text-blue-400'
+            >
+              <rect
+                x='10'
+                y='10'
+                width='100'
+                height='60'
+                fill='currentColor'
+                opacity='0.2'
+              />
+              <rect
+                x='15'
+                y='15'
+                width='90'
+                height='50'
+                fill='currentColor'
+                opacity='0.3'
+              />
+              <rect
+                x='20'
+                y='20'
+                width='80'
+                height='40'
+                fill='currentColor'
+                opacity='0.1'
+              >
+                <animate
+                  attributeName='opacity'
+                  values='0.1;0.15;0.1'
+                  dur='2s'
+                  repeatCount='indefinite'
+                />
+              </rect>
+              <rect
+                x='50'
+                y='70'
+                width='20'
+                height='10'
+                fill='currentColor'
+                opacity='0.2'
+              />
+              <rect
+                x='40'
+                y='80'
+                width='40'
+                height='5'
+                fill='currentColor'
+                opacity='0.2'
+              />
+            </svg>
+          </div>
+          <div className='flex flex-col items-center gap-3'>
+            <div className='relative h-3 w-64 overflow-hidden rounded border border-blue-400/30 bg-gray-800/30'>
+              <div className='animate-progress-infinite h-full bg-gradient-to-r from-blue-600 via-blue-400 to-blue-600' />
+            </div>
+            <p
+              className='animate-pulse text-xs text-blue-400/70'
+              style={{
+                fontFamily: "'Press Start 2P', monospace",
+              }}
+            >
+              LOADING...
+            </p>
+          </div>
           <div
             className='max-w-md text-center text-lg text-blue-400/80'
             style={{
@@ -62,8 +119,6 @@ const MaintenancePage = () => {
             이용에 불편을 드려 죄송합니다
           </div>
         </div>
-
-        {/* CRT 스캔라인 효과 */}
         <div
           className='pointer-events-none absolute inset-0 opacity-5'
           style={{
