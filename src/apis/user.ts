@@ -5,7 +5,7 @@ import {
 } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
-import { Rarity } from '@/pages/profile/AvatarCollection';
+import { Rarity } from '@/pages/sale/type';
 
 import { domain } from './avatar';
 

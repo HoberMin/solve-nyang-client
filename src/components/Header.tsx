@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import { toast } from 'sonner';
 
 import { useGetUserInfo } from '@/apis/user';
-// shadcn 드롭다운 메뉴 컴포넌트 import 추가
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -61,8 +60,47 @@ interface UserDropdownProps {
   username: string;
 }
 
+interface ActionDropdownProps {
+  actionText: string;
+}
+
+const ActionDropdown = ({ actionText }: ActionDropdownProps) => {
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger className='cursor-pointer bg-gray-900 outline-none ring-0 focus:outline-none focus:ring-0 focus:ring-offset-0 active:outline-none active:ring-0'>
+        <span
+          className='relative inline-block bg-gradient-to-b from-blue-300 to-blue-500 bg-clip-text text-xl text-transparent'
+          style={{
+            textShadow: '0 0 5px rgba(59, 130, 246, 0.3)',
+            WebkitTextStroke: '1px rgba(59, 130, 246, 0.2)',
+          }}
+        >
+          {actionText}
+        </span>
+      </DropdownMenuTrigger>
+      <DropdownMenuPortal>
+        <DropdownMenuContent
+          className='z-50 border-0 bg-gray-900 py-1'
+          side='bottom'
+          align='start'
+        >
+          <DropdownMenuItem asChild className='focus:bg-gray-800'>
+            <Link to='/auction' className='text-xl text-white hover:text-white'>
+              경매장
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild className='focus:bg-gray-800'>
+            <Link to='/sale' className='text-xl text-white hover:text-white'>
+              캐릭터 판매
+            </Link>
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenuPortal>
+    </DropdownMenu>
+  );
+};
+
 const UserDropdown: React.FC<UserDropdownProps> = ({ username }) => {
-  // 로그아웃
   const handleLogout = () => {
     localStorage.removeItem('token');
     toast.success('로그아웃 되었습니다.');
@@ -90,7 +128,12 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ username }) => {
         >
           <DropdownMenuItem asChild className='focus:bg-gray-800'>
             <Link to='/profile' className='text-xl text-white hover:text-white'>
-              내 정보
+              프로필
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild className='focus:bg-gray-800'>
+            <Link to='/gallery' className='text-xl text-white hover:text-white'>
+              고양이도감
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem
@@ -155,7 +198,7 @@ const Header = () => {
           <>
             <RetroMenuItem href='/contest'>공모전</RetroMenuItem>
             <RetroMenuItem href='/gacha'>뽑기 </RetroMenuItem>
-            <RetroMenuItem href='/auction'>상점</RetroMenuItem>
+            <ActionDropdown actionText='상점' />
             <UserDropdown username={data?.username || 'User'} />
           </>
         )}
