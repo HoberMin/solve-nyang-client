@@ -8,28 +8,42 @@ import AvatarCard from '@/pages/service/components/AvatarCard';
 
 import AvatarCollectionCard from './AvatarCollectionCard';
 
+export type RarityType = 'S' | 'A' | 'B' | 'C' | 'D';
+
 interface RaritySectionProps {
-  title: Character['rarity'];
+  title: RarityType;
   characters: Character[];
 }
 
 const VISIBLE_CARDS = 5;
 
-const rarityTitles = {
+const rarityTitles: Record<RarityType, string> = {
   S: 'S등급',
   A: 'A등급',
   B: 'B등급',
   C: 'C등급',
   D: 'D등급',
-} as const;
+};
 
-const rarityColors = {
-  S: `from-[#f74600]/80`,
-  A: `from-[#ffc337]/80`,
-  B: `from-[#7abf16]/80`,
-  C: `from-[#108df1]/80`,
-  D: `from-[#a663ee]`,
-} as const;
+const rarityColors: Record<RarityType, string> = {
+  S: 'from-[#f74600]/80',
+  A: 'from-[#ffc337]/80',
+  B: 'from-[#7abf16]/80',
+  C: 'from-[#108df1]/80',
+  D: 'from-[#a663ee]',
+};
+
+const getRarityBgColor = (rarity: RarityType) => {
+  const colors = {
+    S: 'bg-[#f74600]',
+    A: 'bg-[#ffc337]',
+    B: 'bg-[#7abf16]',
+    C: 'bg-[#108df1]',
+    D: 'bg-[#a663ee]',
+  };
+
+  return colors[rarity];
+};
 
 const RaritySection = ({ title, characters }: RaritySectionProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -47,17 +61,7 @@ const RaritySection = ({ title, characters }: RaritySectionProps) => {
       >
         <div className='flex items-center gap-3'>
           <span
-            className={`inline-block h-3 w-3 rounded-full ${
-              title === 'S'
-                ? 'bg-[#f74600]'
-                : title === 'A'
-                  ? 'bg-[#ffc337]'
-                  : title === 'B'
-                    ? 'bg-[#7abf16]'
-                    : title === 'C'
-                      ? 'bg-[#108df1]'
-                      : 'bg-[#a663ee]'
-            }`}
+            className={`inline-block h-3 w-3 rounded-full ${getRarityBgColor(title)}`}
           />
           <h3 className='font-bold text-white'>
             {rarityTitles[title]}
