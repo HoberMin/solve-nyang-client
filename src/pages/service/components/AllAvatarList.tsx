@@ -1,9 +1,8 @@
 import _ from 'lodash';
 
-import { useGetAvatarList } from '@/apis/avatar';
-import RaritySection, {
-  RarityType,
-} from '@/pages/catCollection/components/RaritySection';
+import { RarityType, useGetAvatarList } from '@/apis/avatar';
+
+import RaritySection from './ServiceRaritySection';
 
 export interface Character {
   id: string;
