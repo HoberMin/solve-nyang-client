@@ -2,6 +2,7 @@ import { createBrowserRouter } from 'react-router-dom';
 
 import RetroError from '@/components/ErrorBoundary';
 import Root from '@/components/Root';
+import Auction from '@/pages/auction';
 import Gallery from '@/pages/catCollection';
 import CatCollection from '@/pages/catCollection';
 import ChangePassword from '@/pages/changePassword';
@@ -74,6 +75,10 @@ export const router = createBrowserRouter([
       {
         path: 'extension',
         element: <ExtensionPage />,
+      },
+      {
+        path: 'auction',
+        element: <Auction />,
       },
     ],
   },
