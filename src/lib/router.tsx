@@ -2,6 +2,7 @@ import { createBrowserRouter } from 'react-router-dom';
 
 import RetroError from '@/components/ErrorBoundary';
 import Root from '@/components/Root';
+import Auction from '@/pages/auction';
 import CatCollection from '@/pages/catCollection';
 import Contest from '@/pages/contest';
 import Gacha from '@/pages/gacha';
@@ -27,7 +28,7 @@ export const router = createBrowserRouter([
         element: <ProfilePage />,
       },
       {
-        path: 'auction',
+        path: 'sale',
         element: <SalePage />,
       },
       {
@@ -49,6 +50,10 @@ export const router = createBrowserRouter([
       {
         path: 'gallery',
         element: <CatCollection />,
+      },
+      {
+        path: 'auction',
+        element: <Auction />,
       },
     ],
   },
