@@ -1,12 +1,14 @@
 import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
 
+import { Rarity } from '@/pages/sale/type';
+
 export const domain = 'https://api.solve-nyang.com';
 
 export interface Avatar {
   id: string; // 고유값
   avatarId: number;
   name: string;
-  rarity: 'S' | 'A' | 'B' | 'C' | 'D';
+  rarity: Rarity;
   dropRate: number;
 }
 
