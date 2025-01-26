@@ -52,7 +52,7 @@ interface ActionDropdownProps {
 const ActionDropdown = ({ actionText }: ActionDropdownProps) => {
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className='cursor-pointer bg-transparent outline-none ring-0 focus:outline-none focus:ring-0 focus:ring-offset-0 active:outline-none active:ring-0'>
+      <DropdownMenuTrigger className='cursor-pointer bg-gray-900 outline-none ring-0 focus:outline-none focus:ring-0 focus:ring-offset-0 active:outline-none active:ring-0'>
         <span
           className='relative inline-block bg-gradient-to-b from-blue-300 to-blue-500 bg-clip-text text-xl text-transparent'
           style={{
@@ -69,11 +69,11 @@ const ActionDropdown = ({ actionText }: ActionDropdownProps) => {
           side='bottom'
           align='start'
         >
-          {/* <DropdownMenuItem asChild className='focus:bg-gray-800'>
+          <DropdownMenuItem asChild className='focus:bg-gray-800'>
             <Link to='/auction' className='text-xl text-white hover:text-white'>
               경매장
             </Link>
-          </DropdownMenuItem> */}
+          </DropdownMenuItem>
           <DropdownMenuItem asChild className='focus:bg-gray-800'>
             <Link to='/sale' className='text-xl text-white hover:text-white'>
               캐릭터 판매
@@ -192,7 +192,7 @@ const Header = () => {
         ) : (
           <>
             <RetroMenuItem href='/contest'>공모전</RetroMenuItem>
-            <RetroMenuItem href='/gacha'>뽑기</RetroMenuItem>
+            <RetroMenuItem href='/gacha'>뽑기 </RetroMenuItem>
             <ActionDropdown actionText='상점' />
             <UserDropdown username={data?.username || 'User'} />
           </>
