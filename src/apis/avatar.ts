@@ -5,10 +5,9 @@ import {
 } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
-import { RarityType } from '@/pages/catCollection/components/RaritySection';
-
 export const domain = 'https://api.solve-nyang.com';
 
+export type RarityType = 'S' | 'A' | 'B' | 'C' | 'D';
 export interface Avatar {
   id: string; // 고유값
   avatarId: number;
