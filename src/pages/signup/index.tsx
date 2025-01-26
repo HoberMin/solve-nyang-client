@@ -49,7 +49,6 @@ interface ErrorMessages {
 const VALIDATION: ValidationRules = {
   PASSWORD_MIN_LENGTH: 8,
   PASSWORD_PATTERN:
-    // /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
     /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&^])[A-Za-z\d@$!%*#?&^]{8,}$/,
 };
 
@@ -178,7 +177,8 @@ const Signup = () => {
 
   useEffect(() => {
     if (!isKeyIssued) {
-      setIsValid(!!formData.username.trim());
+      // setIsValid(!!formData.username.trim());
+      setIsValid(false);
       return;
     }
 
