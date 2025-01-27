@@ -4,7 +4,9 @@ import RetroError from '@/components/ErrorBoundary';
 import Root from '@/components/Root';
 import Auction from '@/pages/auction';
 import CatCollection from '@/pages/catCollection';
+import ChangePassword from '@/pages/changePassword';
 import Contest from '@/pages/contest';
+import FindPassword from '@/pages/findPassword';
 import Gacha from '@/pages/gacha';
 import Login from '@/pages/login';
 import NotFoundPage from '@/pages/notFound';
@@ -54,6 +56,14 @@ export const router = createBrowserRouter([
       {
         path: 'auction',
         element: <Auction />,
+      },
+      {
+        path: 'find',
+        element: <FindPassword />,
+      },
+      {
+        path: 'change',
+        element: <ChangePassword />,
       },
     ],
   },
