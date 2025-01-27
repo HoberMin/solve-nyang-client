@@ -101,13 +101,24 @@ const Login = () => {
 
             <div className='mt-8 text-center'>
               <div className='space-x-1 text-base text-zinc-400'>
-                <span>아직 계정이 없으신가요?</span>
-                <Link
-                  to='/signup'
-                  className='font-medium text-blue-500 transition-colors hover:text-blue-400'
-                >
-                  회원가입
-                </Link>
+                <div className='space-x-3'>
+                  <span>비밀번호가 기억나지 않는다면?</span>
+                  <Link
+                    to='/find'
+                    className='font-medium text-blue-500 transition-colors hover:text-blue-400'
+                  >
+                    비밀번호 찾기
+                  </Link>
+                </div>
+                <div className='space-x-3'>
+                  <span>아직 계정이 없으신가요?</span>
+                  <Link
+                    to='/signup'
+                    className='font-medium text-blue-500 transition-colors hover:text-blue-400'
+                  >
+                    회원가입
+                  </Link>
+                </div>
               </div>
             </div>
           </CardContent>
