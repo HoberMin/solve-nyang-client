@@ -312,7 +312,7 @@ const ChangePassword = () => {
                         sideOffset={28}
                         className='bg-white px-8 text-black'
                       >
-                        <p>'모든 필드를 올바르게 입력하세요.'</p>
+                        <p>모든 필드를 올바르게 입력하세요.</p>
                       </TooltipContent>
                     </Tooltip>
                   ) : (
