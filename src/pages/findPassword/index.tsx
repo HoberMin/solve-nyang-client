@@ -38,7 +38,8 @@ interface ErrorMessages {
   USERNAME_ERROR: string;
   PASSWORD_ERROR: string;
   FAILED_TO_CHECK_USER: string;
-  SIGNUP_FAILED: string;
+  // SIGNUP_FAILED: string;
+  FAILED_MODIFY_PASSWORD: string;
 }
 
 // error 타입 정의 추가
@@ -76,7 +77,8 @@ const ERROR_MESSAGES: ErrorMessages = {
   USERNAME_ERROR: '존재하지 않는 사용자입니다.', // signin의 Username Error
   PASSWORD_ERROR: '비밀번호가 올바르지 않습니다.', // signin의 Password Error
   FAILED_TO_CHECK_USER: '사용자 확인에 실패했습니다.', // verify의 Failed to check user
-  SIGNUP_FAILED: '회원가입에 실패했습니다.', // signup의 failed
+  // SIGNUP_FAILED: '회원가입에 실패했습니다.', // signup의 failed
+  FAILED_MODIFY_PASSWORD: '비밀번호 수정 실패',
 };
 
 const FEEDBACK_MESSAGES = {
@@ -84,6 +86,7 @@ const FEEDBACK_MESSAGES = {
   INCOMPLETE_FORM: '가입정보를 입력하세요.',
 };
 
+// 비밀번호 찾기이지만 사실상 재가입 로직
 const FindPassword = () => {
   const signUpMutation = useSignUp();
   const getEncryptionMutation = useGetEncryption();
@@ -191,7 +194,7 @@ const FindPassword = () => {
       },
       {
         onSuccess: () => {
-          toast.success('비밀번호 변경 성공!');
+          toast.success('비밀번호 재설정 성공!');
         },
         onError: (error: ApiError) => {
           const errorMessage = error.response?.data?.message;
@@ -204,10 +207,10 @@ const FindPassword = () => {
               toast.error(ERROR_MESSAGES.PASSWORD_ERROR);
               break;
             case 'failed':
-              toast.error(ERROR_MESSAGES.SIGNUP_FAILED);
+              toast.error(ERROR_MESSAGES.FAILED_MODIFY_PASSWORD);
               break;
             default:
-              toast.error('비밀번호 변경 중 오류가 발생했습니다.');
+              toast.error('비밀번호 재설정 중 오류가 발생했습니다.');
           }
         },
       },
@@ -235,11 +238,38 @@ const FindPassword = () => {
   return (
     <Layout>
       <div className='flex min-h-[calc(100vh-64px)] flex-col items-center justify-center gap-16 px-4 lg:flex-row lg:px-8'>
+        {/* 좌측 설명 */}
+        {/* <Card className='border-zinc-800 bg-zinc-950/50 p-10'> */}
+        <div className='space-y-2 text-white'>
+          <div className='flex justify-center gap-3 text-center'>
+            <h3 className='mb-1 text-xl font-bold'>비밀번호 재설정 방법</h3>
+          </div>
+          <div>
+            <p>① solved.ac 닉네임 입력 후 키 발급 버튼 클릭</p>
+            <p>② 암호화키 복사</p>
+            <div className='flex gap-4'>
+              <p>③ solved.ac 로그인</p>
+              <a href='https://solved.ac/' target='_blank'>
+                [바로가기]
+              </a>
+            </div>
+            <p>④ 로그인 후 프로필 창 - '설정' 클릭</p>
+            <p>⑤ 개인정보 - 이름 항목에 암호화키 입력</p>
+            <p className='pl-4'>* 모국어와 영어 모두 작성해주세요 </p>
+            <p>⑥ 프로필에 이름 표시 ON</p>
+            <p>⑦ 비밀번호 찾기 페이지로 돌아와 새로운 솔브냥 비밀번호 입력</p>
+            <p>⑧ 비밀번호 재설정 버튼 클릭</p>
+          </div>
+        </div>
+        {/* </Card> */}
+
+        {/* 우측 양식 */}
         <div className='w-full max-w-sm lg:w-[30%]'>
-          <Card className='border-zinc-800 bg-zinc-950/50'>
+          {/* <Card className='border-zinc-800 bg-zinc-950/50'> */}
+          <Card className='border-zinc-800 bg-white/15'>
             <CardHeader>
               <CardTitle className='text-center text-2xl text-zinc-100'>
-                비밀번호 찾기
+                비밀번호를 잊어버리셨나요?
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -345,7 +375,7 @@ const FindPassword = () => {
                   )}
                 </div>
                 <TooltipProvider>
-                  {!isValid && (
+                  {!isValid ? (
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <span className='inline-block w-full'>
@@ -354,7 +384,7 @@ const FindPassword = () => {
                             disabled={true}
                             className='mt-6 h-10 w-full bg-blue-600 hover:bg-blue-700'
                           >
-                            비밀번호 변경
+                            비밀번호 재설정
                           </Button>
                         </span>
                       </TooltipTrigger>
@@ -363,9 +393,17 @@ const FindPassword = () => {
                         sideOffset={28}
                         className='bg-white px-8 text-black'
                       >
-                        <p>{'변경 정보를 입력하세요.'}</p>
+                        <p>모든 필드를 올바르게 입력하세요.</p>
                       </TooltipContent>
                     </Tooltip>
+                  ) : (
+                    <Button
+                      type='submit'
+                      disabled={true}
+                      className='mt-6 h-10 w-full bg-blue-600 hover:bg-blue-700'
+                    >
+                      비밀번호 재설정
+                    </Button>
                   )}
                 </TooltipProvider>
               </form>
