@@ -16,7 +16,7 @@ interface FindPassword {
 export const useChangePassword = () =>
   useMutation({
     mutationFn: async (changePassword: ChangePassword) => {
-      const response = await fetch(`${domain}/password/change`, {
+      const response = await fetch(`${domain}/account/password/change`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ changePassword }),
@@ -40,7 +40,7 @@ export const useChangePassword = () =>
 export const useFindPassword = async () =>
   useMutation({
     mutationFn: async (username: FindPassword) => {
-      const response = await fetch(`${domain}/password/find`, {
+      const response = await fetch(`${domain}/account/password/find`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username }),
