@@ -1,29 +1,13 @@
 import { useState } from 'react';
 
 import { ArrowLeftCircle, ArrowRightCircle } from 'lucide-react';
-import { useLocation } from 'react-router-dom';
 
-import { Character } from '@/pages/service/components/AllAvatarList';
-import AvatarCard from '@/pages/service/components/AvatarCard';
+import { RarityType } from '@/apis/avatar';
+import { AvatarGallery } from '@/apis/gallery';
 
 import AvatarCollectionCard from './AvatarCollectionCard';
 
-export type RarityType = 'S' | 'A' | 'B' | 'C' | 'D';
-
-interface RaritySectionProps {
-  title: RarityType;
-  characters: Character[];
-}
-
 const VISIBLE_CARDS = 5;
-
-const rarityTitles: Record<RarityType, string> = {
-  S: 'S등급',
-  A: 'A등급',
-  B: 'B등급',
-  C: 'C등급',
-  D: 'D등급',
-};
 
 const rarityColors: Record<RarityType, string> = {
   S: 'from-[#f74600]/80',
@@ -33,24 +17,31 @@ const rarityColors: Record<RarityType, string> = {
   D: 'from-[#a663ee]',
 };
 
-const getRarityBgColor = (rarity: RarityType) => {
-  const colors = {
+const getRarityBgColor = (rarity: RarityType) =>
+  ({
     S: 'bg-[#f74600]',
     A: 'bg-[#ffc337]',
     B: 'bg-[#7abf16]',
     C: 'bg-[#108df1]',
     D: 'bg-[#a663ee]',
-  };
+  })[rarity];
 
-  return colors[rarity];
+const rarityTitles: Record<RarityType, string> = {
+  S: 'S등급',
+  A: 'A등급',
+  B: 'B등급',
+  C: 'C등급',
+  D: 'D등급',
 };
 
-const RaritySection = ({ title, characters }: RaritySectionProps) => {
+const RaritySection = ({
+  title,
+  characters,
+}: {
+  title: RarityType;
+  characters: AvatarGallery[];
+}) => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const location = useLocation();
-  const CardComponent =
-    location.pathname === '/gallery' ? AvatarCollectionCard : AvatarCard;
-
   const isCanGoBack = currentIndex > 0;
   const isCanGoForward = currentIndex + VISIBLE_CARDS < characters.length;
 
@@ -88,7 +79,11 @@ const RaritySection = ({ title, characters }: RaritySectionProps) => {
           {characters
             .slice(currentIndex, currentIndex + VISIBLE_CARDS)
             .map(char => (
-              <CardComponent key={char.id} name={char.name} />
+              <AvatarCollectionCard
+                key={`${char.name}-${char.owned}`}
+                name={char.name}
+                owned={char.owned}
+              />
             ))}
         </div>
 
