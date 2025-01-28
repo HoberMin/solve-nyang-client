@@ -10,6 +10,7 @@ interface ChangePassword {
 
 interface FindPassword {
   username: string;
+  password: string;
 }
 
 // 비밀번호 변경
@@ -39,11 +40,11 @@ export const useChangePassword = () =>
 // 비밀번호 찾기
 export const useFindPassword = async () =>
   useMutation({
-    mutationFn: async (username: FindPassword) => {
+    mutationFn: async (findPassword: FindPassword) => {
       const response = await fetch(`${domain}/account/password/find`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username }),
+        body: JSON.stringify({ findPassword }),
       });
 
       if (!response.ok) {
