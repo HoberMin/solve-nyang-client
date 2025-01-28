@@ -56,7 +56,7 @@ const resetAvatar = async () => {
     throw new Error(`HTTP error! status: ${response.status}`);
   }
 
-  return response.json();
+  return response;
 };
 
 export const useResetAvatar = () => {
