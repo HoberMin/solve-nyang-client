@@ -18,6 +18,7 @@ export const getAvatarGallery = async () =>
   await fetch(`${domain}/user/me/collection`, {
     headers: {
       'Content-Type': 'application/json',
+      authorization: `Bearer ${localStorage.getItem('token')}`,
     },
   })
     .then(res => res.json())

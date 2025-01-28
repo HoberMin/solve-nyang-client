@@ -73,7 +73,7 @@ const userAvatar = async () => {
 };
 
 const saleAvatar = async (avatarList: UserAvatarList) => {
-  await fetch(`${domain}/gacha/sale`, {
+  await fetch(`${domain}/user/me/sale`, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
