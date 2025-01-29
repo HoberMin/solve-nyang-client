@@ -55,8 +55,8 @@ export const styles = {
     title: 'text-xl font-bold text-blue-400',
     grid: 'grid grid-cols-3 md:grid-cols-6 lg:grid-cols-6 xl:grid-cols-8 gap-3',
     sectionTitle: {
-      active: 'mb-4 text-xl font-medium text-emerald-400',
-      inactive: 'mb-4 text-xl font-medium text-gray-400',
+      active: 'text-xl font-medium text-emerald-400',
+      inactive: 'text-xl font-medium text-gray-400',
     },
   },
   card: {

@@ -1,4 +1,5 @@
 import { UserAvatar } from '@/apis/user';
+import { getCatKorName } from '@/pages/gacha/constants/catMappings';
 
 import { styles } from '../style';
 
@@ -19,6 +20,6 @@ export const AvatarCard = ({ avatar, onClick }: AvatarCardProps) => (
         {avatar.rarity}
       </div>
     </div>
-    <div className={styles.card.name}>{avatar.name}</div>
+    <div className={styles.card.name}>{getCatKorName(avatar.name)}</div>
   </div>
 );
