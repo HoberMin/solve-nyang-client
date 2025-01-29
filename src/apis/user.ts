@@ -13,8 +13,8 @@ export interface UserAvatar {
   ownedAvatarId: string; // 고유값
   name: string;
   rarity: Rarity;
-  dropRate: number;
   visible: boolean;
+  visibleExtension: boolean;
 }
 
 interface UserAvatarList {

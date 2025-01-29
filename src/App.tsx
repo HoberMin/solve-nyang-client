@@ -10,6 +10,7 @@ const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <Toaster />
+
       <RouterProvider router={router} />
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>

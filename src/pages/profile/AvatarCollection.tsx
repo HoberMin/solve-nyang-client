@@ -18,7 +18,7 @@ import { Rarity } from '../sale/type';
 
 type FilterType = 'ALL' | Rarity;
 
-const RARITY_ORDER: Rarity[] = ['H', 'S', 'A', 'B', 'C', 'D'];
+export const RARITY_ORDER: Rarity[] = ['H', 'S', 'A', 'B', 'C', 'D'];
 const MAX_VISIBLE_CHARACTERS = 15;
 
 const RARITY_CONFIG = {

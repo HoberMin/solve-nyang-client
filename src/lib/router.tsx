@@ -3,10 +3,12 @@ import { createBrowserRouter } from 'react-router-dom';
 import ComingSoon from '@/components/Commingsoon';
 import RetroError from '@/components/ErrorBoundary';
 import Root from '@/components/Root';
+import AvatarImagePage from '@/pages/AvatarImage';
 import Auction from '@/pages/auction';
 import CatCollection from '@/pages/catCollection';
 import ChangePassword from '@/pages/changePassword';
 import Contest from '@/pages/contest';
+import Extension from '@/pages/extension';
 import FindPassword from '@/pages/findPassword';
 import Gacha from '@/pages/gacha';
 import Login from '@/pages/login';
@@ -60,6 +62,14 @@ export const router = createBrowserRouter([
       {
         path: 'change',
         element: <ChangePassword />,
+      },
+      {
+        path: 'extension',
+        element: <Extension />,
+      },
+      {
+        path: 'image',
+        element: <AvatarImagePage />,
       },
     ],
   },

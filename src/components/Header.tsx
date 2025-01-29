@@ -19,7 +19,7 @@ interface RetroMenuItemProps extends PropsWithChildren {
 const RetroMenuItem = ({ children, href }: RetroMenuItemProps) => {
   return (
     <Link to={href}>
-      <div className='group relative cursor-pointer'>
+      <div className='group relative cursor-pointer px-4'>
         <div
           className='absolute inset-0 -z-10 h-full w-full rounded opacity-0 blur transition-all duration-300 group-hover:opacity-30 group-hover:blur-md'
           style={{
@@ -41,21 +41,6 @@ const RetroMenuItem = ({ children, href }: RetroMenuItemProps) => {
   );
 };
 
-// const RetroIcon = ({ children }: PropsWithChildren) => {
-//   return (
-//     <div className='group cursor-pointer'>
-//       <div className='relative transition-all duration-300 hover:scale-105'>
-//         <div className='absolute inset-0 animate-pulse opacity-0 blur-sm transition-opacity duration-300 group-hover:opacity-50'>
-//           <div className='animate-spin-slow absolute inset-0'>{children}</div>
-//         </div>
-//         <div className='relative transition-all duration-150 group-hover:-translate-y-0.5'>
-//           {children}
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
 interface UserDropdownProps {
   username: string;
 }
@@ -67,7 +52,7 @@ interface ActionDropdownProps {
 const ActionDropdown = ({ actionText }: ActionDropdownProps) => {
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className='cursor-pointer bg-gray-900 outline-none ring-0 focus:outline-none focus:ring-0 focus:ring-offset-0 active:outline-none active:ring-0'>
+      <DropdownMenuTrigger className='cursor-pointer bg-transparent outline-none ring-0 focus:outline-none focus:ring-0 focus:ring-offset-0 active:outline-none active:ring-0'>
         <span
           className='relative inline-block bg-gradient-to-b from-blue-300 to-blue-500 bg-clip-text text-xl text-transparent'
           style={{
@@ -109,7 +94,7 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ username }) => {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className='cursor-pointer bg-gray-900 outline-none ring-0 focus:outline-none focus:ring-0 focus:ring-offset-0 active:outline-none active:ring-0'>
+      <DropdownMenuTrigger className='cursor-pointer bg-transparent outline-none ring-0 focus:outline-none focus:ring-0 focus:ring-offset-0 active:outline-none active:ring-0'>
         <span
           className='relative inline-block bg-gradient-to-b from-blue-300 to-blue-500 bg-clip-text text-xl text-transparent'
           style={{
@@ -134,6 +119,19 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ username }) => {
           <DropdownMenuItem asChild className='focus:bg-gray-800'>
             <Link to='/gallery' className='text-xl text-white hover:text-white'>
               고양이도감
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild className='focus:bg-gray-800'>
+            <Link to='/image' className='text-xl text-white hover:text-white'>
+              내 이미지
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild className='focus:bg-gray-800'>
+            <Link
+              to='/extension'
+              className='text-xl text-white hover:text-white'
+            >
+              솔브냥 익스텐션
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem
@@ -161,14 +159,14 @@ const Header = () => {
   const isAuthenticated = Boolean(data?.username);
 
   return (
-    <header className='relative z-10 flex h-16 items-center justify-between bg-gray-900 px-6'>
+    <header className='relative z-10 flex h-16 items-center justify-between bg-gray-900 px-8'>
       <div
         className='absolute inset-0 opacity-5'
         style={{
           backgroundImage: `
-            linear-gradient(rgba(59, 130, 246, 0.2) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(59, 130, 246, 0.2) 1px, transparent 1px)
-          `,
+          linear-gradient(rgba(59, 130, 246, 0.2) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(59, 130, 246, 0.2) 1px, transparent 1px)
+        `,
           backgroundSize: '8px 8px',
           animation: 'backgroundScroll 20s linear infinite',
         }}
@@ -189,7 +187,7 @@ const Header = () => {
           <div className='absolute -bottom-1 left-0 h-px w-0 bg-gradient-to-r from-blue-400/50 to-blue-300/50 transition-all duration-300 group-hover:w-full' />
         </div>
       </div>
-      <nav className='relative z-10 flex items-center gap-8'>
+      <nav className='relative z-10 flex items-center gap-6'>
         {isLoading ? (
           <LoadingPulse />
         ) : !isAuthenticated ? (
@@ -197,7 +195,7 @@ const Header = () => {
         ) : (
           <>
             <RetroMenuItem href='/contest'>공모전</RetroMenuItem>
-            <RetroMenuItem href='/gacha'>뽑기 </RetroMenuItem>
+            <RetroMenuItem href='/gacha'>뽑기</RetroMenuItem>
             <ActionDropdown actionText='상점' />
             <UserDropdown username={data?.username || 'User'} />
           </>
