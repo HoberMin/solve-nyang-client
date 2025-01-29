@@ -117,13 +117,8 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ username }) => {
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild className='focus:bg-gray-800'>
-            <Link to='/gallery' className='text-xl text-white hover:text-white'>
-              고양이도감
-            </Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem asChild className='focus:bg-gray-800'>
             <Link to='/image' className='text-xl text-white hover:text-white'>
-              내 이미지
+              이미지 제작
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild className='focus:bg-gray-800'>

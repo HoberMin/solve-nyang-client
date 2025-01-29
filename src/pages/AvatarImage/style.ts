@@ -19,7 +19,7 @@ export const styles = {
   },
   preview: {
     wrapper:
-      'rounded-3xl  border-blue-800/50 bg-blue-950/30 p-4 transition-all duration-300',
+      'rounded-3xl border border-gray-300 bg-blue-850/50 p-4 transition-all duration-300',
     header:
       'flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-4',
     title: 'text-xl font-bold text-blue-400',
@@ -35,8 +35,8 @@ export const styles = {
       'text-blue-300 hover:text-blue-200',
       'transition-all',
     ),
-    imageContainer: 'overflow-hidden rounded-3xl border-blue-800/50',
-    image: 'w-full h-full object-contain bg-black/20',
+    imageContainer: 'overflow-hidden rounded-[40px] border aspect-[2/1]',
+    image: 'w-full h-full object-contain ',
   },
   backgroundSelect: {
     wrapper: 'flex items-center gap-2',
@@ -47,7 +47,6 @@ export const styles = {
       'focus:outline-none focus:ring-1 focus:ring-blue-500',
     ),
   },
-  // styles.ts의 collection 부분
   collection: {
     section: 'rounded-xl border border-blue-800/50 bg-blue-950/30 p-6',
     header:
@@ -63,7 +62,7 @@ export const styles = {
     wrapper: (rarity: Rarity) =>
       cn(
         'relative cursor-pointer rounded-lg border p-2 transition-all',
-        'hover:scale-105 hover:shadow-lg hover:brightness-110',
+        'hover:scale-105 hover:shadow-lg',
         {
           'border-[#26ffc9] bg-[#26ffc9]/5': rarity === 'H',
           'border-[#f74600] bg-[#f74600]/5': rarity === 'S',

@@ -48,7 +48,7 @@ const ExtensionPage = () => {
             </p>
           </div>
           <div className='mx-auto grid max-w-5xl grid-cols-1 gap-8 md:grid-cols-3'>
-            <Card className='border-blue-800/50 bg-blue-950/30 transition-colors hover:bg-blue-950/40'>
+            <Card className='border-0 bg-transparent transition-colors'>
               <CardContent className='flex flex-col items-center gap-4 pt-8'>
                 <Puzzle className='mx-auto h-12 w-12 text-blue-400' />
                 <span className='text-2xl font-bold text-white'>쉬운 설치</span>
@@ -59,7 +59,7 @@ const ExtensionPage = () => {
                 </p>
               </CardContent>
             </Card>
-            <Card className='border-blue-800/50 bg-blue-950/30 transition-colors hover:bg-blue-950/40'>
+            <Card className='border-0 bg-transparent transition-colors'>
               <CardContent className='flex flex-col items-center gap-4 pt-8'>
                 <Mouse className='mx-auto h-12 w-12 text-blue-400' />
                 <span className='text-2xl font-bold text-white'>어디서나</span>
@@ -69,7 +69,8 @@ const ExtensionPage = () => {
                 </p>
               </CardContent>
             </Card>
-            <Card className='border-blue-800/50 bg-blue-950/30 transition-colors hover:bg-blue-950/40'>
+
+            <Card className='border-0 bg-transparent transition-colors'>
               <CardContent className='flex flex-col items-center gap-4 pt-8'>
                 <PawPrint className='mx-auto h-12 w-12 text-blue-400' />
                 <span className='text-2xl font-bold text-white'>
