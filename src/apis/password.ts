@@ -37,9 +37,17 @@ export const useChangePassword = () =>
     },
   });
 
-// 비밀번호 찾기
-export const useFindPassword = async () =>
-  useMutation({
+interface FindPasswordRequest {
+  username: string;
+  password: string;
+}
+
+interface FindPasswordResponse {
+  message: string;
+}
+// 비밀번호 찾기(재설정/재가입)
+export const useFindPassword = () =>
+  useMutation<FindPasswordResponse, Error, FindPasswordRequest>({
     mutationFn: async (findPassword: FindPassword) => {
       const response = await fetch(`${domain}/account/password/find`, {
         method: 'POST',
@@ -49,10 +57,10 @@ export const useFindPassword = async () =>
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || '비밀번호 찾기 중 오류 발생');
+        throw new Error(errorData.message || '비밀번호 재설정 중 오류 발생');
       }
 
-      return (await response.json()) as FindPassword;
+      return response.json();
     },
     onSuccess: () => {
       toast.success('비밀번호 찾기 요청이 성공적으로 처리되었습니다.');
