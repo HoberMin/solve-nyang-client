@@ -37,16 +37,14 @@ interface ErrorMessages {
   PASSWORD_PATTERN: string;
   PASSWORD_MISMATCH: string;
   PASSWORD_CHECK: string;
-  USERNAME_ERROR: string;
-  PASSWORD_ERROR: string;
   FAILED_TO_CHECK_USER: string;
-  // SIGNUP_FAILED: string;
   FAILED_MODIFY_PASSWORD: string;
 }
 
 // error 타입 정의 추가
 interface ApiError extends Error {
   response?: {
+    status?: number;
     data?: {
       message?: string;
     };
@@ -74,11 +72,7 @@ const ERROR_MESSAGES: ErrorMessages = {
   PASSWORD_MISMATCH: '비밀번호가 일치하지 않습니다.',
   PASSWORD_CHECK: '비밀번호를 확인해주세요.',
 
-  // 백엔드 에러 메시지와 매칭
-  USERNAME_ERROR: '존재하지 않는 사용자입니다.', // signin의 Username Error
-  PASSWORD_ERROR: '비밀번호가 올바르지 않습니다.', // signin의 Password Error
   FAILED_TO_CHECK_USER: '사용자 확인에 실패했습니다.', // verify의 Failed to check user
-  // SIGNUP_FAILED: '회원가입에 실패했습니다.', // signup의 failed
   FAILED_MODIFY_PASSWORD: '비밀번호 수정 실패',
 };
 
@@ -183,11 +177,21 @@ const FindPassword = () => {
         toast.success(FEEDBACK_MESSAGES.ENCRYPTION_GUIDE);
       },
       onError: (error: ApiError) => {
-        if (error.response?.data?.message === 'Failed to check user') {
-          toast.error(ERROR_MESSAGES.FAILED_TO_CHECK_USER);
-        } else {
-          toast.error(ERROR_MESSAGES.USERNAME_ERROR);
-        }
+        // 디버깅을 위한 에러 로그 추가
+        console.log('Error response:', error.response?.data);
+        console.log('Error status:', error.response?.status);
+
+        toast.error('존재하지 않는 사용자입니다.');
+
+        // 왜 안될까
+        // if (error.response?.status === 403) {
+        //   toast.error('존재하지 않는 사용자입니다.');
+        // } else {
+        //   // 기타 에러
+        //   toast.error(
+        //     '암호화 키 발급에 실패 했습니다. 잠시 후 다시 시도해주세요',
+        //   );
+        // }
       },
     });
   };
@@ -216,14 +220,8 @@ const FindPassword = () => {
           const errorMessage = error.response?.data?.message;
 
           switch (errorMessage) {
-            case 'Username Error':
-              toast.error(ERROR_MESSAGES.USERNAME_ERROR);
-              break;
-            case 'Password Error':
-              toast.error(ERROR_MESSAGES.PASSWORD_ERROR);
-              break;
-            case 'failed':
-              toast.error(ERROR_MESSAGES.FAILED_MODIFY_PASSWORD);
+            case 'Incorrect verificationKey':
+              toast.error('본인 인증 실패');
               break;
             default:
               toast.error('비밀번호 재설정 중 오류가 발생했습니다.');
@@ -395,38 +393,40 @@ const FindPassword = () => {
                     )}
                   </div>
                 </div>
-                <TooltipProvider>
-                  {!isValid ? (
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <span className='inline-block w-full'>
-                          <Button
-                            type='submit'
-                            disabled={!isValid}
-                            className='mt-1 h-10 w-full bg-blue-600 hover:bg-blue-700'
-                          >
-                            비밀번호 재설정
-                          </Button>
-                        </span>
-                      </TooltipTrigger>
-                      <TooltipContent
-                        side='bottom'
-                        sideOffset={28}
-                        className='bg-white px-8 text-black'
+                <div>
+                  <TooltipProvider>
+                    {!isValid ? (
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <span className='inline-block w-full'>
+                            <Button
+                              type='submit'
+                              disabled={!isValid}
+                              className='mt-1 h-10 w-full bg-blue-600 hover:bg-blue-700'
+                            >
+                              비밀번호 재설정
+                            </Button>
+                          </span>
+                        </TooltipTrigger>
+                        <TooltipContent
+                          side='bottom'
+                          sideOffset={28}
+                          className='bg-white px-8 text-black'
+                        >
+                          <p>모든 필드를 올바르게 입력하세요.</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    ) : (
+                      <Button
+                        type='submit'
+                        disabled={!isValid}
+                        className='mt-1 h-10 w-full bg-blue-600 hover:bg-blue-700'
                       >
-                        <p>모든 필드를 올바르게 입력하세요.</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  ) : (
-                    <Button
-                      type='submit'
-                      disabled={!isValid}
-                      className='mt-1 h-10 w-full bg-blue-600 hover:bg-blue-700'
-                    >
-                      비밀번호 재설정
-                    </Button>
-                  )}
-                </TooltipProvider>
+                        비밀번호 재설정
+                      </Button>
+                    )}
+                  </TooltipProvider>
+                </div>
               </form>
             </CardContent>
           </Card>

@@ -43,8 +43,6 @@ interface ErrorMessages {
   PASSWORD_PATTERN: string;
   PASSWORD_MISMATCH: string;
   PASSWORD_CHECK: string;
-  // USERNAME_ERROR: string;
-  // PASSWORD_ERROR: string;
   FAILED_TO_CHECK_USER: string;
   SIGNUP_FAILED: string;
 }
@@ -79,9 +77,6 @@ const ERROR_MESSAGES: ErrorMessages = {
   PASSWORD_PATTERN: '영문, 숫자, 특수문자를 최소 1자 포함해야 합니다.',
   PASSWORD_MISMATCH: '비밀번호가 일치하지 않습니다.',
   PASSWORD_CHECK: '비밀번호를 확인해주세요.',
-
-  // USERNAME_ERROR: '존재하지 않는 사용자입니다.', // signin의 Username Error
-  // PASSWORD_ERROR: '비밀번호가 올바르지 않습니다.', // signin의 Password Error
   FAILED_TO_CHECK_USER: '사용자 확인에 실패했습니다.', // verify의 Failed to check user
   SIGNUP_FAILED: '회원가입에 실패했습니다.', // signup의 failed
 };
@@ -432,38 +427,40 @@ const Signup = () => {
                     )}
                   </div>
                 </div>
-                <TooltipProvider>
-                  {!isValid && (
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <span className='inline-block w-full'>
-                          <Button
-                            type='submit'
-                            disabled={true}
-                            className='mt-1 h-10 w-full bg-blue-600 hover:bg-blue-700'
-                          >
-                            회원가입
-                          </Button>
-                        </span>
-                      </TooltipTrigger>
-                      <TooltipContent
-                        side='bottom'
-                        sideOffset={28}
-                        className='bg-white px-8 text-black'
+                <div>
+                  <TooltipProvider>
+                    {!isValid && (
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <span className='inline-block w-full'>
+                            <Button
+                              type='submit'
+                              disabled={true}
+                              className='mt-1 h-10 w-full bg-blue-600 hover:bg-blue-700'
+                            >
+                              회원가입
+                            </Button>
+                          </span>
+                        </TooltipTrigger>
+                        <TooltipContent
+                          side='bottom'
+                          sideOffset={28}
+                          className='bg-white px-8 text-black'
+                        >
+                          <p>{FEEDBACK_MESSAGES.INCOMPLETE_FORM}</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    )}
+                    {isValid && (
+                      <Button
+                        type='submit'
+                        className='mt-1 h-10 w-full bg-blue-600 hover:bg-blue-700'
                       >
-                        <p>{FEEDBACK_MESSAGES.INCOMPLETE_FORM}</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  )}
-                  {isValid && (
-                    <Button
-                      type='submit'
-                      className='mt-1 h-10 w-full bg-blue-600 hover:bg-blue-700'
-                    >
-                      회원가입
-                    </Button>
-                  )}
-                </TooltipProvider>
+                        회원가입
+                      </Button>
+                    )}
+                  </TooltipProvider>
+                </div>
               </form>
             </CardContent>
           </Card>
