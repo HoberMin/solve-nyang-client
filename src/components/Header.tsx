@@ -194,6 +194,7 @@ const Header = () => {
           <RetroMenuItem href='/login'>로그인</RetroMenuItem>
         ) : (
           <>
+            <RetroMenuItem href='/event'>설 이벤트</RetroMenuItem>
             <RetroMenuItem href='/contest'>공모전</RetroMenuItem>
             <RetroMenuItem href='/gacha'>뽑기</RetroMenuItem>
             <ActionDropdown actionText='상점' />
