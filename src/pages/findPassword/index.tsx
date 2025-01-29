@@ -316,6 +316,7 @@ const FindPassword = () => {
                       키 발급
                     </Button>
                   </div>
+
                   {errors.username && (
                     <p className='text-sm text-red-500'>{errors.username}</p>
                   )}
@@ -361,9 +362,11 @@ const FindPassword = () => {
                       />
                     )}
                   </div>
-                  {errors.password && (
-                    <p className='text-sm text-red-500'>{errors.password}</p>
-                  )}
+                  <div className='h-1'>
+                    {errors.password && (
+                      <p className='text-sm text-red-500'>{errors.password}</p>
+                    )}
+                  </div>
                 </div>
 
                 <div className='space-y-4'>
@@ -379,16 +382,18 @@ const FindPassword = () => {
                     className='h-10 bg-zinc-900 text-zinc-100'
                     placeholder='비밀번호를 다시 입력하세요.'
                   />
-                  {errors.passwordConfirm && (
-                    <p className='text-sm text-red-500'>
-                      {errors.passwordConfirm}
-                    </p>
-                  )}
-                  {errors.passwordSuccess && (
-                    <p className='text-sm text-green-500'>
-                      {errors.passwordSuccess}
-                    </p>
-                  )}
+                  <div className='h-1'>
+                    {errors.passwordConfirm && (
+                      <p className='text-sm text-red-500'>
+                        {errors.passwordConfirm}
+                      </p>
+                    )}
+                    {errors.passwordSuccess && (
+                      <p className='text-sm text-green-500'>
+                        {errors.passwordSuccess}
+                      </p>
+                    )}
+                  </div>
                 </div>
                 <TooltipProvider>
                   {!isValid ? (
@@ -398,7 +403,7 @@ const FindPassword = () => {
                           <Button
                             type='submit'
                             disabled={!isValid}
-                            className='mt-6 h-10 w-full bg-blue-600 hover:bg-blue-700'
+                            className='mt-1 h-10 w-full bg-blue-600 hover:bg-blue-700'
                           >
                             비밀번호 재설정
                           </Button>
@@ -416,7 +421,7 @@ const FindPassword = () => {
                     <Button
                       type='submit'
                       disabled={!isValid}
-                      className='mt-6 h-10 w-full bg-blue-600 hover:bg-blue-700'
+                      className='mt-1 h-10 w-full bg-blue-600 hover:bg-blue-700'
                     >
                       비밀번호 재설정
                     </Button>
