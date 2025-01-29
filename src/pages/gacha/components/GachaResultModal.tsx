@@ -95,33 +95,56 @@ export const GachaResultModal = memo(
       setIsSummary(true);
     }, []);
 
-    const handleBackdropClick = useCallback(
-      (e: React.MouseEvent<HTMLDivElement>) => {
-        if (e.target !== e.currentTarget) return;
+    const handleContinueClick = useCallback(() => {
+      if (isAnimating) return;
 
-        if (isAnimating) return;
-
-        if (!isSingleDraw && !isSummary) {
-          if (currentIndex < results.length - 1) {
-            handleNext();
-          } else {
-            setIsSummary(true);
-          }
-          return;
+      if (isSingleDraw) {
+        if (animationStep === ANIMATION_STEPS.COMPLETE) {
+          onOpenChange(false);
         }
+      } else {
+        if (isSummary) {
+          onOpenChange(false);
+        } else {
+          handleNext();
+        }
+      }
+    }, [
+      isAnimating,
+      isSingleDraw,
+      isSummary,
+      animationStep,
+      handleNext,
+      onOpenChange,
+    ]);
 
-        onOpenChange(false);
-      },
-      [
-        isAnimating,
-        isSingleDraw,
-        isSummary,
-        currentIndex,
-        results.length,
-        handleNext,
-        onOpenChange,
-      ],
-    );
+    // const handleBackdropClick = useCallback(
+    //   (e: React.MouseEvent<HTMLDivElement>) => {
+    //     if (e.target !== e.currentTarget) return;
+
+    //     if (isAnimating) return;
+
+    //     if (!isSingleDraw && !isSummary) {
+    //       if (currentIndex < results.length - 1) {
+    //         handleNext();
+    //       } else {
+    //         setIsSummary(true);
+    //       }
+    //       return;
+    //     }
+
+    //     onOpenChange(false);
+    //   },
+    //   [
+    //     isAnimating,
+    //     isSingleDraw,
+    //     isSummary,
+    //     currentIndex,
+    //     results.length,
+    //     handleNext,
+    //     onOpenChange,
+    //   ],
+    // );
 
     useEffect(() => {
       const handleKeyPress = (event: globalThis.KeyboardEvent) => {
@@ -224,7 +247,8 @@ export const GachaResultModal = memo(
 
     if (isSummary) {
       return (
-        <SummaryView results={results} onBackdropClick={handleBackdropClick} />
+        // <SummaryView results={results} onBackdropClick={handleBackdropClick} />
+        <SummaryView results={results} onOpenChange={onOpenChange} />
       );
     }
 
@@ -238,7 +262,7 @@ export const GachaResultModal = memo(
     return (
       <div
         className='fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-80'
-        onClick={handleBackdropClick}
+        // onClick={handleBackdropClick}
       >
         {isConfetti && <Confetti />}
         <div className='relative z-50 h-96 w-96 rounded-lg bg-transparent'>
@@ -284,11 +308,15 @@ export const GachaResultModal = memo(
               </button>
             </div>
           )}
+
           {isCompleteStep && (
-            <div className='absolute left-1/2 top-[-80px] w-full -translate-x-1/2 transform'>
-              <p className='animate-pulse text-center text-lg font-semibold text-white'>
-                {'Press Enter'}
-              </p>
+            <div className='absolute left-1/2 top-[-80px] flex w-full -translate-x-1/2 transform justify-center'>
+              <button
+                onClick={handleContinueClick}
+                className='animate-pulse bg-transparent text-center text-lg font-semibold text-white hover:scale-110'
+              >
+                Press Enter or Click here
+              </button>
             </div>
           )}
         </div>
