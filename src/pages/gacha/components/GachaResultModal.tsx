@@ -149,7 +149,13 @@ export const GachaResultModal = memo(
     useEffect(() => {
       const handleKeyPress = (event: globalThis.KeyboardEvent) => {
         if (event.key === 'Enter') {
-          if (isAnimating) return;
+          if (isAnimating) {
+            // 애니메이션 중일 때는 즉시 완료 상태로 전환
+            setIsAnimating(false);
+            setIsCapsuleVisible(true);
+            setAnimationStep(ANIMATION_STEPS.COMPLETE);
+            return;
+          }
 
           if (isSingleDraw) {
             if (animationStep === ANIMATION_STEPS.COMPLETE) {
@@ -199,19 +205,20 @@ export const GachaResultModal = memo(
           await new Promise(resolve =>
             setTimeout(resolve, ANIMATION_TIMING.CAPSULE),
           );
+          // 각 단계에서 isAnimating 상태 확인
           if (!isSubscribed) return;
 
           setAnimationStep(ANIMATION_STEPS.SHAKE);
           await new Promise(resolve =>
             setTimeout(resolve, ANIMATION_TIMING.SHAKE),
           );
-          if (!isSubscribed) return;
+          if (!isSubscribed || !isAnimating) return;
 
           setAnimationStep(ANIMATION_STEPS.OPEN);
           await new Promise(resolve =>
             setTimeout(resolve, ANIMATION_TIMING.OPEN),
           );
-          if (!isSubscribed) return;
+          if (!isSubscribed || !isAnimating) return;
         }
 
         setAnimationStep(ANIMATION_STEPS.COMPLETE);
