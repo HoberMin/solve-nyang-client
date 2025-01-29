@@ -1,4 +1,4 @@
-import { memo, useCallback, useEffect, useMemo, useState } from 'react';
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import {
   ANIMATION_STEPS,
@@ -41,7 +41,7 @@ export const GachaResultModal = memo(
     const [isSummary, setIsSummary] = useState(false);
     const [isAnimating, setIsAnimating] = useState(false);
     const [isConfetti, setIsConfetti] = useState(false);
-
+    const animationCancelRef = useRef(false);
     // 필요한 모든 이미지 URL 수집
     const imagesToPreload = useMemo(() => {
       if (!results.length) return [];
@@ -150,10 +150,10 @@ export const GachaResultModal = memo(
       const handleKeyPress = (event: globalThis.KeyboardEvent) => {
         if (event.key === 'Enter') {
           if (isAnimating) {
-            // 애니메이션 중일 때는 즉시 완료 상태로 전환
-            setIsAnimating(false);
-            setIsCapsuleVisible(true);
+            // 애니메이션 취소 플래그 설정
+            animationCancelRef.current = true;
             setAnimationStep(ANIMATION_STEPS.COMPLETE);
+            setIsAnimating(false);
             return;
           }
 
@@ -188,6 +188,8 @@ export const GachaResultModal = memo(
         setIsCapsuleVisible(false);
         setCurrentIndex(0);
         setIsSummary(false);
+        setIsAnimating(false);
+        animationCancelRef.current = false;
         return;
       }
 
@@ -197,28 +199,40 @@ export const GachaResultModal = memo(
 
       const runAnimation = async () => {
         if (!isSubscribed) return;
+
+        // 애니메이션 시작 전 취소 플래그 초기화
+        animationCancelRef.current = false;
         setIsAnimating(true);
 
         if (isSingleDraw || currentIndex === 0) {
           setIsCapsuleVisible(true);
           setAnimationStep(ANIMATION_STEPS.CAPSULE);
+
           await new Promise(resolve =>
             setTimeout(resolve, ANIMATION_TIMING.CAPSULE),
           );
-          // 각 단계에서 isAnimating 상태 확인
-          if (!isSubscribed) return;
+          if (!isSubscribed || animationCancelRef.current) {
+            setIsAnimating(false);
+            return;
+          }
 
           setAnimationStep(ANIMATION_STEPS.SHAKE);
           await new Promise(resolve =>
             setTimeout(resolve, ANIMATION_TIMING.SHAKE),
           );
-          if (!isSubscribed || !isAnimating) return;
+          if (!isSubscribed || animationCancelRef.current) {
+            setIsAnimating(false);
+            return;
+          }
 
           setAnimationStep(ANIMATION_STEPS.OPEN);
           await new Promise(resolve =>
             setTimeout(resolve, ANIMATION_TIMING.OPEN),
           );
-          if (!isSubscribed || !isAnimating) return;
+          if (!isSubscribed || animationCancelRef.current) {
+            setIsAnimating(false);
+            return;
+          }
         }
 
         setAnimationStep(ANIMATION_STEPS.COMPLETE);
@@ -231,6 +245,8 @@ export const GachaResultModal = memo(
 
       return () => {
         isSubscribed = false;
+        animationCancelRef.current = true;
+        setIsAnimating(false);
       };
     }, [
       isOpen,
@@ -240,7 +256,6 @@ export const GachaResultModal = memo(
       isSummary,
       isImagePreloading,
     ]);
-
     // 로딩 중일 때 표시할 내용
     if (!isImagePreloading) {
       return (
