@@ -1,10 +1,12 @@
 import { FormEvent, useEffect, useState } from 'react';
 
+import { UseMutationResult } from '@tanstack/react-query';
 import { Copy, Eye, EyeOff } from 'lucide-react';
 import { toast } from 'sonner';
 
 import { useGetEncryption } from '@/apis/encryption';
-import { useSignUp } from '@/apis/sign';
+// import { useSignUp } from '@/apis/sign';
+import { useFindPassword } from '@/apis/password';
 import Layout from '@/components/Layout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -86,9 +88,24 @@ const FEEDBACK_MESSAGES = {
   INCOMPLETE_FORM: '가입정보를 입력하세요.',
 };
 
+interface FindPasswordRequest {
+  username: string;
+  password: string;
+}
+
+interface FindPasswordResponse {
+  message: string;
+}
+
 // 비밀번호 찾기이지만 사실상 재가입 로직
 const FindPassword = () => {
-  const signUpMutation = useSignUp();
+  // const findPasswordMutation = useFindPassword();
+  const findPasswordMutation: UseMutationResult<
+    FindPasswordResponse,
+    ApiError,
+    FindPasswordRequest
+  > = useFindPassword();
+
   const getEncryptionMutation = useGetEncryption();
 
   const [formData, setFormData] = useState<FormData>(INITIAL_FORM_STATE);
@@ -187,7 +204,7 @@ const FindPassword = () => {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
-    signUpMutation(
+    findPasswordMutation.mutate(
       {
         username: formData.username,
         password: formData.password,
@@ -381,7 +398,7 @@ const FindPassword = () => {
                         <span className='inline-block w-full'>
                           <Button
                             type='submit'
-                            disabled={true}
+                            disabled={!isValid}
                             className='mt-6 h-10 w-full bg-blue-600 hover:bg-blue-700'
                           >
                             비밀번호 재설정
@@ -399,7 +416,7 @@ const FindPassword = () => {
                   ) : (
                     <Button
                       type='submit'
-                      disabled={true}
+                      disabled={!isValid}
                       className='mt-6 h-10 w-full bg-blue-600 hover:bg-blue-700'
                     >
                       비밀번호 재설정
