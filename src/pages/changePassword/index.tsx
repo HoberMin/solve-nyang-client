@@ -1,11 +1,10 @@
 import { FormEvent, useState } from 'react';
 
 import { Eye, EyeOff } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
 import { useChangePassword } from '@/apis/password';
-// import { useGetEncryption } from '@/apis/encryption';
-// import { useSignUp } from '@/apis/sign';
 import Layout from '@/components/Layout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -37,13 +36,9 @@ interface ErrorMessages {
   PASSWORD_PATTERN: string;
   PASSWORD_MISMATCH: string;
   PASSWORD_CHECK: string;
-  USERNAME_ERROR: string;
-  PASSWORD_ERROR: string;
   FAILED_TO_CHECK_USER: string;
-  SIGNUP_FAILED: string;
 }
 
-// error 타입 정의 추가
 interface ApiError extends Error {
   response?: {
     data?: {
@@ -70,35 +65,23 @@ const ERROR_MESSAGES: ErrorMessages = {
   EMPTY_NICKNAME: '닉네임을 입력해 주세요.',
   EMPTY_PASSWORD: '비밀번호를 입력해 주세요.',
   PASSWORD_LENGTH: '비밀번호는 8자 이상이어야 합니다.',
-  PASSWORD_PATTERN:
-    '비밀번호는 영문, 숫자, 특수문자를 최소 1자 포함해야 합니다.',
+  PASSWORD_PATTERN: '영문, 숫자, 특수문자를 최소 1자 포함해야 합니다.',
   PASSWORD_MISMATCH: '비밀번호가 일치하지 않습니다.',
   PASSWORD_CHECK: '비밀번호를 확인해주세요.',
 
-  // 백엔드 에러 메시지와 매칭
-  USERNAME_ERROR: '존재하지 않는 사용자입니다.', // signin의 Username Error
-  PASSWORD_ERROR: '비밀번호가 올바르지 않습니다.', // signin의 Password Error
   FAILED_TO_CHECK_USER: '사용자 확인에 실패했습니다.', // verify의 Failed to check user
-  SIGNUP_FAILED: '회원가입에 실패했습니다.', // signup의 failed
 };
 
-// const FEEDBACK_MESSAGES = {
-//   ENCRYPTION_GUIDE: '암호화키를 solved.ac 내정보-이름에 입력하세요.',
-//   INCOMPLETE_FORM: '가입정보를 입력하세요.',
-// };
-
 const ChangePassword = () => {
+  const navigate = useNavigate();
   const changeMutation = useChangePassword();
   // const getEncryptionMutation = useGetEncryption();
 
   const [formData, setFormData] = useState<FormData>(INITIAL_FORM_STATE);
   const [errors, setErrors] = useState<Record<string, string>>({});
-  // const [encryptionKey, setEncryptionKey] = useState<string>(''); // 인증키 재발급
   const [isShowCurrentPassword, setIsShowCurrentPassword] =
     useState<boolean>(false);
   const [isShowNewPassword, setIsShowNewPassword] = useState<boolean>(false);
-  // const [isKeyIssued, setIsKeyIssued] = useState<boolean>(false);
-  // const [isValid, setIsValid] = useState<boolean>(false);
 
   // 유효성 검사 통과 여부
   const isValid =
@@ -175,20 +158,17 @@ const ChangePassword = () => {
       },
       {
         onSuccess: () => {
-          toast.success('비밀번호 변경 성공!');
+          toast.success('비밀번호가 변경되었습니다.');
+          setFormData(INITIAL_FORM_STATE);
+          setErrors({});
+          navigate('/');
         },
         onError: (error: ApiError) => {
           const errorMessage = error.response?.data?.message;
 
           switch (errorMessage) {
-            case 'Username Error':
-              toast.error(ERROR_MESSAGES.USERNAME_ERROR);
-              break;
-            case 'Password Error':
-              toast.error(ERROR_MESSAGES.PASSWORD_ERROR);
-              break;
-            case 'failed':
-              toast.error(ERROR_MESSAGES.SIGNUP_FAILED);
+            case 'Incorrect current password':
+              toast.error('현재 비밀번호를 확인해주세요.');
               break;
             default:
               toast.error('비밀번호 변경 중 오류가 발생했습니다.');
@@ -264,9 +244,13 @@ const ChangePassword = () => {
                       />
                     )}
                   </div>
-                  {errors.newPassword && (
-                    <p className='text-sm text-red-500'>{errors.newPassword}</p>
-                  )}
+                  <div className='h-1'>
+                    {errors.newPassword && (
+                      <p className='text-sm text-red-500'>
+                        {errors.newPassword}
+                      </p>
+                    )}
+                  </div>
                 </div>
 
                 <div className='space-y-4'>
@@ -282,48 +266,52 @@ const ChangePassword = () => {
                     className='h-10 bg-zinc-900 text-zinc-100'
                     placeholder='비밀번호를 다시 입력하세요.'
                   />
-                  {errors.passwordConfirm && (
-                    <p className='text-sm text-red-500'>
-                      {errors.passwordConfirm}
-                    </p>
-                  )}
-                  {errors.passwordSuccess && (
-                    <p className='text-sm text-green-500'>
-                      {errors.passwordSuccess}
-                    </p>
-                  )}
+                  <div className='h-1'>
+                    {errors.passwordConfirm && (
+                      <p className='text-sm text-red-500'>
+                        {errors.passwordConfirm}
+                      </p>
+                    )}
+                    {errors.passwordSuccess && (
+                      <p className='text-sm text-green-500'>
+                        {errors.passwordSuccess}
+                      </p>
+                    )}
+                  </div>
                 </div>
-                <TooltipProvider>
-                  {!isValid ? (
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <span className='inline-block w-full'>
-                          <Button
-                            type='submit'
-                            disabled={true}
-                            className='mt-6 h-10 w-full bg-blue-600 hover:bg-blue-700'
-                          >
-                            비밀번호 변경
-                          </Button>
-                        </span>
-                      </TooltipTrigger>
-                      <TooltipContent
-                        side='bottom'
-                        sideOffset={28}
-                        className='bg-white px-8 text-black'
+                <div>
+                  <TooltipProvider>
+                    {!isValid ? (
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <span className='inline-block w-full'>
+                            <Button
+                              type='submit'
+                              disabled={true}
+                              className='mt-1 h-10 w-full bg-blue-600 hover:bg-blue-700'
+                            >
+                              비밀번호 변경
+                            </Button>
+                          </span>
+                        </TooltipTrigger>
+                        <TooltipContent
+                          side='bottom'
+                          sideOffset={28}
+                          className='bg-white px-8 text-black'
+                        >
+                          <p>모든 필드를 올바르게 입력하세요.</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    ) : (
+                      <Button
+                        type='submit'
+                        className='mt-1 h-10 w-full bg-blue-600 hover:bg-blue-700'
                       >
-                        <p>모든 필드를 올바르게 입력하세요.</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  ) : (
-                    <Button
-                      type='submit'
-                      className='mt-6 h-10 w-full bg-blue-600 hover:bg-blue-700'
-                    >
-                      비밀번호 변경
-                    </Button>
-                  )}
-                </TooltipProvider>
+                        비밀번호 변경
+                      </Button>
+                    )}
+                  </TooltipProvider>
+                </div>
               </form>
             </CardContent>
           </Card>
