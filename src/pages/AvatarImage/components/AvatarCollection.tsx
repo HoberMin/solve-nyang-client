@@ -1,7 +1,16 @@
-// components/AvatarCollection.tsx
 import { useState } from 'react';
 
+import { RotateCcw } from 'lucide-react';
+
+import { useResetAvatar } from '@/apis/avatar';
 import { UserAvatar } from '@/apis/user';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { RARITY_ORDER } from '@/pages/profile/AvatarCollection';
 import { Rarity } from '@/pages/sale/type';
 
@@ -14,18 +23,60 @@ interface AvatarCollectionProps {
   onToggle: (id: string) => void;
 }
 
+const ResetDialog = ({
+  isOpen,
+  onClose,
+  onReset,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+  onReset: () => void;
+}) => (
+  <Dialog open={isOpen} onOpenChange={onClose}>
+    <DialogContent className='border-gray-600 bg-gray-900'>
+      <DialogHeader>
+        <DialogTitle className='text-xl text-red-400'>초기화 확인</DialogTitle>
+        <DialogDescription className='text-base text-gray-400'>
+          <div className='space-y-4'>
+            <p>선택한 고양이를 초기화하시겠습니까?</p>
+            <div className='rounded-lg border border-yellow-500/50 bg-yellow-500/10 p-4 text-yellow-400'>
+              <p className='font-medium'>⚠️ 주의!</p>
+              <p className='mt-2'>초기화하면 모든 선택이 해제됩니다.</p>
+            </div>
+          </div>
+        </DialogDescription>
+      </DialogHeader>
+      <div className='flex justify-end gap-4 pt-4'>
+        <button
+          onClick={onClose}
+          className='cursor-pointer rounded-full px-4 py-2 text-base text-gray-400 hover:text-white'
+        >
+          취소
+        </button>
+        <button
+          onClick={onReset}
+          className='cursor-pointer rounded-full border border-red-400 px-4 py-2 text-base text-red-400 hover:bg-red-400 hover:text-gray-900'
+        >
+          확인
+        </button>
+      </div>
+    </DialogContent>
+  </Dialog>
+);
+
 export const AvatarCollection = ({
   avatars,
   onToggle,
 }: AvatarCollectionProps) => {
   const [visibleFilter, setVisibleFilter] = useState<Rarity | 'ALL'>('ALL');
   const [hiddenFilter, setHiddenFilter] = useState<Rarity | 'ALL'>('ALL');
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  // 활성화/비활성화 아바타 분리
+  const { mutate: resetAvatar } = useResetAvatar();
+
   const visibleAvatars = avatars.filter(avatar => avatar.visible);
   const hiddenAvatars = avatars.filter(avatar => !avatar.visible);
 
-  // 각각의 등급별 카운트 계산
   const getCountsByRarity = (avatars: UserAvatar[]) => {
     return ['H', 'S', 'A', 'B', 'C', 'D'].reduce(
       (acc, rarity) => {
@@ -39,22 +90,33 @@ export const AvatarCollection = ({
   const visibleCounts = getCountsByRarity(visibleAvatars);
   const hiddenCounts = getCountsByRarity(hiddenAvatars);
 
-  // 필터링 함수
   const filterAvatars = (avatars: UserAvatar[], filter: Rarity | 'ALL') =>
     avatars
       .filter(avatar => filter === 'ALL' || avatar.rarity === filter)
       .sort((a, b) => {
-        // RARITY_ORDER 배열의 인덱스를 비교하여 정렬
         return RARITY_ORDER.indexOf(a.rarity) - RARITY_ORDER.indexOf(b.rarity);
       });
+
+  const handleReset = () => {
+    resetAvatar();
+    setIsDialogOpen(false);
+  };
 
   return (
     <div className='space-y-8'>
       <section className={styles.collection.section}>
         <div className={styles.collection.header}>
-          <h4 className={styles.collection.sectionTitle.active}>
-            활성화된 아바타 ({visibleAvatars.length})
-          </h4>
+          <div className='flex items-center gap-4'>
+            <h4 className={styles.collection.sectionTitle.active}>
+              활성화된 아바타 ({visibleAvatars.length})
+            </h4>
+            <button
+              onClick={() => setIsDialogOpen(true)}
+              className='rounded-full border-2 border-red-500 bg-red-500/10 p-2 text-red-500 outline-none transition-all hover:bg-red-500 hover:text-white'
+            >
+              <RotateCcw className='h-3 w-3' />
+            </button>
+          </div>
           <RarityFilter
             selectedRarity={visibleFilter}
             onRarityChange={setVisibleFilter}
@@ -93,6 +155,12 @@ export const AvatarCollection = ({
           ))}
         </div>
       </section>
+
+      <ResetDialog
+        isOpen={isDialogOpen}
+        onClose={() => setIsDialogOpen(false)}
+        onReset={handleReset}
+      />
     </div>
   );
 };
