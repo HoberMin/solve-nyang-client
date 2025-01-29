@@ -2,10 +2,10 @@ import { FormEvent, useEffect, useState } from 'react';
 
 import { UseMutationResult } from '@tanstack/react-query';
 import { Copy, Eye, EyeOff } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
 import { useGetEncryption } from '@/apis/encryption';
-// import { useSignUp } from '@/apis/sign';
 import { useFindPassword } from '@/apis/password';
 import Layout from '@/components/Layout';
 import { Button } from '@/components/ui/button';
@@ -44,8 +44,8 @@ interface ErrorMessages {
 // error 타입 정의 추가
 interface ApiError extends Error {
   response?: {
-    status?: number;
-    data?: {
+    status: number;
+    data: {
       message?: string;
     };
   };
@@ -92,7 +92,7 @@ interface FindPasswordResponse {
 
 // 비밀번호 찾기이지만 사실상 재가입 로직
 const FindPassword = () => {
-  // const findPasswordMutation = useFindPassword();
+  const navigate = useNavigate();
   const findPasswordMutation: UseMutationResult<
     FindPasswordResponse,
     ApiError,
@@ -214,14 +214,15 @@ const FindPassword = () => {
       },
       {
         onSuccess: () => {
-          toast.success('비밀번호 재설정 성공!');
+          toast.success('비밀번호가 재설정 되었습니다.');
+          navigate('/login');
         },
         onError: (error: ApiError) => {
           const errorMessage = error.response?.data?.message;
 
           switch (errorMessage) {
-            case 'Incorrect verificationKey':
-              toast.error('본인 인증 실패');
+            case 'solved.ac 인증을 확인하세요':
+              toast.error('solved.ac 인증을 확인하세요');
               break;
             default:
               toast.error('비밀번호 재설정 중 오류가 발생했습니다.');
@@ -233,7 +234,6 @@ const FindPassword = () => {
 
   useEffect(() => {
     if (!isKeyIssued) {
-      // setIsValid(!!formData.username.trim());
       setIsValid(false);
       return;
     }
