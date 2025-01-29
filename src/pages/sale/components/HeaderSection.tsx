@@ -34,10 +34,10 @@ const HeaderSection = ({
         <div className='flex-1'>
           <div className='mb-6 mt-8'>
             <div className='mb-2 text-2xl font-bold text-blue-400 shadow-blue-400/50 drop-shadow-lg'>
-              아바타 판매
+              고양이 캐릭터 판매
             </div>
             <p className='text-lg text-gray-400'>
-              아바타 한개당 {POINT_PER_AVATAR}냥코인을 획득할 수 있습니다
+              고양이 캐릭터 한개당 {POINT_PER_AVATAR}냥코인을 획득할 수 있습니다
             </p>
             <div className='mt-8 text-xl'>
               <span className='text-gray-400'>획득 냥코인: </span>

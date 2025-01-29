@@ -16,7 +16,7 @@ interface MyImageProps {
 
 export const MyImage = ({ username, visibleAvatars }: MyImageProps) => {
   const [isCopied, setIsCopied] = useState(false);
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(true);
   const [background, setBackground] = useState<BackgroundType>('우주배경');
 
   const handleCopy = async () => {
@@ -38,7 +38,7 @@ export const MyImage = ({ username, visibleAvatars }: MyImageProps) => {
     <div
       className={cn(
         styles.preview.wrapper,
-        isExpanded ? 'mx-auto max-w-5xl' : 'mx-auto max-w-2xl',
+        isExpanded ? 'mx-auto max-w-5xl' : 'mx-auto max-w-3xl',
       )}
     >
       <div className={styles.preview.header}>
@@ -83,7 +83,7 @@ export const MyImage = ({ username, visibleAvatars }: MyImageProps) => {
         className={cn(
           styles.preview.imageContainer,
           'transition-all duration-300',
-          isExpanded ? 'max-h-[600px]' : 'max-h-[300px]',
+          isExpanded ? 'max-h-[600px]' : 'max-h-[500px]',
         )}
       >
         <img

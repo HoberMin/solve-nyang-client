@@ -108,7 +108,7 @@ export const AvatarCollection = ({
         <div className={styles.collection.header}>
           <div className='flex items-center gap-4'>
             <h4 className={styles.collection.sectionTitle.active}>
-              활성화된 아바타 ({visibleAvatars.length})
+              활성화된 고양이 ({visibleAvatars.length})
             </h4>
             <button
               onClick={() => setIsDialogOpen(true)}
@@ -137,7 +137,7 @@ export const AvatarCollection = ({
       <section className={styles.collection.section}>
         <div className={styles.collection.header}>
           <h4 className={styles.collection.sectionTitle.inactive}>
-            비활성화된 아바타 ({hiddenAvatars.length})
+            비활성화된 고양이 ({hiddenAvatars.length})
           </h4>
           <RarityFilter
             selectedRarity={hiddenFilter}

@@ -121,7 +121,7 @@ export const useSaleAvatar = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['userInfo'] });
       queryClient.invalidateQueries({ queryKey: ['userAvatar'] });
-      toast.success('아바타가 성공적으로 판매되었습니다.');
+      toast.success('고양이 캐릭터가 성공적으로 판매되었습니다.');
     },
     onError: error => {
       toast.error('판매 중 오류가 발생했습니다.');
