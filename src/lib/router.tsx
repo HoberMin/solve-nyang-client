@@ -8,6 +8,7 @@ import Auction from '@/pages/auction';
 import CatCollection from '@/pages/catCollection';
 import ChangePassword from '@/pages/changePassword';
 import Contest from '@/pages/contest';
+import EventPage from '@/pages/event';
 import Extension from '@/pages/extension';
 import FindPassword from '@/pages/findPassword';
 import Gacha from '@/pages/gacha';
@@ -70,6 +71,10 @@ export const router = createBrowserRouter([
       {
         path: 'image',
         element: <AvatarImagePage />,
+      },
+      {
+        path: 'event',
+        element: <EventPage />,
       },
     ],
   },
