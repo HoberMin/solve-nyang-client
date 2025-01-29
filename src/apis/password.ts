@@ -44,11 +44,11 @@ export const useChangePassword = () =>
 // 비밀번호 찾기(재설정/재가입)
 export const useFindPassword = () =>
   useMutation<FindPasswordResponse, Error, FindPasswordRequest>({
-    mutationFn: async (findPassword: FindPassword) => {
+    mutationFn: async ({ username, password }: FindPassword) => {
       const response = await fetch(`${domain}/account/password/find`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ findPassword }),
+        body: JSON.stringify({ username, password }),
       });
 
       if (!response.ok) {
