@@ -23,14 +23,14 @@ interface FindPasswordResponse {
 // 비밀번호 변경
 export const useChangePassword = () =>
   useMutation({
-    mutationFn: async (changePassword: ChangePassword) => {
+    mutationFn: async ({ currentPassword, newPassword }: ChangePassword) => {
       const response = await fetch(`${domain}/account/password/change`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
-        body: JSON.stringify({ changePassword }),
+        body: JSON.stringify({ currentPassword, newPassword }),
       });
 
       if (!response.ok) {
