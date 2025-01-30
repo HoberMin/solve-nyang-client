@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Copy, Expand, Minimize } from 'lucide-react';
 import { toast } from 'sonner';
 
+import { useGetUserAvatar } from '@/apis/user';
 import { cn } from '@/lib/utils';
 
 import { styles } from '../style';
@@ -11,13 +12,15 @@ export type BackgroundType = '우주배경' | '지구배경' | '공원배경';
 
 interface MyImageProps {
   username: string;
-  visibleAvatars: number;
 }
 
-export const MyImage = ({ username, visibleAvatars }: MyImageProps) => {
+export const MyImage = ({ username }: MyImageProps) => {
   const [isCopied, setIsCopied] = useState(false);
   const [isExpanded, setIsExpanded] = useState(true);
-  const [background, setBackground] = useState<BackgroundType>('우주배경');
+  // const [background, setBackground] = useState<BackgroundType>('우주배경');
+
+  const { data: avatarData } = useGetUserAvatar();
+  const visibleAvatars = avatarData.avatars.filter(a => a.visible).length;
 
   const handleCopy = async () => {
     try {
@@ -46,7 +49,7 @@ export const MyImage = ({ username, visibleAvatars }: MyImageProps) => {
         <div className='flex items-center gap-2'>
           <div className={styles.backgroundSelect.wrapper}>
             <label className={styles.backgroundSelect.label}>배경:</label>
-            <select
+            {/* <select
               className={styles.backgroundSelect.select}
               value={background}
               onChange={e => {
@@ -60,7 +63,7 @@ export const MyImage = ({ username, visibleAvatars }: MyImageProps) => {
                   {bg}
                 </option>
               ))}
-            </select>
+            </select> */}
           </div>
           <button
             onClick={() => setIsExpanded(!isExpanded)}
@@ -87,7 +90,7 @@ export const MyImage = ({ username, visibleAvatars }: MyImageProps) => {
         )}
       >
         <img
-          src={`https://api.solve-nyang.com/compose/${username}?t=${visibleAvatars}&bg=${background}`}
+          src={`https://api.solve-nyang.com/compose/${username}?t=${visibleAvatars}`}
           alt='Farm Preview'
           className={styles.preview.image}
         />
