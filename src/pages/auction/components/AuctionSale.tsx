@@ -194,7 +194,7 @@ const AuctionSale = () => {
   };
 
   return (
-    <div className='space-y-6 p-4'>
+    <div className='space-y-6'>
       {/* 등급 필터 버튼 */}
       <div className='flex gap-2'>
         <Button
@@ -225,7 +225,7 @@ const AuctionSale = () => {
       </div>
 
       {/* 아이템 목록 */}
-      <div className='grid grid-cols-7 gap-4'>
+      <div className='grid grid-cols-8 gap-4'>
         {filteredAvatars.map(avatar => {
           const rarity = getRarityStyle(avatar.rarity);
 
@@ -248,11 +248,11 @@ const AuctionSale = () => {
                 <img
                   src={`/cats/${avatar.name}.svg`}
                   alt={avatar.name}
-                  className='h-32 w-full rounded-md object-cover'
+                  className='h-28 w-full rounded-md object-cover'
                 />
               </div>
               <div className='mt-2 space-y-1'>
-                <h3 className='text-center font-bold text-gray-200'>
+                <h3 className='text-center text-sm font-bold text-gray-200'>
                   {getCatKorName(avatar.name)}
                 </h3>
               </div>

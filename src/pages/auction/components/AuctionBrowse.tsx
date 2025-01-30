@@ -2,6 +2,16 @@ import { useState } from 'react';
 
 import { Search } from 'lucide-react';
 
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { Input } from '@/components/ui/input';
 import {
   Select,
@@ -10,20 +20,46 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import { cn } from '@/lib/utils';
+
+type Rarity = 'S' | 'A' | 'B' | 'C' | 'D';
+type PurchaseStatus = 'success' | 'already-sold' | 'insufficient-funds' | null;
 
 interface AuctionItem {
   id: number;
   name: string;
-  rarity: string;
+  rarity: Rarity;
   currentBid: number;
   image: string;
   endTime: string;
 }
 
+const rarityConfig: Record<
+  Rarity,
+  { border: string; text: string; bg: string }
+> = {
+  S: { border: 'border-[#f74600]', text: 'text-[#f74600]', bg: 'bg-[#f74600]' },
+  A: { border: 'border-[#ffc337]', text: 'text-[#ffc337]', bg: 'bg-[#ffc337]' },
+  B: { border: 'border-[#7abf16]', text: 'text-[#7abf16]', bg: 'bg-[#7abf16]' },
+  C: { border: 'border-[#108df1]', text: 'text-[#108df1]', bg: 'bg-[#108df1]' },
+  D: { border: 'border-[#a663ee]', text: 'text-[#a663ee]', bg: 'bg-[#a663ee]' },
+};
+
 const AuctionBrowse = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('latest');
   const [selectedRarity, setSelectedRarity] = useState('ALL');
+  const [selectedItem, setSelectedItem] = useState<AuctionItem | null>(null);
+  const [purchaseStatus, setPurchaseStatus] = useState<PurchaseStatus>(null);
+  const [isResult, setIsResult] = useState(false);
 
   const dummyItems: AuctionItem[] = [
     {
@@ -32,7 +68,7 @@ const AuctionBrowse = () => {
       rarity: 'S',
       currentBid: 5000,
       image: '/cats/YarnBallCat.svg',
-      endTime: '2일 남음',
+      endTime: '25분',
     },
     {
       id: 2,
@@ -40,15 +76,61 @@ const AuctionBrowse = () => {
       rarity: 'A',
       currentBid: 3000,
       image: '/cats/FishbowlCat.svg',
-      endTime: '5시간 남음',
+      endTime: '5시간',
     },
   ];
 
+  const filteredItems =
+    selectedRarity === 'ALL'
+      ? dummyItems
+      : dummyItems.filter(item => item.rarity === selectedRarity);
+
+  const handlePurchase = () => {
+    // 실제 구현에서는 여기에 구매 로직을 추가
+    const random = Math.random();
+    if (random < 0.33) {
+      setPurchaseStatus('success');
+    } else if (random < 0.66) {
+      setPurchaseStatus('already-sold');
+    } else {
+      setPurchaseStatus('insufficient-funds');
+    }
+    setSelectedItem(null);
+    setIsResult(true);
+  };
+
+  const getPurchaseResultContent = () => {
+    switch (purchaseStatus) {
+      case 'success':
+        return {
+          title: '구매 성공',
+          description: '성공적으로 구매하였습니다.',
+          buttonText: '확인',
+          variant: 'default',
+        };
+      case 'already-sold':
+        return {
+          title: '구매 실패',
+          description: '이미 거래된 아바타입니다.',
+          buttonText: '확인',
+          variant: 'destructive',
+        };
+      case 'insufficient-funds':
+        return {
+          title: '구매 실패',
+          description: '냥코인이 부족합니다.',
+          buttonText: '확인',
+          variant: 'destructive',
+        };
+      default:
+        return null;
+    }
+  };
+
   return (
     <div className='space-y-6'>
-      {/* 필터 영역 */}
-      <div className='flex flex-wrap gap-4'>
-        {/* 검색 */}
+      {/* 검색 및 필터 영역 */}
+      <div className='flex gap-4'>
         <div className='flex-1'>
           <div className='relative'>
             <Input
@@ -61,20 +143,6 @@ const AuctionBrowse = () => {
           </div>
         </div>
 
-        {/* 정렬 */}
-        <Select value={sortBy} onValueChange={setSortBy}>
-          <SelectTrigger className='h-12 w-[180px] border-transparent bg-gray-800 text-gray-200'>
-            <SelectValue placeholder='정렬 기준' />
-          </SelectTrigger>
-          <SelectContent className='border-transparent bg-gray-800 text-gray-200'>
-            <SelectItem value='latest'>최신순</SelectItem>
-            <SelectItem value='price-high'>가격 높은순</SelectItem>
-            <SelectItem value='price-low'>가격 낮은순</SelectItem>
-            <SelectItem value='ending-soon'>마감임박순</SelectItem>
-          </SelectContent>
-        </Select>
-
-        {/* 등급 필터 */}
         <Select value={selectedRarity} onValueChange={setSelectedRarity}>
           <SelectTrigger className='h-12 w-[150px] border-transparent bg-gray-800 text-gray-200'>
             <SelectValue placeholder='등급' />
@@ -88,45 +156,128 @@ const AuctionBrowse = () => {
             <SelectItem value='D'>D등급</SelectItem>
           </SelectContent>
         </Select>
+
+        <Select value={sortBy} onValueChange={setSortBy}>
+          <SelectTrigger className='h-12 w-[180px] border-transparent bg-gray-800 text-gray-200'>
+            <SelectValue placeholder='정렬 기준' />
+          </SelectTrigger>
+          <SelectContent className='border-transparent bg-gray-800 text-gray-200'>
+            <SelectItem value='latest'>최신순</SelectItem>
+            <SelectItem value='price-high'>가격 높은순</SelectItem>
+            <SelectItem value='price-low'>가격 낮은순</SelectItem>
+            <SelectItem value='ending-soon'>마감임박순</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
-      {/* 아이템 목록 */}
-      <div className='grid grid-cols-1 gap-4 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6'>
-        {dummyItems.map(item => (
-          <div
-            key={item.id}
-            className='rounded-lg border border-transparent bg-gray-800 p-4 transition-colors hover:border-blue-400'
-          >
-            <img
-              src={item.image}
-              alt={item.name}
-              className='mb-4 h-40 w-full rounded-md object-cover'
-            />
-            <div className='space-y-2'>
-              <div className='flex items-center justify-between'>
-                <h3 className='font-semibold text-gray-200'>{item.name}</h3>
-                <span
-                  className={`text-sm font-bold ${
-                    item.rarity === 'S'
-                      ? 'text-[#f74600]'
-                      : item.rarity === 'A'
-                        ? 'text-[#ffc337]'
-                        : 'text-blue-400'
-                  }`}
-                >
-                  {item.rarity}등급
-                </span>
-              </div>
-              <div className='flex items-center justify-between'>
-                <span className='text-lg font-bold text-blue-400'>
+      {/* 테이블 */}
+      <div className='rounded-lg bg-gray-800'>
+        <Table>
+          <TableHeader>
+            <TableRow className='rounded-lg border-gray-700 hover:bg-transparent'>
+              <TableHead className='text-gray-200'></TableHead>
+              <TableHead className='text-gray-200'>이름</TableHead>
+              <TableHead className='text-gray-200'>등급</TableHead>
+              <TableHead className='text-gray-200'>가격</TableHead>
+              <TableHead className='text-gray-200'>남은 시간</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody className='rounded-lg bg-gray-700'>
+            {filteredItems.map(item => (
+              <TableRow
+                key={item.id}
+                className='cursor-pointer border-gray-600 text-base hover:bg-gray-600'
+                onClick={() => setSelectedItem(item)}
+              >
+                <TableCell className='w-24'>
+                  <div className='flex justify-center'>
+                    <img
+                      src={item.image}
+                      alt={item.name}
+                      className='h-16 w-16 object-cover'
+                    />
+                  </div>
+                </TableCell>
+                <TableCell className='font-medium text-gray-200'>
+                  {item.name}
+                </TableCell>
+                <TableCell>
+                  <span
+                    className={cn('font-bold', rarityConfig[item.rarity]?.text)}
+                  >
+                    {item.rarity}등급
+                  </span>
+                </TableCell>
+                <TableCell className='font-bold text-blue-400'>
                   {item.currentBid.toLocaleString()}냥
-                </span>
-                <span className='text-sm text-gray-400'>{item.endTime}</span>
-              </div>
-            </div>
-          </div>
-        ))}
+                </TableCell>
+                <TableCell className='text-sm text-gray-400'>
+                  {item.endTime}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
       </div>
+
+      {/* Purchase Confirmation Dialog */}
+      <AlertDialog
+        open={!!selectedItem}
+        onOpenChange={() => setSelectedItem(null)}
+      >
+        <AlertDialogContent className='border-transparent bg-gray-800 text-gray-400'>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              <p className='text-center text-2xl'>구매 확인</p>
+            </AlertDialogTitle>
+            <AlertDialogDescription className='text-center text-base text-gray-200'>
+              <span className='font-bold text-yellow-500'>
+                {selectedItem?.name}
+              </span>
+              을(를){' '}
+              <span className='font-bold text-blue-500'>
+                {selectedItem?.currentBid.toLocaleString()}냥
+              </span>
+              에 정말로 구매하시겠습니까?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className='bg-gray-700 text-gray-200 hover:bg-gray-600'>
+              취소
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handlePurchase}
+              className='bg-blue-500 hover:bg-blue-600'
+            >
+              구매
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Result Dialog */}
+      <AlertDialog open={isResult} onOpenChange={setIsResult}>
+        <AlertDialogContent className='border-transparent bg-gray-800 text-gray-400'>
+          <AlertDialogHeader>
+            <AlertDialogTitle className='text-center text-base text-gray-400'>
+              <p className='text-center text-2xl'>
+                {getPurchaseResultContent()?.title}
+              </p>
+            </AlertDialogTitle>
+            <AlertDialogDescription className='text-center text-base text-gray-200'>
+              {getPurchaseResultContent()?.description}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogAction
+              onClick={() => setIsResult(false)}
+              className='bg-blue-500 hover:bg-blue-600'
+            >
+              {getPurchaseResultContent()?.buttonText}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
