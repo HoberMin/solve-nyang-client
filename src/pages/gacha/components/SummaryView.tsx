@@ -16,7 +16,7 @@ export const SummaryView = memo(
             onClick={() => onOpenChange(false)}
             className='animate-pulse bg-transparent text-center text-lg font-semibold text-white hover:scale-110'
           >
-            Press Enter or Click here
+            엔터키를 누르거나 여기를 클릭하세요
           </button>
         </div>
 
