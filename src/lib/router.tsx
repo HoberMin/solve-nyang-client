@@ -2,7 +2,6 @@ import { createBrowserRouter } from 'react-router-dom';
 
 import RetroError from '@/components/ErrorBoundary';
 import Root from '@/components/Root';
-import Gallery from '@/pages/catCollection';
 import ChangePassword from '@/pages/changePassword';
 import Contest from '@/pages/contest';
 import EventPage from '@/pages/event';
@@ -61,10 +60,10 @@ export const router = createBrowserRouter([
         path: 'event',
         element: <EventPage />,
       },
-      {
-        path: 'gallery',
-        element: <Gallery />,
-      },
+      // {
+      //   path: 'gallery',
+      //   element: <Gallery />,
+      // },
     ],
   },
   {
