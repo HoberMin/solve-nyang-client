@@ -6,11 +6,16 @@ interface CatInfo {
 export const CAT_MAPPINGS: Record<string, CatInfo> = {
   // Hidden
   SSAFY: { korName: '싸피냥', engName: 'SSAFY' },
+  NewYearLuckCat: { korName: '새해복냥', engName: 'NewYearLuckCat' },
+  MVPCat: { korName: 'MVP냥', engName: 'MVPCat' },
+  IdeaCat: { korName: '아이디어냥', engName: 'IdeaCat' },
 
   // S 등급
   CodingCat: { korName: '코딩냥', engName: 'CodingCat' },
   FishbowlCat: { korName: '어항냥', engName: 'FishbowlCat' },
   UFOCat: { korName: 'UFO냥', engName: 'UFOCat' },
+  MagpieCat: { korName: '까치냥', engName: 'MagpieCat' },
+  TteokgukCat: { korName: '떡국냥', engName: 'TteokgukCat' },
 
   // A 등급
   EatingCat: { korName: '밥먹냥', engName: 'EatingCat' },
