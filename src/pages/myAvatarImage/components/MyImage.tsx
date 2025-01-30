@@ -48,8 +48,8 @@ export const MyImage = ({ username }: MyImageProps) => {
         <h3 className={styles.preview.title}>MY Image</h3>
         <div className='flex items-center gap-2'>
           <div className={styles.backgroundSelect.wrapper}>
-            <label className={styles.backgroundSelect.label}>배경:</label>
-            {/* <select
+            {/* <label className={styles.backgroundSelect.label}>배경:</label>
+            <select
               className={styles.backgroundSelect.select}
               value={background}
               onChange={e => {

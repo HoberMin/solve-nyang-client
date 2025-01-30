@@ -37,13 +37,6 @@ const RetroError = () => {
           <Home className='h-6 w-6' />
           <span className='text-lg tracking-wide'>홈으로 돌아가기</span>
         </button>
-        <p className='mt-12 text-base leading-loose tracking-wide text-slate-400'>
-          문제가 지속되면
-          <a href='#' className='text-slate-300 underline hover:text-slate-200'>
-            고객센터
-          </a>
-          로 문의해 주세요
-        </p>
       </div>
     </div>
   );

@@ -69,11 +69,11 @@ const ActionDropdown = ({ actionText }: ActionDropdownProps) => {
           side='bottom'
           align='start'
         >
-          <DropdownMenuItem asChild className='focus:bg-gray-800'>
+          {/* <DropdownMenuItem asChild className='focus:bg-gray-800'>
             <Link to='/auction' className='text-xl text-white hover:text-white'>
               경매장
             </Link>
-          </DropdownMenuItem>
+          </DropdownMenuItem> */}
           <DropdownMenuItem asChild className='focus:bg-gray-800'>
             <Link to='/sale' className='text-xl text-white hover:text-white'>
               캐릭터 판매
