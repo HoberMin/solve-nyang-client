@@ -39,14 +39,6 @@ interface ErrorMessages {
   FAILED_TO_CHECK_USER: string;
 }
 
-interface ApiError extends Error {
-  response?: {
-    data?: {
-      message?: string;
-    };
-  };
-}
-
 // 상수 정의
 const VALIDATION: ValidationRules = {
   PASSWORD_MIN_LENGTH: 8,
@@ -163,15 +155,11 @@ const ChangePassword = () => {
           setErrors({});
           navigate('/');
         },
-        onError: (error: ApiError) => {
-          const errorMessage = error.response?.data?.message;
-
-          switch (errorMessage) {
-            case 'Incorrect current password':
-              toast.error('현재 비밀번호를 확인해주세요.');
-              break;
-            default:
-              toast.error('비밀번호 변경 중 오류가 발생했습니다.');
+        onError: (error: Error) => {
+          if (error.message === 'Incorrect current password') {
+            toast.error('현재 비밀번호를 확인해주세요.');
+          } else {
+            toast.error('비밀번호 변경 중 오류가 발생했습니다.');
           }
         },
       },

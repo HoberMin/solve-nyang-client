@@ -33,11 +33,11 @@ export const useChangePassword = () =>
         body: JSON.stringify({ currentPassword, newPassword }),
       });
 
+      const data = await response.json();
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || '비밀번호 변경 중 오류 발생');
+        throw new Error(data.message || '비밀번호 변경 중 오류 발생');
       }
-      return (await response.json()) as ChangePassword;
+      return data;
     },
   });
 
@@ -51,11 +51,11 @@ export const useFindPassword = () =>
         body: JSON.stringify({ username, password }),
       });
 
+      const data = await response.json();
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || '비밀번호 재설정 중 오류 발생');
+        throw new Error(data.message || '비밀번호 재설정 중 오류 발생');
       }
 
-      return response.json();
+      return data;
     },
   });
