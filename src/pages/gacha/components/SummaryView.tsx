@@ -14,7 +14,7 @@ export const SummaryView = memo(
         <div className='absolute left-1/2 top-[-40px] flex w-full -translate-x-1/2 transform justify-center'>
           <button
             onClick={() => onOpenChange(false)}
-            className='animate-pulse bg-transparent text-center text-lg font-semibold text-white hover:scale-110'
+            className='animate-pulse bg-transparent text-center text-lg font-semibold text-white hover:scale-110 focus:border-0 focus:outline-0 focus:ring-0'
           >
             엔터키를 누르거나 여기를 클릭하세요
           </button>

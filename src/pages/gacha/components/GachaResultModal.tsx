@@ -335,7 +335,7 @@ export const GachaResultModal = memo(
             <div className='absolute left-1/2 top-[-80px] flex w-full -translate-x-1/2 transform justify-center'>
               <button
                 onClick={handleContinueClick}
-                className='animate-pulse border-transparent bg-transparent p-0 text-center text-xl font-bold text-white hover:scale-110'
+                className='animate-pulse border-transparent bg-transparent p-0 text-center text-xl font-bold text-white hover:scale-110 focus:border-0 focus:outline-0 focus:ring-0'
               >
                 엔터키를 누르거나 여기를 클릭하세요
               </button>
