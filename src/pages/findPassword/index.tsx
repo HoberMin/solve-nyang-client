@@ -217,15 +217,11 @@ const FindPassword = () => {
           toast.success('비밀번호가 재설정 되었습니다.');
           navigate('/login');
         },
-        onError: (error: ApiError) => {
-          const errorMessage = error.response?.data?.message;
-
-          switch (errorMessage) {
-            case 'solved.ac 인증을 확인하세요':
-              toast.error('solved.ac 인증을 확인하세요');
-              break;
-            default:
-              toast.error('비밀번호 재설정 중 오류가 발생했습니다.');
+        onError: (error: Error) => {
+          if (error.message === 'solved.ac 인증을 확인하세요') {
+            toast.error(error.message);
+          } else {
+            toast.error('비밀번호 재설정 중 오류가 발생했습니다.');
           }
         },
       },
