@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { RotateCcw } from 'lucide-react';
 
 import { useResetAvatar } from '@/apis/avatar';
-import { UserAvatar } from '@/apis/user';
+import { UserAvatar, useGetUserAvatar } from '@/apis/user';
 import {
   Dialog,
   DialogContent,
@@ -19,7 +19,6 @@ import { AvatarCard } from './AvatarCard';
 import { RarityFilter } from './RarityFilter';
 
 interface AvatarCollectionProps {
-  avatars: UserAvatar[];
   onToggle: (id: string) => void;
 }
 
@@ -64,15 +63,15 @@ const ResetDialog = ({
   </Dialog>
 );
 
-export const AvatarCollection = ({
-  avatars,
-  onToggle,
-}: AvatarCollectionProps) => {
+export const AvatarCollection = ({ onToggle }: AvatarCollectionProps) => {
   const [visibleFilter, setVisibleFilter] = useState<Rarity | 'ALL'>('ALL');
   const [hiddenFilter, setHiddenFilter] = useState<Rarity | 'ALL'>('ALL');
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const { mutate: resetAvatar } = useResetAvatar();
+
+  const { data: avatarData } = useGetUserAvatar();
+  const avatars = avatarData.avatars;
 
   const visibleAvatars = avatars.filter(avatar => avatar.visible);
   const hiddenAvatars = avatars.filter(avatar => !avatar.visible);

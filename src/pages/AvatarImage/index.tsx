@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
-import { useGetUserAvatar, useGetUserInfo, useToggleAvatar } from '@/apis/user';
+import { useGetUserInfo, useToggleAvatar } from '@/apis/user';
 import Layout from '@/components/Layout';
 
 import { AvatarCollection } from './components/AvatarCollection';
@@ -13,7 +13,6 @@ import { styles } from './style';
 const AvatarImagePage = () => {
   const navigate = useNavigate();
   const { data: userData, isPending } = useGetUserInfo();
-  const { data: avatarData } = useGetUserAvatar();
   const mutate = useToggleAvatar();
 
   useEffect(() => {
@@ -29,10 +28,6 @@ const AvatarImagePage = () => {
     }
   }, [userData, isPending, navigate]);
 
-  if (!userData?.username || !avatarData) {
-    return null;
-  }
-
   return (
     <Layout>
       <div className={styles.page.container}>
@@ -46,11 +41,8 @@ const AvatarImagePage = () => {
             GitHub README.md에 추가하여 나만의 개성을 표현할 수 있습니다.
           </p>
         </div>
-        <MyImage
-          username={userData.username}
-          visibleAvatars={avatarData.avatars.filter(a => a.visible).length}
-        />
-        <AvatarCollection avatars={avatarData.avatars} onToggle={mutate} />
+        <MyImage username={userData.username} />
+        <AvatarCollection onToggle={mutate} />
       </div>
     </Layout>
   );

@@ -85,7 +85,7 @@ export const ServiceIntro = () => {
             캐릭터 뽑기
           </motion.a>
           <motion.a
-            href='/profile'
+            href='/image'
             className='rounded-lg border border-white/20 bg-white/5 px-6 py-3 font-semibold text-white backdrop-blur-sm transition-colors hover:bg-white/10'
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}

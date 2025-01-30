@@ -1,14 +1,26 @@
-import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
+import { useGetEventAvatar, useGetEventParticipant } from '@/apis/event';
+import { useGetUserInfo } from '@/apis/user';
 import Layout from '@/components/Layout';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
 const EventPage = () => {
-  const [hasReceived, setHasReceived] = useState(false);
+  const navigate = useNavigate();
+  const getEventAvatar = useGetEventAvatar();
+  const { data: userInfo } = useGetUserInfo();
+  const { data: eventParticipant } = useGetEventParticipant();
 
-  const handleReceiveGift = () => {
-    setHasReceived(true);
+  const isAuthenticated = Boolean(userInfo?.username);
+  const { hasEventAvatar } = eventParticipant || {};
+
+  const handleReceiveGift = async () => {
+    if (!isAuthenticated) {
+      navigate('/login');
+      return;
+    }
+    await getEventAvatar();
   };
 
   return (
@@ -57,18 +69,25 @@ const EventPage = () => {
               <div className='flex flex-col justify-center space-y-4'>
                 <div className='mx-auto aspect-square w-full overflow-hidden rounded-xl p-4'>
                   <img
-                    src='/cats/Barcode.svg'
+                    src='/cats/NewYearLuckCat.svg'
                     alt='새해복냥'
                     className='h-full w-full object-contain'
                   />
                 </div>
                 <div className='space-y-3'>
-                  <div className='rounded-lg bg-amber-500/10 p-3 text-base text-amber-300'>
-                    ⚠️ 계정당 1회만 참여 가능합니다
-                  </div>
+                  {!isAuthenticated && (
+                    <div className='rounded-lg bg-blue-500/10 p-3 text-base text-blue-300'>
+                      ℹ️ 로그인하시면 새해복냥을 받을 수 있어요!
+                    </div>
+                  )}
+                  {isAuthenticated && (
+                    <div className='rounded-lg bg-amber-500/10 p-3 text-base text-amber-300'>
+                      ⚠️ 계정당 1회만 참여 가능합니다
+                    </div>
+                  )}
                   <Button
                     onClick={handleReceiveGift}
-                    disabled={hasReceived}
+                    disabled={isAuthenticated && hasEventAvatar}
                     className={cn(
                       'h-auto w-full px-6 py-3 text-base font-medium',
                       'bg-blue-500 hover:bg-blue-600',
@@ -76,12 +95,14 @@ const EventPage = () => {
                       'transition-colors',
                     )}
                   >
-                    {hasReceived ? '이미 받았어요!' : '새해복냥 받기'}
+                    {!isAuthenticated && '로그인하고 새해복냥 받기'}
+                    {isAuthenticated &&
+                      (hasEventAvatar ? '이미 받았어요!' : '새해복냥 받기')}
                   </Button>
                 </div>
               </div>
             </div>
-            {hasReceived && (
+            {isAuthenticated && hasEventAvatar && (
               <div className='rounded-lg bg-green-500/10 p-3 text-base text-green-300'>
                 🎉 새해복냥이 지급되었습니다! 인벤토리에서 확인해보세요.
               </div>

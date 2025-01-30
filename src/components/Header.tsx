@@ -111,22 +111,27 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ username }) => {
           side='bottom'
           align='start'
         >
-          <DropdownMenuItem asChild className='focus:bg-gray-800'>
+          {/* <DropdownMenuItem asChild className='focus:bg-gray-800'>
             <Link to='/profile' className='text-xl text-white hover:text-white'>
               프로필
             </Link>
-          </DropdownMenuItem>
+          </DropdownMenuItem> */}
           <DropdownMenuItem asChild className='focus:bg-gray-800'>
             <Link to='/image' className='text-xl text-white hover:text-white'>
               이미지 제작
             </Link>
           </DropdownMenuItem>
-          <DropdownMenuItem asChild className='focus:bg-gray-800'>
+          {/* <DropdownMenuItem asChild className='focus:bg-gray-800'>
             <Link
               to='/extension'
               className='text-xl text-white hover:text-white'
             >
               솔브냥 익스텐션
+            </Link>
+          </DropdownMenuItem> */}
+          <DropdownMenuItem asChild className='focus:bg-gray-800'>
+            <Link to='/change' className='text-xl text-white hover:text-white'>
+              비밀번호 변경
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem
@@ -183,13 +188,14 @@ const Header = () => {
         </div>
       </div>
       <nav className='relative z-10 flex items-center gap-6'>
+        <RetroMenuItem href='/event'>설 이벤트</RetroMenuItem>
+
         {isLoading ? (
           <LoadingPulse />
         ) : !isAuthenticated ? (
           <RetroMenuItem href='/login'>로그인</RetroMenuItem>
         ) : (
           <>
-            <RetroMenuItem href='/event'>설 이벤트</RetroMenuItem>
             <RetroMenuItem href='/contest'>공모전</RetroMenuItem>
             <RetroMenuItem href='/gacha'>뽑기</RetroMenuItem>
             <ActionDropdown actionText='상점' />
