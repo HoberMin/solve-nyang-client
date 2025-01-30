@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import type { MouseEvent } from 'react';
+
+// import type { MouseEvent } from 'react';
 
 // Avatar 타입 정의 (실제 Avatar 인터페이스에 맞게 수정 필요)
 interface Avatar {
@@ -26,7 +27,8 @@ export interface SummaryItemProps {
 
 export interface SummaryViewProps {
   results: Avatar[];
-  onBackdropClick: (e: MouseEvent<HTMLDivElement>) => void;
+  // onBackdropClick: (e: MouseEvent<HTMLDivElement>) => void;
+  onOpenChange: (open: boolean) => void;
 }
 
 // 이미지 캐시 관리를 위한 전역 Map
