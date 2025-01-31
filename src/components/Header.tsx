@@ -111,14 +111,27 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ username }) => {
           side='bottom'
           align='start'
         >
-          <DropdownMenuItem asChild className='focus:bg-gray-800'>
+          {/* <DropdownMenuItem asChild className='focus:bg-gray-800'>
             <Link to='/profile' className='text-xl text-white hover:text-white'>
               프로필
             </Link>
-          </DropdownMenuItem>
+          </DropdownMenuItem> */}
           <DropdownMenuItem asChild className='focus:bg-gray-800'>
-            <Link to='/gallery' className='text-xl text-white hover:text-white'>
-              고양이도감
+            <Link to='/image' className='text-xl text-white hover:text-white'>
+              나만의 이미지
+            </Link>
+          </DropdownMenuItem>
+          {/* <DropdownMenuItem asChild className='focus:bg-gray-800'>
+            <Link
+              to='/extension'
+              className='text-xl text-white hover:text-white'
+            >
+              솔브냥 익스텐션
+            </Link>
+          </DropdownMenuItem> */}
+          <DropdownMenuItem asChild className='focus:bg-gray-800'>
+            <Link to='/change' className='text-xl text-white hover:text-white'>
+              비밀번호 변경
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem
