@@ -27,7 +27,7 @@ const EventPage = () => {
     <Layout>
       <div className='flex items-center justify-center'>
         <div className='mx-auto max-w-4xl px-4 py-8 pt-20'>
-          <div className='flex flex-col items-center space-y-2'>
+          <div className='flex flex-col items-center space-y-6'>
             <h1 className='text-3xl font-bold text-blue-400'>
               솔브냥의 설날 이벤트 🎊
             </h1>
@@ -41,11 +41,12 @@ const EventPage = () => {
                 이벤트 안내
               </h2>
               <div className='flex flex-col gap-4 space-y-4 text-left'>
-                <p className='text-base leading-loose text-blue-200'>
-                  2025년 설날을 맞이하여 특별한 새해복냥 이벤트를 준비했습니다!
+                <p className='text-center text-base leading-loose text-blue-200'>
+                  2025년 설날을 맞이하여 <br /> 특별한 새해복냥 이벤트를
+                  준비했습니다!
                   <br />
-                  새해복냥은 특별 제작된 한정판 캐릭터로, 설날 기간 동안에만
-                  받을 수 있습니다.
+                  새해복냥은 특별 제작된 한정판 캐릭터로,
+                  <br /> 설날 기간 동안에만 받을 수 있습니다.
                 </p>
                 <ul className='space-y-2 text-base text-blue-200'>
                   <li className='flex items-center gap-2'>
