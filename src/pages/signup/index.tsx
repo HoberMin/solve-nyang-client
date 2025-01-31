@@ -43,13 +43,24 @@ interface ErrorMessages {
   PASSWORD_PATTERN: string;
   PASSWORD_MISMATCH: string;
   PASSWORD_CHECK: string;
+  FAILED_TO_CHECK_USER: string;
+  SIGNUP_FAILED: string;
+}
+
+// error 타입 정의 추가
+interface ApiError extends Error {
+  response?: {
+    status?: number;
+    data?: {
+      message?: string;
+    };
+  };
 }
 
 // 상수 정의
 const VALIDATION: ValidationRules = {
   PASSWORD_MIN_LENGTH: 8,
   PASSWORD_PATTERN:
-    // /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
     /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&^])[A-Za-z\d@$!%*#?&^]{8,}$/,
 };
 
@@ -63,14 +74,14 @@ const ERROR_MESSAGES: ErrorMessages = {
   EMPTY_NICKNAME: '닉네임을 입력해 주세요.',
   EMPTY_PASSWORD: '비밀번호를 입력해 주세요.',
   PASSWORD_LENGTH: '비밀번호는 8자 이상이어야 합니다.',
-  PASSWORD_PATTERN:
-    '비밀번호는 영문, 숫자, 특수문자를 최소 1자 포함해야 합니다.',
+  PASSWORD_PATTERN: '영문, 숫자, 특수문자를 최소 1자 포함해야 합니다.',
   PASSWORD_MISMATCH: '비밀번호가 일치하지 않습니다.',
   PASSWORD_CHECK: '비밀번호를 확인해주세요.',
+  FAILED_TO_CHECK_USER: '사용자 확인에 실패했습니다.', // verify의 Failed to check user
+  SIGNUP_FAILED: '회원가입에 실패했습니다.', // signup의 failed
 };
 
 const FEEDBACK_MESSAGES = {
-  INVALID_NICKNAME: '유효한 닉네임을 입력하세요.',
   ENCRYPTION_GUIDE: '암호화키를 solved.ac 내정보-이름에 입력하세요.',
   INCOMPLETE_FORM: '가입정보를 입력하세요.',
 };
@@ -137,6 +148,7 @@ const Signup = () => {
     }
   };
 
+  // 키 발급
   const handleKeyIssuance = (): void => {
     if (!formData.username.trim()) {
       setErrors(prev => ({
@@ -153,8 +165,22 @@ const Signup = () => {
         setErrors(prev => ({ ...prev, encryption: '', username: '' }));
         toast.success(FEEDBACK_MESSAGES.ENCRYPTION_GUIDE);
       },
-      onError: () => {
-        toast.error(FEEDBACK_MESSAGES.INVALID_NICKNAME);
+      onError: (error: ApiError) => {
+        // 디버깅을 위한 에러 로그 추가
+        console.log('Error response:', error.response?.data);
+        console.log('Error status:', error.response?.status);
+
+        toast.error('존재하지 않는 사용자입니다.');
+
+        // 왜 안될까
+        // if (error.response?.status === 403) {
+        //   toast.error('존재하지 않는 사용자입니다.');
+        // } else {
+        //   // 기타 에러
+        //   toast.error(
+        //     '암호화 키 발급에 실패 했습니다. 잠시 후 다시 시도해주세요',
+        //   );
+        // }
       },
     });
   };
@@ -170,15 +196,42 @@ const Signup = () => {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
-    signUpMutation({
-      username: formData.username,
-      password: formData.password,
-    });
+    signUpMutation(
+      {
+        username: formData.username,
+        password: formData.password,
+      },
+      {
+        onSuccess: () => {
+          // useSignup에서 처리
+        },
+        onError: (error: ApiError) => {
+          const errorMessage = error.response?.data?.message;
+
+          switch (errorMessage) {
+            case 'failed':
+              toast.error(ERROR_MESSAGES.SIGNUP_FAILED);
+              break;
+            case '이미 가입된 회원입니다.':
+              toast.error('이미 가입된 회원입니다.');
+              break;
+            case 'solved.ac 인증을 확인하세요':
+              toast.error('solved.ac 인증을 확인하세요.');
+              break;
+            default:
+              toast.error(
+                '회원가입 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
+              );
+          }
+        },
+      },
+    );
   };
 
   useEffect(() => {
     if (!isKeyIssued) {
-      setIsValid(!!formData.username.trim());
+      // setIsValid(!!formData.username.trim());
+      setIsValid(false);
       return;
     }
 
@@ -259,41 +312,6 @@ const Signup = () => {
           </p>
         </div>
         {/* </Card> */}
-
-        {/* 이미지 바로 보이기기 */}
-        {/* <div className='w-full max-w-sm lg:w-[30%]'>
-          <Card className='border-zinc-800 bg-zinc-950/50'>
-            <CardHeader className='flex flex-row items-center justify-between pb-4'>
-              <CardTitle className='text-xl text-zinc-100'>
-                본인 인증 방법
-              </CardTitle>
-              <a
-                href='https://solved.ac/'
-                target='_blank'
-                rel='noopener noreferrer'
-              >
-                <Button
-                  variant='outline'
-                  className='h-8 border-blue-600/40 bg-transparent text-xs text-blue-500 hover:bg-blue-600/10 hover:text-blue-400'
-                  size='sm'
-                >
-                  solved.ac
-                  <ExternalLink className='ml-1 h-3 w-3' />
-                </Button>
-              </a>
-            </CardHeader>
-            <CardContent className='flex flex-col items-center space-y-6'>
-              <div className='relative aspect-[3/4] w-full overflow-hidden rounded-lg'>
-                <img
-                  className='object-fit h-full w-full'
-                  src='/signup_description.jpg'
-                  alt='인증 방법 설명'
-                />
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-         */}
 
         {/* Right Side - Sign Up Form */}
         <div className='w-full max-w-sm lg:w-[30%]'>
@@ -376,9 +394,11 @@ const Signup = () => {
                       />
                     )}
                   </div>
-                  {errors.password && (
-                    <p className='text-sm text-red-500'>{errors.password}</p>
-                  )}
+                  <div className='h-1'>
+                    {errors.password && (
+                      <p className='text-sm text-red-500'>{errors.password}</p>
+                    )}
+                  </div>
                 </div>
 
                 <div className='space-y-4'>
@@ -394,58 +414,53 @@ const Signup = () => {
                     className='h-10 bg-zinc-900 text-zinc-100'
                     placeholder='비밀번호를 다시 입력하세요.'
                   />
-                  {errors.passwordConfirm && (
-                    <p className='text-sm text-red-500'>
-                      {errors.passwordConfirm}
-                    </p>
-                  )}
-                  {errors.passwordSuccess && (
-                    <p className='text-sm text-green-500'>
-                      {errors.passwordSuccess}
-                    </p>
-                  )}
+                  <div className='h-1'>
+                    {errors.passwordConfirm && (
+                      <p className='text-sm text-red-500'>
+                        {errors.passwordConfirm}
+                      </p>
+                    )}
+                    {errors.passwordSuccess && (
+                      <p className='text-sm text-green-500'>
+                        {errors.passwordSuccess}
+                      </p>
+                    )}
+                  </div>
                 </div>
-                <TooltipProvider>
-                  {!isValid && (
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <span className='inline-block w-full'>
-                          <Button
-                            type='submit'
-                            disabled={true}
-                            className='mt-6 h-10 w-full bg-blue-600 hover:bg-blue-700'
-                          >
-                            회원가입
-                          </Button>
-                        </span>
-                      </TooltipTrigger>
-                      <TooltipContent
-                        side='bottom'
-                        sideOffset={28}
-                        className='bg-white px-8 text-black'
+                <div>
+                  <TooltipProvider>
+                    {!isValid && (
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <span className='inline-block w-full'>
+                            <Button
+                              type='submit'
+                              disabled={true}
+                              className='mt-1 h-10 w-full bg-blue-600 hover:bg-blue-700'
+                            >
+                              회원가입
+                            </Button>
+                          </span>
+                        </TooltipTrigger>
+                        <TooltipContent
+                          side='bottom'
+                          sideOffset={28}
+                          className='bg-white px-8 text-black'
+                        >
+                          <p>{FEEDBACK_MESSAGES.INCOMPLETE_FORM}</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    )}
+                    {isValid && (
+                      <Button
+                        type='submit'
+                        className='mt-1 h-10 w-full bg-blue-600 hover:bg-blue-700'
                       >
-                        <p>{FEEDBACK_MESSAGES.INCOMPLETE_FORM}</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  )}
-                  {isValid && (
-                    <Button
-                      type='submit'
-                      className='mt-6 h-10 w-full bg-blue-600 hover:bg-blue-700'
-                    >
-                      회원가입
-                    </Button>
-                  )}
-                </TooltipProvider>
-
-                {/* <Button
-                  type='submit'
-                  disabled={!isValid}
-                  className='mt-6 h-10 w-full bg-blue-600 hover:bg-blue-700'
-                  title={!isValid ? FEEDBACK_MESSAGES.INCOMPLETE_FORM : ''}
-                >
-                  회원가입
-                </Button> */}
+                        회원가입
+                      </Button>
+                    )}
+                  </TooltipProvider>
+                </div>
               </form>
             </CardContent>
           </Card>

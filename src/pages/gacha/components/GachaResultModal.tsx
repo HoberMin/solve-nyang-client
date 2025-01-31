@@ -1,4 +1,4 @@
-import { memo, useCallback, useEffect, useMemo, useState } from 'react';
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import {
   ANIMATION_STEPS,
@@ -41,7 +41,7 @@ export const GachaResultModal = memo(
     const [isSummary, setIsSummary] = useState(false);
     const [isAnimating, setIsAnimating] = useState(false);
     const [isConfetti, setIsConfetti] = useState(false);
-
+    const animationCancelRef = useRef(false);
     // 필요한 모든 이미지 URL 수집
     const imagesToPreload = useMemo(() => {
       if (!results.length) return [];
@@ -95,38 +95,67 @@ export const GachaResultModal = memo(
       setIsSummary(true);
     }, []);
 
-    const handleBackdropClick = useCallback(
-      (e: React.MouseEvent<HTMLDivElement>) => {
-        if (e.target !== e.currentTarget) return;
+    const handleContinueClick = useCallback(() => {
+      if (isAnimating) return;
 
-        if (isAnimating) return;
-
-        if (!isSingleDraw && !isSummary) {
-          if (currentIndex < results.length - 1) {
-            handleNext();
-          } else {
-            setIsSummary(true);
-          }
-          return;
+      if (isSingleDraw) {
+        if (animationStep === ANIMATION_STEPS.COMPLETE) {
+          onOpenChange(false);
         }
+      } else {
+        if (isSummary) {
+          onOpenChange(false);
+        } else {
+          handleNext();
+        }
+      }
+    }, [
+      isAnimating,
+      isSingleDraw,
+      isSummary,
+      animationStep,
+      handleNext,
+      onOpenChange,
+    ]);
 
-        onOpenChange(false);
-      },
-      [
-        isAnimating,
-        isSingleDraw,
-        isSummary,
-        currentIndex,
-        results.length,
-        handleNext,
-        onOpenChange,
-      ],
-    );
+    // const handleBackdropClick = useCallback(
+    //   (e: React.MouseEvent<HTMLDivElement>) => {
+    //     if (e.target !== e.currentTarget) return;
+
+    //     if (isAnimating) return;
+
+    //     if (!isSingleDraw && !isSummary) {
+    //       if (currentIndex < results.length - 1) {
+    //         handleNext();
+    //       } else {
+    //         setIsSummary(true);
+    //       }
+    //       return;
+    //     }
+
+    //     onOpenChange(false);
+    //   },
+    //   [
+    //     isAnimating,
+    //     isSingleDraw,
+    //     isSummary,
+    //     currentIndex,
+    //     results.length,
+    //     handleNext,
+    //     onOpenChange,
+    //   ],
+    // );
 
     useEffect(() => {
       const handleKeyPress = (event: globalThis.KeyboardEvent) => {
         if (event.key === 'Enter') {
-          if (isAnimating) return;
+          if (isAnimating) {
+            // 애니메이션 취소 플래그 설정
+            animationCancelRef.current = true;
+            setAnimationStep(ANIMATION_STEPS.COMPLETE);
+            setIsAnimating(false);
+            return;
+          }
 
           if (isSingleDraw) {
             if (animationStep === ANIMATION_STEPS.COMPLETE) {
@@ -159,6 +188,8 @@ export const GachaResultModal = memo(
         setIsCapsuleVisible(false);
         setCurrentIndex(0);
         setIsSummary(false);
+        setIsAnimating(false);
+        animationCancelRef.current = false;
         return;
       }
 
@@ -168,27 +199,40 @@ export const GachaResultModal = memo(
 
       const runAnimation = async () => {
         if (!isSubscribed) return;
+
+        // 애니메이션 시작 전 취소 플래그 초기화
+        animationCancelRef.current = false;
         setIsAnimating(true);
 
         if (isSingleDraw || currentIndex === 0) {
           setIsCapsuleVisible(true);
           setAnimationStep(ANIMATION_STEPS.CAPSULE);
+
           await new Promise(resolve =>
             setTimeout(resolve, ANIMATION_TIMING.CAPSULE),
           );
-          if (!isSubscribed) return;
+          if (!isSubscribed || animationCancelRef.current) {
+            setIsAnimating(false);
+            return;
+          }
 
           setAnimationStep(ANIMATION_STEPS.SHAKE);
           await new Promise(resolve =>
             setTimeout(resolve, ANIMATION_TIMING.SHAKE),
           );
-          if (!isSubscribed) return;
+          if (!isSubscribed || animationCancelRef.current) {
+            setIsAnimating(false);
+            return;
+          }
 
           setAnimationStep(ANIMATION_STEPS.OPEN);
           await new Promise(resolve =>
             setTimeout(resolve, ANIMATION_TIMING.OPEN),
           );
-          if (!isSubscribed) return;
+          if (!isSubscribed || animationCancelRef.current) {
+            setIsAnimating(false);
+            return;
+          }
         }
 
         setAnimationStep(ANIMATION_STEPS.COMPLETE);
@@ -201,6 +245,8 @@ export const GachaResultModal = memo(
 
       return () => {
         isSubscribed = false;
+        animationCancelRef.current = true;
+        setIsAnimating(false);
       };
     }, [
       isOpen,
@@ -210,7 +256,6 @@ export const GachaResultModal = memo(
       isSummary,
       isImagePreloading,
     ]);
-
     // 로딩 중일 때 표시할 내용
     if (!isImagePreloading) {
       return (
@@ -224,7 +269,8 @@ export const GachaResultModal = memo(
 
     if (isSummary) {
       return (
-        <SummaryView results={results} onBackdropClick={handleBackdropClick} />
+        // <SummaryView results={results} onBackdropClick={handleBackdropClick} />
+        <SummaryView results={results} onOpenChange={onOpenChange} />
       );
     }
 
@@ -238,7 +284,7 @@ export const GachaResultModal = memo(
     return (
       <div
         className='fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-80'
-        onClick={handleBackdropClick}
+        // onClick={handleBackdropClick}
       >
         {isConfetti && <Confetti />}
         <div className='relative z-50 h-96 w-96 rounded-lg bg-transparent'>
@@ -284,11 +330,15 @@ export const GachaResultModal = memo(
               </button>
             </div>
           )}
+
           {isCompleteStep && (
-            <div className='absolute left-1/2 top-[-80px] w-full -translate-x-1/2 transform'>
-              <p className='animate-pulse text-center text-lg font-semibold text-white'>
-                {'Press Enter'}
-              </p>
+            <div className='absolute left-1/2 top-[-80px] flex w-full -translate-x-1/2 transform justify-center'>
+              <button
+                onClick={handleContinueClick}
+                className='animate-pulse border-transparent bg-transparent p-0 text-center text-xl font-bold text-white hover:scale-110 focus:border-0 focus:outline-0 focus:ring-0'
+              >
+                엔터키를 누르거나 여기를 클릭하세요
+              </button>
             </div>
           )}
         </div>

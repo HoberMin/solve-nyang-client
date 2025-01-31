@@ -96,7 +96,6 @@ export const Footer = () => {
             <div className='flex justify-between'>
               <TeamSection title='Backend Team' members={backendMembers} />
               <TeamSection title='Frontend Team' members={frontendMembers} />
-              {/* <DesignerSection /> */}
             </div>
           </div>
         </div>

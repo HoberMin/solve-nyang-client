@@ -5,7 +5,7 @@ import {
 } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
-import { Rarity } from '@/pages/profile/AvatarCollection';
+import { Rarity } from '@/pages/sale/type';
 
 import { domain } from './avatar';
 
@@ -13,8 +13,8 @@ export interface UserAvatar {
   ownedAvatarId: string; // 고유값
   name: string;
   rarity: Rarity;
-  dropRate: number;
   visible: boolean;
+  visibleExtension: boolean;
 }
 
 interface UserAvatarList {
@@ -73,7 +73,7 @@ const userAvatar = async () => {
 };
 
 const saleAvatar = async (avatarList: UserAvatarList) => {
-  await fetch(`${domain}/gacha/sale`, {
+  await fetch(`${domain}/user/me/sale`, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
@@ -121,7 +121,7 @@ export const useSaleAvatar = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['userInfo'] });
       queryClient.invalidateQueries({ queryKey: ['userAvatar'] });
-      toast.success('아바타가 성공적으로 판매되었습니다.');
+      toast.success('고양이 캐릭터가 성공적으로 판매되었습니다.');
     },
     onError: error => {
       toast.error('판매 중 오류가 발생했습니다.');

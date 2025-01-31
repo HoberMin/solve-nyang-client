@@ -13,9 +13,7 @@ const RetroError = () => {
 
   return (
     <div className='flex min-h-screen flex-col items-center justify-center bg-slate-900'>
-      {/* 메인 콘텐츠 */}
       <div className='flex flex-col items-center justify-center px-6 text-center'>
-        {/* 아이콘 섹션 */}
         <div className='mb-12'>
           <Cat
             className={`h-24 w-24 text-slate-300 transition-transform duration-300 ${
@@ -25,8 +23,6 @@ const RetroError = () => {
             onMouseLeave={() => setIsHovered(false)}
           />
         </div>
-
-        {/* 텍스트 섹션 */}
         <h1 className='mb-8 text-4xl font-bold leading-relaxed tracking-wide text-slate-200'>
           앗! 문제가 발생했어요
         </h1>
@@ -34,8 +30,6 @@ const RetroError = () => {
         <p className='mb-12 max-w-md text-lg leading-loose tracking-wide text-slate-300'>
           {errorMessage}
         </p>
-
-        {/* 홈으로 가기 버튼 */}
         <button
           onClick={() => navigate('/')}
           className='flex items-center gap-3 rounded-lg bg-slate-800 px-8 py-4 text-slate-200 transition-colors hover:bg-slate-700'
@@ -43,15 +37,6 @@ const RetroError = () => {
           <Home className='h-6 w-6' />
           <span className='text-lg tracking-wide'>홈으로 돌아가기</span>
         </button>
-
-        {/* 하단 지원 메시지 */}
-        <p className='mt-12 text-base leading-loose tracking-wide text-slate-400'>
-          문제가 지속되면
-          <a href='#' className='text-slate-300 underline hover:text-slate-200'>
-            고객센터
-          </a>
-          로 문의해 주세요
-        </p>
       </div>
     </div>
   );

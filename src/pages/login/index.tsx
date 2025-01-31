@@ -101,13 +101,22 @@ const Login = () => {
 
             <div className='mt-8 text-center'>
               <div className='space-x-1 text-base text-zinc-400'>
-                <span>아직 계정이 없으신가요?</span>
-                <Link
-                  to='/signup'
-                  className='font-medium text-blue-500 transition-colors hover:text-blue-400'
-                >
-                  회원가입
-                </Link>
+                <div className='space-x-8'>
+                  <Link
+                    to='/find'
+                    className='font-medium text-blue-500 transition-colors hover:text-blue-400'
+                  >
+                    비밀번호 찾기
+                  </Link>
+                  <span className='text-gray-500'>|</span>
+
+                  <Link
+                    to='/signup'
+                    className='font-medium text-blue-500 transition-colors hover:text-blue-400'
+                  >
+                    회원가입
+                  </Link>
+                </div>
               </div>
             </div>
           </CardContent>

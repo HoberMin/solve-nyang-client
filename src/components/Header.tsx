@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import { toast } from 'sonner';
 
 import { useGetUserInfo } from '@/apis/user';
-// shadcn 드롭다운 메뉴 컴포넌트 import 추가
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -20,7 +19,7 @@ interface RetroMenuItemProps extends PropsWithChildren {
 const RetroMenuItem = ({ children, href }: RetroMenuItemProps) => {
   return (
     <Link to={href}>
-      <div className='group relative cursor-pointer'>
+      <div className='group relative cursor-pointer px-4'>
         <div
           className='absolute inset-0 -z-10 h-full w-full rounded opacity-0 blur transition-all duration-300 group-hover:opacity-30 group-hover:blur-md'
           style={{
@@ -42,27 +41,51 @@ const RetroMenuItem = ({ children, href }: RetroMenuItemProps) => {
   );
 };
 
-// const RetroIcon = ({ children }: PropsWithChildren) => {
-//   return (
-//     <div className='group cursor-pointer'>
-//       <div className='relative transition-all duration-300 hover:scale-105'>
-//         <div className='absolute inset-0 animate-pulse opacity-0 blur-sm transition-opacity duration-300 group-hover:opacity-50'>
-//           <div className='animate-spin-slow absolute inset-0'>{children}</div>
-//         </div>
-//         <div className='relative transition-all duration-150 group-hover:-translate-y-0.5'>
-//           {children}
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
 interface UserDropdownProps {
   username: string;
 }
 
+interface ActionDropdownProps {
+  actionText: string;
+}
+
+const ActionDropdown = ({ actionText }: ActionDropdownProps) => {
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger className='cursor-pointer bg-transparent outline-none ring-0 focus:outline-none focus:ring-0 focus:ring-offset-0 active:outline-none active:ring-0'>
+        <span
+          className='relative inline-block bg-gradient-to-b from-blue-300 to-blue-500 bg-clip-text text-xl text-transparent'
+          style={{
+            textShadow: '0 0 5px rgba(59, 130, 246, 0.3)',
+            WebkitTextStroke: '1px rgba(59, 130, 246, 0.2)',
+          }}
+        >
+          {actionText}
+        </span>
+      </DropdownMenuTrigger>
+      <DropdownMenuPortal>
+        <DropdownMenuContent
+          className='z-50 border-0 bg-gray-900 py-1'
+          side='bottom'
+          align='start'
+        >
+          {/* <DropdownMenuItem asChild className='focus:bg-gray-800'>
+            <Link to='/auction' className='text-xl text-white hover:text-white'>
+              경매장
+            </Link>
+          </DropdownMenuItem> */}
+          <DropdownMenuItem asChild className='focus:bg-gray-800'>
+            <Link to='/sale' className='text-xl text-white hover:text-white'>
+              캐릭터 판매
+            </Link>
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenuPortal>
+    </DropdownMenu>
+  );
+};
+
 const UserDropdown: React.FC<UserDropdownProps> = ({ username }) => {
-  // 로그아웃
   const handleLogout = () => {
     localStorage.removeItem('token');
     toast.success('로그아웃 되었습니다.');
@@ -71,7 +94,7 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ username }) => {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className='cursor-pointer bg-gray-900 outline-none ring-0 focus:outline-none focus:ring-0 focus:ring-offset-0 active:outline-none active:ring-0'>
+      <DropdownMenuTrigger className='cursor-pointer bg-transparent outline-none ring-0 focus:outline-none focus:ring-0 focus:ring-offset-0 active:outline-none active:ring-0'>
         <span
           className='relative inline-block bg-gradient-to-b from-blue-300 to-blue-500 bg-clip-text text-xl text-transparent'
           style={{
@@ -88,9 +111,27 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ username }) => {
           side='bottom'
           align='start'
         >
-          <DropdownMenuItem asChild className='focus:bg-gray-800'>
+          {/* <DropdownMenuItem asChild className='focus:bg-gray-800'>
             <Link to='/profile' className='text-xl text-white hover:text-white'>
-              내 정보
+              프로필
+            </Link>
+          </DropdownMenuItem> */}
+          <DropdownMenuItem asChild className='focus:bg-gray-800'>
+            <Link to='/image' className='text-xl text-white hover:text-white'>
+              나만의 이미지
+            </Link>
+          </DropdownMenuItem>
+          {/* <DropdownMenuItem asChild className='focus:bg-gray-800'>
+            <Link
+              to='/extension'
+              className='text-xl text-white hover:text-white'
+            >
+              솔브냥 익스텐션
+            </Link>
+          </DropdownMenuItem> */}
+          <DropdownMenuItem asChild className='focus:bg-gray-800'>
+            <Link to='/change' className='text-xl text-white hover:text-white'>
+              비밀번호 변경
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem
@@ -118,14 +159,14 @@ const Header = () => {
   const isAuthenticated = Boolean(data?.username);
 
   return (
-    <header className='relative z-10 flex h-16 items-center justify-between bg-gray-900 px-6'>
+    <header className='relative z-10 flex h-16 items-center justify-between bg-gray-900 px-8'>
       <div
         className='absolute inset-0 opacity-5'
         style={{
           backgroundImage: `
-            linear-gradient(rgba(59, 130, 246, 0.2) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(59, 130, 246, 0.2) 1px, transparent 1px)
-          `,
+          linear-gradient(rgba(59, 130, 246, 0.2) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(59, 130, 246, 0.2) 1px, transparent 1px)
+        `,
           backgroundSize: '8px 8px',
           animation: 'backgroundScroll 20s linear infinite',
         }}
@@ -146,7 +187,9 @@ const Header = () => {
           <div className='absolute -bottom-1 left-0 h-px w-0 bg-gradient-to-r from-blue-400/50 to-blue-300/50 transition-all duration-300 group-hover:w-full' />
         </div>
       </div>
-      <nav className='relative z-10 flex items-center gap-8'>
+      <nav className='relative z-10 flex items-center gap-6'>
+        <RetroMenuItem href='/event'>설 이벤트</RetroMenuItem>
+
         {isLoading ? (
           <LoadingPulse />
         ) : !isAuthenticated ? (
@@ -154,8 +197,8 @@ const Header = () => {
         ) : (
           <>
             <RetroMenuItem href='/contest'>공모전</RetroMenuItem>
-            <RetroMenuItem href='/gacha'>뽑기 </RetroMenuItem>
-            <RetroMenuItem href='/auction'>상점</RetroMenuItem>
+            <RetroMenuItem href='/gacha'>뽑기</RetroMenuItem>
+            <ActionDropdown actionText='상점' />
             <UserDropdown username={data?.username || 'User'} />
           </>
         )}
