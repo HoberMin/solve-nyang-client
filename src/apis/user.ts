@@ -24,9 +24,9 @@ interface UserAvatarList {
 interface UserInfo {
   username: string;
   point: number;
-  // solvedacStrick: number;
-  // solvedCount: number;
-  // solvedacTier: number;
+  tier: string;
+  solvedCount: number;
+  streak: number;
 }
 
 const userInfo = async () => {
