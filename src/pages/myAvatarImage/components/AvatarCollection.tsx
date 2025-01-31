@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 import { RotateCcw } from 'lucide-react';
+import { toast } from 'sonner';
 
 import { useResetAvatar } from '@/apis/avatar';
 import { UserAvatar, useGetUserAvatar } from '@/apis/user';
@@ -63,13 +64,14 @@ const ResetDialog = ({
   </Dialog>
 );
 
+const MAX_VISIBLE_AVATARS = 15;
+
 export const AvatarCollection = ({ onToggle }: AvatarCollectionProps) => {
   const [visibleFilter, setVisibleFilter] = useState<Rarity | 'ALL'>('ALL');
   const [hiddenFilter, setHiddenFilter] = useState<Rarity | 'ALL'>('ALL');
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const { mutate: resetAvatar } = useResetAvatar();
-
   const { data: avatarData } = useGetUserAvatar();
   const avatars = avatarData.avatars;
 
@@ -101,13 +103,35 @@ export const AvatarCollection = ({ onToggle }: AvatarCollectionProps) => {
     setIsDialogOpen(false);
   };
 
+  const handleToggle = (id: string) => {
+    const avatar = avatars.find(a => a.ownedAvatarId === id);
+    if (!avatar) return;
+
+    if (!avatar.visible && visibleAvatars.length >= MAX_VISIBLE_AVATARS) {
+      toast.error(
+        <>
+          최대 15마리까지만 활성화할 수 있어요.
+          <br />
+          다른 고양이를 비활성화한 후 다시 시도해주세요!
+        </>,
+        {
+          position: 'top-center',
+          duration: 3000,
+        },
+      );
+      return;
+    }
+
+    onToggle(id);
+  };
+
   return (
     <div className='space-y-8'>
       <section className={styles.collection.section}>
         <div className={styles.collection.header}>
           <div className='flex items-center gap-4'>
             <h4 className={styles.collection.sectionTitle.active}>
-              활성화된 고양이 ({visibleAvatars.length})
+              활성화된 고양이 ({visibleAvatars.length}/15)
             </h4>
             <button
               onClick={() => setIsDialogOpen(true)}
@@ -127,7 +151,7 @@ export const AvatarCollection = ({ onToggle }: AvatarCollectionProps) => {
             <AvatarCard
               key={avatar.ownedAvatarId}
               avatar={avatar}
-              onClick={() => onToggle(avatar.ownedAvatarId)}
+              onClick={() => handleToggle(avatar.ownedAvatarId)}
             />
           ))}
         </div>
@@ -149,7 +173,7 @@ export const AvatarCollection = ({ onToggle }: AvatarCollectionProps) => {
             <AvatarCard
               key={avatar.ownedAvatarId}
               avatar={avatar}
-              onClick={() => onToggle(avatar.ownedAvatarId)}
+              onClick={() => handleToggle(avatar.ownedAvatarId)}
             />
           ))}
         </div>
