@@ -9,6 +9,7 @@ import ChangePassword from '@/pages/changePassword';
 import Contest from '@/pages/contest';
 import EventPage from '@/pages/event';
 import ExtensionPage from '@/pages/extension';
+import FindPassword from '@/pages/findPassword';
 import Gacha from '@/pages/gacha';
 import Login from '@/pages/login';
 import AvatarImagePage from '@/pages/myAvatarImage';
@@ -80,6 +81,26 @@ export const router = createBrowserRouter([
         path: 'auction',
         element: <Auction />,
       },
+      {
+        path: 'find',
+        element: <FindPassword />,
+      },
+      {
+        path: 'change',
+        element: <ChangePassword />,
+      },
+      {
+        path: 'image',
+        element: <AvatarImagePage />,
+      },
+      {
+        path: 'event',
+        element: <EventPage />,
+      },
+      // {
+      //   path: 'gallery',
+      //   element: <Gallery />,
+      // },
     ],
   },
   {

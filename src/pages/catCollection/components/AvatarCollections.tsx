@@ -1,18 +1,14 @@
 import _ from 'lodash';
 
-import { useGetAvatarList } from '@/apis/avatar';
-import RaritySection from '@/pages/catCollection/components/RaritySection';
+import { useGetAvatarGallery } from '@/apis/gallery';
+import { Character } from '@/pages/service/components/AllAvatarList';
 
-export interface Character {
-  id: string;
-  name: string;
-  rarity: 'S' | 'A' | 'B' | 'C' | 'D';
-}
+import GalleryRaritySection from './GalleryRaritySection';
 
 const AvatarCollections = () => {
-  const { data } = useGetAvatarList();
-  const { avatars = [] } = data || {};
-  const groupedCharacters = _.groupBy(avatars, 'rarity');
+  const { data } = useGetAvatarGallery();
+  const { collections = [] } = data || {};
+  const groupedCharacters = _.groupBy(collections, 'rarity');
   const rarityOrder: Character['rarity'][] = ['S', 'A', 'B', 'C', 'D'];
 
   return (
@@ -30,7 +26,7 @@ const AvatarCollections = () => {
           {rarityOrder.map(
             rarity =>
               groupedCharacters[rarity] && (
-                <RaritySection
+                <GalleryRaritySection
                   key={rarity}
                   title={rarity}
                   characters={groupedCharacters[rarity]}
