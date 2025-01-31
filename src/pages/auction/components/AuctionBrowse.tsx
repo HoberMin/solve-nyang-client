@@ -12,6 +12,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
+import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
   Select,
@@ -30,7 +31,7 @@ import {
 } from '@/components/ui/table';
 import { cn } from '@/lib/utils';
 
-type Rarity = 'S' | 'A' | 'B' | 'C' | 'D';
+type Rarity = 'H' | 'S' | 'A' | 'B' | 'C' | 'D';
 type PurchaseStatus = 'success' | 'already-sold' | 'insufficient-funds' | null;
 
 interface AuctionItem {
@@ -39,13 +40,13 @@ interface AuctionItem {
   rarity: Rarity;
   currentBid: number;
   image: string;
-  endTime: string;
 }
 
 const rarityConfig: Record<
   Rarity,
   { border: string; text: string; bg: string }
 > = {
+  H: { border: 'border-[#26ffc9]', text: 'text-[#26ffc9]', bg: 'bg-[#26ffc9]' },
   S: { border: 'border-[#f74600]', text: 'text-[#f74600]', bg: 'bg-[#f74600]' },
   A: { border: 'border-[#ffc337]', text: 'text-[#ffc337]', bg: 'bg-[#ffc337]' },
   B: { border: 'border-[#7abf16]', text: 'text-[#7abf16]', bg: 'bg-[#7abf16]' },
@@ -68,7 +69,6 @@ const AuctionBrowse = () => {
       rarity: 'S',
       currentBid: 5000,
       image: '/cats/YarnBallCat.svg',
-      endTime: '25분',
     },
     {
       id: 2,
@@ -76,7 +76,6 @@ const AuctionBrowse = () => {
       rarity: 'A',
       currentBid: 3000,
       image: '/cats/FishbowlCat.svg',
-      endTime: '5시간',
     },
   ];
 
@@ -85,8 +84,12 @@ const AuctionBrowse = () => {
       ? dummyItems
       : dummyItems.filter(item => item.rarity === selectedRarity);
 
+  const handleSearch = () => {
+    // 검색 로직 구현
+    console.log('Searching for:', searchTerm);
+  };
+
   const handlePurchase = () => {
-    // 실제 구현에서는 여기에 구매 로직을 추가
     const random = Math.random();
     if (random < 0.33) {
       setPurchaseStatus('success');
@@ -128,96 +131,111 @@ const AuctionBrowse = () => {
   };
 
   return (
-    <div className='space-y-6'>
-      {/* 검색 및 필터 영역 */}
-      <div className='flex gap-4'>
-        <div className='flex-1'>
-          <div className='relative'>
-            <Input
-              placeholder='검색어를 입력하세요'
-              value={searchTerm}
-              onChange={e => setSearchTerm(e.target.value)}
-              className='h-12 border-transparent bg-gray-800 pl-12 text-gray-200'
-            />
-            <Search className='absolute left-3 top-3 h-6 w-6 text-gray-400' />
+    <div className='flex gap-6'>
+      {/* 왼쪽 사이드바 */}
+      <div className='w-72 space-y-6'>
+        <div className='space-y-4 rounded-lg bg-gray-800 p-4'>
+          <div className='space-y-2'>
+            <div className='relative'>
+              <Input
+                placeholder='고양이 이름을 입력하세요.'
+                value={searchTerm}
+                onChange={e => setSearchTerm(e.target.value)}
+                className='h-12 border-transparent bg-gray-700 pl-12 text-gray-200'
+              />
+              <Search className='absolute left-3 top-3 h-6 w-6 text-gray-400' />
+            </div>
+            <Button
+              className='w-full bg-blue-500 hover:bg-blue-600'
+              onClick={handleSearch}
+            >
+              검색
+            </Button>
+          </div>
+
+          <div className='space-y-2'>
+            <p className='text-sm text-gray-400'>등급</p>
+            <Select value={selectedRarity} onValueChange={setSelectedRarity}>
+              <SelectTrigger className='h-12 w-full border-transparent bg-gray-700 text-gray-200'>
+                <SelectValue placeholder='등급' />
+              </SelectTrigger>
+              <SelectContent className='border-transparent bg-gray-800 text-gray-200'>
+                <SelectItem value='ALL'>전체</SelectItem>
+                <SelectItem value='S'>S등급</SelectItem>
+                <SelectItem value='A'>A등급</SelectItem>
+                <SelectItem value='B'>B등급</SelectItem>
+                <SelectItem value='C'>C등급</SelectItem>
+                <SelectItem value='D'>D등급</SelectItem>
+                <SelectItem value='H'>Hidden</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className='space-y-2'>
+            <p className='text-sm text-gray-400'>정렬</p>
+            <Select value={sortBy} onValueChange={setSortBy}>
+              <SelectTrigger className='h-12 w-full border-transparent bg-gray-700 text-gray-200'>
+                <SelectValue placeholder='정렬 기준' />
+              </SelectTrigger>
+              <SelectContent className='border-transparent bg-gray-800 text-gray-200'>
+                <SelectItem value='latest'>최신순</SelectItem>
+                <SelectItem value='price-high'>가격 높은순</SelectItem>
+                <SelectItem value='price-low'>가격 낮은순</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         </div>
-
-        <Select value={selectedRarity} onValueChange={setSelectedRarity}>
-          <SelectTrigger className='h-12 w-[150px] border-transparent bg-gray-800 text-gray-200'>
-            <SelectValue placeholder='등급' />
-          </SelectTrigger>
-          <SelectContent className='border-transparent bg-gray-800 text-gray-200'>
-            <SelectItem value='ALL'>전체</SelectItem>
-            <SelectItem value='S'>S등급</SelectItem>
-            <SelectItem value='A'>A등급</SelectItem>
-            <SelectItem value='B'>B등급</SelectItem>
-            <SelectItem value='C'>C등급</SelectItem>
-            <SelectItem value='D'>D등급</SelectItem>
-          </SelectContent>
-        </Select>
-
-        <Select value={sortBy} onValueChange={setSortBy}>
-          <SelectTrigger className='h-12 w-[180px] border-transparent bg-gray-800 text-gray-200'>
-            <SelectValue placeholder='정렬 기준' />
-          </SelectTrigger>
-          <SelectContent className='border-transparent bg-gray-800 text-gray-200'>
-            <SelectItem value='latest'>최신순</SelectItem>
-            <SelectItem value='price-high'>가격 높은순</SelectItem>
-            <SelectItem value='price-low'>가격 낮은순</SelectItem>
-            <SelectItem value='ending-soon'>마감임박순</SelectItem>
-          </SelectContent>
-        </Select>
       </div>
 
-      {/* 테이블 */}
-      <div className='rounded-lg bg-gray-800'>
-        <Table>
-          <TableHeader>
-            <TableRow className='rounded-lg border-gray-700 hover:bg-transparent'>
-              <TableHead className='text-gray-200'></TableHead>
-              <TableHead className='text-gray-200'>이름</TableHead>
-              <TableHead className='text-gray-200'>등급</TableHead>
-              <TableHead className='text-gray-200'>가격</TableHead>
-              <TableHead className='text-gray-200'>남은 시간</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody className='rounded-lg bg-gray-700'>
-            {filteredItems.map(item => (
-              <TableRow
-                key={item.id}
-                className='cursor-pointer border-gray-600 text-base hover:bg-gray-600'
-                onClick={() => setSelectedItem(item)}
-              >
-                <TableCell className='w-24'>
-                  <div className='flex justify-center'>
-                    <img
-                      src={item.image}
-                      alt={item.name}
-                      className='h-16 w-16 object-cover'
-                    />
-                  </div>
-                </TableCell>
-                <TableCell className='font-medium text-gray-200'>
-                  {item.name}
-                </TableCell>
-                <TableCell>
-                  <span
-                    className={cn('font-bold', rarityConfig[item.rarity]?.text)}
-                  >
-                    {item.rarity}등급
-                  </span>
-                </TableCell>
-                <TableCell className='font-bold text-blue-400'>
-                  {item.currentBid.toLocaleString()}냥
-                </TableCell>
-                <TableCell className='text-sm text-gray-400'>
-                  {item.endTime}
-                </TableCell>
+      {/* 오른쪽 테이블 영역 */}
+      <div className='flex-1'>
+        <div className='rounded-lg bg-gray-800'>
+          <Table>
+            <TableHeader>
+              <TableRow className='rounded-lg border-gray-700 hover:bg-transparent'>
+                <TableHead className='text-gray-200'></TableHead>
+                <TableHead className='text-gray-200'>이름</TableHead>
+                <TableHead className='text-gray-200'>등급</TableHead>
+                <TableHead className='text-gray-200'>가격</TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+            </TableHeader>
+            <TableBody className='rounded-lg bg-gray-700'>
+              {filteredItems.map(item => (
+                <TableRow
+                  key={item.id}
+                  className='cursor-pointer border-gray-600 text-base hover:bg-gray-600'
+                  onClick={() => setSelectedItem(item)}
+                >
+                  <TableCell className='w-32'>
+                    <div className='flex justify-center'>
+                      <img
+                        src={item.image}
+                        alt={item.name}
+                        className='h-16 w-16 object-cover'
+                      />
+                    </div>
+                  </TableCell>
+                  <TableCell className='font-medium text-gray-200'>
+                    {item.name}
+                  </TableCell>
+                  <TableCell>
+                    <span
+                      className={cn(
+                        'font-bold',
+                        rarityConfig[item.rarity]?.text,
+                      )}
+                    >
+                      {item.rarity}등급
+                    </span>
+                  </TableCell>
+                  <TableCell className='font-bold text-blue-400'>
+                    {item.currentBid.toLocaleString()}냥
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
       </div>
 
       {/* Purchase Confirmation Dialog */}
