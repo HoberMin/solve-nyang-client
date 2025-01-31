@@ -8,41 +8,18 @@ import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 import { getCatKorName } from '@/pages/gacha/constants/catMappings';
 
-type Rarity = 'S' | 'A' | 'B' | 'C' | 'D' | 'H';
+type Rarity = 'H' | 'S' | 'A' | 'B' | 'C' | 'D';
 
 const rarityConfig: Record<
-  Exclude<Rarity, 'H'>,
-  {
-    border: string;
-    text: string;
-    bg: string;
-  }
+  Rarity,
+  { border: string; text: string; bg: string }
 > = {
-  S: {
-    border: 'border-[#f74600]',
-    text: 'text-[#f74600]',
-    bg: 'bg-[#f74600]',
-  },
-  A: {
-    border: 'border-[#ffc337]',
-    text: 'text-[#ffc337]',
-    bg: 'bg-[#ffc337]',
-  },
-  B: {
-    border: 'border-[#7abf16]',
-    text: 'text-[#7abf16]',
-    bg: 'bg-[#7abf16]',
-  },
-  C: {
-    border: 'border-[#108df1]',
-    text: 'text-[#108df1]',
-    bg: 'bg-[#108df1]',
-  },
-  D: {
-    border: 'border-[#a663ee]',
-    text: 'text-[#a663ee]',
-    bg: 'bg-[#a663ee]',
-  },
+  H: { border: 'border-[#26ffc9]', text: 'text-[#26ffc9]', bg: 'bg-[#26ffc9]' },
+  S: { border: 'border-[#f74600]', text: 'text-[#f74600]', bg: 'bg-[#f74600]' },
+  A: { border: 'border-[#ffc337]', text: 'text-[#ffc337]', bg: 'bg-[#ffc337]' },
+  B: { border: 'border-[#7abf16]', text: 'text-[#7abf16]', bg: 'bg-[#7abf16]' },
+  C: { border: 'border-[#108df1]', text: 'text-[#108df1]', bg: 'bg-[#108df1]' },
+  D: { border: 'border-[#a663ee]', text: 'text-[#a663ee]', bg: 'bg-[#a663ee]' },
 };
 
 const defaultRarityStyle = {
@@ -51,7 +28,7 @@ const defaultRarityStyle = {
   bg: 'bg-gray-400',
 };
 
-const rarityOrder: Exclude<Rarity, 'H'>[] = ['S', 'A', 'B', 'C', 'D'];
+const rarityOrder: Rarity[] = ['H', 'S', 'A', 'B', 'C', 'D'];
 
 interface SaleDialogProps {
   avatar: UserAvatar;
@@ -152,14 +129,11 @@ const SaleDialog: React.FC<SaleDialogProps> = ({
     </Dialog>
   );
 };
-
 const AuctionSale = () => {
   const { data } = useGetUserAvatar();
   const { mutate: saleAvatar } = useSaleAvatar();
   const [selectedAvatar, setSelectedAvatar] = useState<UserAvatar | null>(null);
-  const [selectedRarity, setSelectedRarity] = useState<
-    'ALL' | Exclude<Rarity, 'H'>
-  >('ALL');
+  const [selectedRarity, setSelectedRarity] = useState<'ALL' | Rarity>('ALL');
 
   const handleSell = (avatar: UserAvatar) => {
     saleAvatar({
@@ -167,30 +141,26 @@ const AuctionSale = () => {
     });
   };
 
-  // Hidden 등급을 제외한 아바타만 필터링
-  const avatars = (data?.avatars || []).filter(avatar => avatar.rarity !== 'H');
+  const avatars = data?.avatars || [];
 
   const filteredAvatars =
     selectedRarity === 'ALL'
       ? avatars
       : avatars.filter(avatar => avatar.rarity === selectedRarity);
 
-  const rarityCounts = rarityOrder.reduce<Record<Exclude<Rarity, 'H'>, number>>(
+  const rarityCounts = rarityOrder.reduce<Record<Rarity, number>>(
     (counts, rarity) => {
       counts[rarity] = avatars.filter(char => char.rarity === rarity).length;
       return counts;
     },
-    {} as Record<Exclude<Rarity, 'H'>, number>,
+    {} as Record<Rarity, number>,
   );
 
   const getRarityStyle = (avatarRarity: string | undefined) => {
-    if (
-      !avatarRarity ||
-      !rarityOrder.includes(avatarRarity as Exclude<Rarity, 'H'>)
-    ) {
+    if (!avatarRarity || !rarityOrder.includes(avatarRarity as Rarity)) {
       return defaultRarityStyle;
     }
-    return rarityConfig[avatarRarity as Exclude<Rarity, 'H'>];
+    return rarityConfig[avatarRarity as Rarity];
   };
 
   return (
@@ -272,5 +242,4 @@ const AuctionSale = () => {
     </div>
   );
 };
-
 export default AuctionSale;
