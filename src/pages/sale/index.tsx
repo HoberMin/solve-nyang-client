@@ -47,7 +47,11 @@ export const AvatarSalePage = () => {
   const getDuplicateAvatars = () => {
     const avatarsByName = new Map<string, UserAvatar[]>();
 
-    (data?.avatars ?? []).forEach(avatar => {
+    const avatarsToCheck = (data?.avatars ?? []).filter(avatar =>
+      selectedRarity === 'ALL' ? true : avatar.rarity === selectedRarity,
+    );
+
+    avatarsToCheck.forEach(avatar => {
       const existing = avatarsByName.get(avatar.name) ?? [];
       avatarsByName.set(avatar.name, [...existing, avatar]);
     });
