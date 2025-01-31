@@ -129,11 +129,6 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ username }) => {
               솔브냥 익스텐션
             </Link>
           </DropdownMenuItem>
-          <DropdownMenuItem asChild className='focus:bg-gray-800'>
-            <Link to='/change' className='text-xl text-white hover:text-white'>
-              비밀번호 변경
-            </Link>
-          </DropdownMenuItem>
           <DropdownMenuItem
             className='text-xl text-white focus:bg-gray-800'
             onClick={handleLogout}
