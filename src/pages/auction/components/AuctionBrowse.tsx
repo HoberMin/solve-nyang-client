@@ -2,17 +2,17 @@ import { useState } from 'react';
 
 import { Search } from 'lucide-react';
 
-import { useGetAuctionList } from '@/apis/auction';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
+import { RarityType, SortType, useGetAuctionList } from '@/apis/auction';
+// import {
+//   AlertDialog,
+//   AlertDialogAction,
+//   AlertDialogCancel,
+//   AlertDialogContent,
+//   AlertDialogDescription,
+//   AlertDialogFooter,
+//   AlertDialogHeader,
+//   AlertDialogTitle,
+// } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -33,19 +33,17 @@ import {
 import { cn } from '@/lib/utils';
 import { getCatKorName } from '@/pages/gacha/constants/catMappings';
 
-type Rarity = 'H' | 'S' | 'A' | 'B' | 'C' | 'D';
-type PurchaseStatus = 'success' | 'already-sold' | 'insufficient-funds' | null;
-
-interface AuctionItem {
-  id: number;
-  name: string;
-  rarity: Rarity;
-  currentBid: number;
-  image: string;
-}
+type RarityFilter = 'ALL' | RarityType;
+// interface AuctionItem {
+//   id: number;
+//   name: string;
+//   rarity: Rarity;
+//   currentBid: number;
+//   image: string;
+// }
 
 const rarityConfig: Record<
-  Rarity,
+  RarityType,
   { border: string; text: string; bg: string }
 > = {
   H: { border: 'border-[#26ffc9]', text: 'text-[#26ffc9]', bg: 'bg-[#26ffc9]' },
@@ -58,77 +56,60 @@ const rarityConfig: Record<
 
 const AuctionBrowse = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [sortBy, setSortBy] = useState('latest');
-  const [selectedRarity, setSelectedRarity] = useState('ALL');
-  const [selectedItem, setSelectedItem] = useState<AuctionItem | null>(null);
-  const [purchaseStatus, setPurchaseStatus] = useState<PurchaseStatus>(null);
-  const [isResult, setIsResult] = useState(false);
+  const [sortBy, setSortBy] = useState('0');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [selectedRarity, setSelectedRarity] = useState<RarityFilter>('ALL');
 
-  const handleSearch = () => {
-    // 검색 로직 구현
-    console.log('Searching for:', searchTerm);
+  const [inputValue, setInputValue] = useState(''); // 입력값 저장
+
+  const queryParams = {
+    keyword: searchTerm || undefined,
+    rarity: selectedRarity === 'ALL' ? undefined : selectedRarity,
+    sort: Number(sortBy) as SortType,
+    page: currentPage,
   };
 
-  const handlePurchase = () => {
-    const random = Math.random();
-    if (random < 0.33) {
-      setPurchaseStatus('success');
-    } else if (random < 0.66) {
-      setPurchaseStatus('already-sold');
-    } else {
-      setPurchaseStatus('insufficient-funds');
-    }
-    setSelectedItem(null);
-    setIsResult(true);
+  const { data } = useGetAuctionList(queryParams);
+  const { hasPrevious, hasNext, totalPage, merchandises } = data || {};
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(e.target.value);
   };
 
-  const getPurchaseResultContent = () => {
-    switch (purchaseStatus) {
-      case 'success':
-        return {
-          title: '구매 성공',
-          description: '성공적으로 구매하였습니다.',
-          buttonText: '확인',
-          variant: 'default',
-        };
-      case 'already-sold':
-        return {
-          title: '구매 실패',
-          description: '이미 거래된 아바타입니다.',
-          buttonText: '확인',
-          variant: 'destructive',
-        };
-      case 'insufficient-funds':
-        return {
-          title: '구매 실패',
-          description: '냥코인이 부족합니다.',
-          buttonText: '확인',
-          variant: 'destructive',
-        };
-      default:
-        return null;
-    }
+  const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setSearchTerm(inputValue); // 입력값으로 검색
+    setCurrentPage(1); // 맨 처음으로 이동
   };
-  const { data } = useGetAuctionList({});
+
+  const handleRarity = (value: string) => {
+    setSelectedRarity(value as RarityFilter);
+  };
+  // const handlePurchase = () => {
+  //   // 구매
+  // };
 
   return (
     <div className='flex gap-6'>
       {/* 왼쪽 사이드바 */}
       <div className='w-72 space-y-6'>
-        <div className='space-y-4 rounded-lg bg-gray-800 p-4'>
+        <form
+          onSubmit={handleSearch}
+          className='space-y-4 rounded-lg bg-gray-800 p-4'
+        >
           <div className='space-y-2'>
             <div className='relative'>
               <Input
                 placeholder='고양이 이름을 입력하세요.'
-                value={searchTerm}
-                onChange={e => setSearchTerm(e.target.value)}
+                value={inputValue}
+                onChange={handleChange}
                 className='h-12 border-transparent bg-gray-700 pl-12 text-gray-200'
               />
               <Search className='absolute left-3 top-3 h-6 w-6 text-gray-400' />
             </div>
             <Button
+              type='submit'
               className='w-full bg-blue-500 hover:bg-blue-600'
-              onClick={handleSearch}
             >
               검색
             </Button>
@@ -136,18 +117,18 @@ const AuctionBrowse = () => {
 
           <div className='space-y-2'>
             <p className='text-sm text-gray-400'>등급</p>
-            <Select value={selectedRarity} onValueChange={setSelectedRarity}>
+            <Select value={selectedRarity} onValueChange={handleRarity}>
               <SelectTrigger className='h-12 w-full border-transparent bg-gray-700 text-gray-200'>
                 <SelectValue placeholder='등급' />
               </SelectTrigger>
               <SelectContent className='border-transparent bg-gray-800 text-gray-200'>
                 <SelectItem value='ALL'>전체</SelectItem>
+                <SelectItem value='H'>H등급</SelectItem>
                 <SelectItem value='S'>S등급</SelectItem>
                 <SelectItem value='A'>A등급</SelectItem>
                 <SelectItem value='B'>B등급</SelectItem>
                 <SelectItem value='C'>C등급</SelectItem>
                 <SelectItem value='D'>D등급</SelectItem>
-                <SelectItem value='H'>Hidden</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -159,13 +140,13 @@ const AuctionBrowse = () => {
                 <SelectValue placeholder='정렬 기준' />
               </SelectTrigger>
               <SelectContent className='border-transparent bg-gray-800 text-gray-200'>
-                <SelectItem value='latest'>최신순</SelectItem>
-                <SelectItem value='price-high'>가격 높은순</SelectItem>
-                <SelectItem value='price-low'>가격 낮은순</SelectItem>
+                <SelectItem value='0'>최신순</SelectItem>
+                <SelectItem value='1'>가격 높은순</SelectItem>
+                <SelectItem value='2'>가격 낮은순</SelectItem>
               </SelectContent>
             </Select>
           </div>
-        </div>
+        </form>
       </div>
 
       {/* 오른쪽 테이블 영역 */}
@@ -181,7 +162,7 @@ const AuctionBrowse = () => {
               </TableRow>
             </TableHeader>
             <TableBody className='rounded-lg bg-gray-700'>
-              {data?.merchandises.map(item => (
+              {merchandises.map(item => (
                 <TableRow
                   key={item.id}
                   className='cursor-pointer border-gray-600 text-base hover:bg-gray-600'
@@ -216,11 +197,12 @@ const AuctionBrowse = () => {
               ))}
             </TableBody>
           </Table>
+
         </div>
       </div>
 
       {/* Purchase Confirmation Dialog */}
-      <AlertDialog
+      {/* <AlertDialog
         open={!!selectedItem}
         onOpenChange={() => setSelectedItem(null)}
       >
@@ -252,10 +234,10 @@ const AuctionBrowse = () => {
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
-      </AlertDialog>
+      </AlertDialog> */}
 
       {/* Result Dialog */}
-      <AlertDialog open={isResult} onOpenChange={setIsResult}>
+      {/* <AlertDialog open={isResult} onOpenChange={setIsResult}>
         <AlertDialogContent className='border-transparent bg-gray-800 text-gray-400'>
           <AlertDialogHeader>
             <AlertDialogTitle className='text-center text-base text-gray-400'>
@@ -276,7 +258,7 @@ const AuctionBrowse = () => {
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
-      </AlertDialog>
+      </AlertDialog> */}
     </div>
   );
 };
