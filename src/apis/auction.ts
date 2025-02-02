@@ -38,6 +38,19 @@ interface SaleRequest {
   price: number;
 }
 
+interface UserAuctionHistory {
+  id: number;
+  price: number;
+  name: string;
+  rarity: RarityType;
+  sold: boolean;
+  cancelled: boolean;
+  createdAt: string;
+}
+
+interface UserAuctionResponse {
+  history: UserAuctionHistory[];
+}
 // 경매장 매물 조회
 const getAuctionList = async (params: AuctionParams = {}) => {
   const searchParams = new URLSearchParams();
@@ -112,5 +125,31 @@ export const useAuctionAvatar = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['userAvatar'] });
     },
+  });
+};
+
+// 사용자의 판매 내역 조회
+
+const getUserAuctionList = async () => {
+  const response = await fetch(`${domain}/auction/me`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      authorization: `Bearer ${localStorage.getItem('token')}`,
+    },
+  });
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+
+  const data = await response.json();
+
+  return data as UserAuctionResponse;
+};
+
+export const useGetUserAuctionList = () => {
+  return useSuspenseQuery({
+    queryKey: ['userAuctionHistory'],
+    queryFn: getUserAuctionList,
   });
 };
