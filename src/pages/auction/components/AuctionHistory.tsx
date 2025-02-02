@@ -1,4 +1,6 @@
-import { useGetUserAuctionList } from '@/apis/auction';
+import { toast } from 'sonner';
+
+import { useCancelAuctionItem, useGetUserAuctionList } from '@/apis/auction';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -44,6 +46,7 @@ const statusConfig = {
 
 const AuctionHistory = () => {
   const { data } = useGetUserAuctionList();
+  const { mutate: cancelAuctionItem } = useCancelAuctionItem();
 
   const getStatus = (item: { sold: boolean; cancelled: boolean }) => {
     if (item.sold) return 'completed';
@@ -58,8 +61,11 @@ const AuctionHistory = () => {
   };
 
   const handleCancel = (id: number) => {
-    console.log(`Auction ${id} cancelled`);
-    // 여기에 취소 로직 추가
+    cancelAuctionItem(id, {
+      onSuccess: () => {
+        toast.success('성공적으로 취소되었습니다.');
+      },
+    });
   };
 
   return (
@@ -131,7 +137,12 @@ const AuctionHistory = () => {
                           <p className='text-center text-2xl'>취소 확인</p>
                         </AlertDialogTitle>
                         <AlertDialogDescription className='text-center text-base text-gray-200'>
-                          <span className='font-bold text-yellow-500'>
+                          <span
+                            className={cn(
+                              'font-bold',
+                              rarityConfig[item.rarity]?.text,
+                            )}
+                          >
                             {getCatKorName(item.name)}
                           </span>
                           을(를) 다시 데려올까요?
