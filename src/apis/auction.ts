@@ -153,3 +153,33 @@ export const useGetUserAuctionList = () => {
     queryFn: getUserAuctionList,
   });
 };
+
+// 판매 취소하기
+
+const cancelAuctionItem = async (auctionId: number) => {
+  const response = await fetch(`${domain}/auction/sale`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      authorization: `Bearer ${localStorage.getItem('token')}`,
+    },
+    body: JSON.stringify({
+      id: auctionId,
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+};
+
+export const useCancelAuctionItem = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (auctionId: number) => cancelAuctionItem(auctionId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['userAuctionHistory'] });
+    },
+  });
+};
