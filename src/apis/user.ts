@@ -3,10 +3,12 @@ import {
   useQueryClient,
   useSuspenseQuery,
 } from '@tanstack/react-query';
+import { AxiosError } from 'axios';
 import { toast } from 'sonner';
 
 import { Rarity } from '@/pages/sale/type';
 
+import { axiosInstance } from './auth';
 import { domain } from './avatar';
 
 export interface UserAvatar {
@@ -30,46 +32,32 @@ interface UserInfo {
 }
 
 const userInfo = async () => {
-  const response = await fetch(`${domain}/user/me`, {
-    headers: {
-      'Content-Type': 'application/json',
-      authorization: `Bearer ${localStorage.getItem('token')}`,
-    },
-  });
+  const response = await axiosInstance.get('user/me');
 
-  const data = await response.json();
-
-  return data as UserInfo;
+  return response.data;
 };
 
-const userCharacterSelecte = async (ownedAvatarId: string) =>
-  await fetch(
-    `${domain}/user/me/avatar/${ownedAvatarId}`,
-
-    {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-        authorization: `Bearer ${localStorage.getItem('token')}`,
-      },
-    },
+const userCharacterSelecte = async (ownedAvatarId: string) => {
+  const response = await axiosInstance.patch(
+    `/user/me/avatar/${ownedAvatarId}`,
   );
 
+  return response.data;
+};
+
 const userAvatar = async () => {
-  const response = await fetch(`${domain}/user/me/avatar`, {
-    headers: {
-      'Content-Type': 'application/json',
-      authorization: `Bearer ${localStorage.getItem('token')}`,
-    },
-  });
+  try {
+    const response = await axiosInstance.get('/user/me/avatar');
 
-  if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`);
+    return response.data as UserAvatarList;
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      console.error('Avatar fetch error:', error);
+      throw new Error(`HTTP error! status: ${error.response?.status}`);
+    }
+    // axios 에러가 아닌 경우도 처리``
+    throw error;
   }
-
-  const data = await response.json();
-
-  return data as UserAvatarList;
 };
 
 const saleAvatar = async (avatarList: UserAvatarList) => {

@@ -48,36 +48,50 @@ axiosInstance.interceptors.response.use(
   (response: AxiosResponse<ApiResponse>) => {
     // 응답에 새로운 액세스 토큰이 있는 경우 저장
     if (response.data?.accessToken) {
-      setAccessToken(response.data.accessToken);
+      const newToken = response.data.accessToken;
+      setAccessToken(newToken);
+
+      // 원본 요청
+      const originalRequest = response.config;
+
+      if (originalRequest.headers) {
+        originalRequest.headers.Authorization = `Bearer ${newToken}`;
+      }
+      return axiosInstance(originalRequest);
     }
     return response;
-    // response 받고 끝나는게 아니라 기존 요청 이어서 보내야 되는데?
   },
   async (error: AxiosError<ApiResponse>) => {
-    const originalRequest = error.config;
-
-    if (
-      error.response?.status === 401 &&
-      originalRequest &&
-      !originalRequest._retry
-    ) {
-      originalRequest._retry = true;
-
-      try {
-        // 리프레시 토큰으로 새로운 액세스 토큰 요청
-        const response = await axiosInstance.get('/user/me');
-        if (response.data?.accessToken) {
-          setAccessToken(response.data.accessToken);
-
-          return axiosInstance(originalRequest);
-        }
-      } catch {
-        clearAccessToken();
-        window.location.href = '/login';
-      }
+    // 리프레시 토큰이 만료된 경우에만 로그인 페이지로 이동
+    if (error.response?.status === 401) {
+      clearAccessToken();
+      window.location.href = '/login';
     }
     return Promise.reject(error);
   },
+
+  // const originalRequest = error.config;
+  // if (
+  //   error.response?.status === 401 &&
+  //   originalRequest &&
+  //   !originalRequest._retry
+  // ) {
+  //   originalRequest._retry = true;
+
+  //   try {
+  //     // 리프레시 토큰으로 새로운 액세스 토큰 요청
+  //     const response = await axiosInstance.get('/user/me');
+  //     if (response.data?.accessToken) {
+  //       setAccessToken(response.data.accessToken);
+
+  //       return axiosInstance(originalRequest);
+  //     }
+  //   } catch {
+  //     clearAccessToken();
+  //     window.location.href = '/login';
+  //   }
+  // }
+  // return Promise.reject(error);
 );
 
 export const getAccessToken = () => {
@@ -97,13 +111,17 @@ const checkAuth = async () => {
   try {
     const response = await axiosInstance.get('/user/me');
 
+    // 새로고침 후 첫 요청시 새 액세스 토큰 받아옴?
+    if (response.data?.accessToken) {
+      setAccessToken(response.data.accessToken);
+    }
     return response.data;
   } catch {
     return null;
   }
 };
 
-// 인증 상태 관리 커스텀 훅훅
+// 인증 상태 관리 커스텀 훅
 export const useAuthQuery = () => {
   return useQuery({
     queryKey: ['auth'],
@@ -123,7 +141,7 @@ export const AuthGuard = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     if (isLoading) return;
-
+    // 비인증 상태로 보호된 페이지 접근 시도
     if (!auth?.username && !isPublicPage) {
       toast.error('로그인이 필요한 서비스입니다.', {
         description: '로그인 페이지로 이동합니다.',
