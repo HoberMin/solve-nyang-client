@@ -1,11 +1,15 @@
-import { useSuspenseQuery } from '@tanstack/react-query';
+import {
+  useMutation,
+  useQueryClient,
+  useSuspenseQuery,
+} from '@tanstack/react-query';
 
 import { domain } from './avatar';
 
 type SortType = 0 | 1 | 2; // 0(최신순), 1(최고가순), 2(최저가순)
 type RarityType = 'H' | 'S' | 'A' | 'B' | 'C' | 'D';
 
-export interface AuctionParams {
+interface AuctionParams {
   keyword?: string; // 검색어
   sort?: SortType; // 정렬
   rarity?: RarityType; // 등급
@@ -29,7 +33,13 @@ interface AuctionResponse {
   merchandises: Merchandise[];
 }
 
-export const getAuctionList = async (params: AuctionParams = {}) => {
+interface SaleRequest {
+  id: string;
+  price: number;
+}
+
+// 경매장 매물 조회
+const getAuctionList = async (params: AuctionParams = {}) => {
   const searchParams = new URLSearchParams();
 
   if (params.keyword) {
@@ -73,5 +83,34 @@ export const useGetAuctionList = (params: AuctionParams = {}) => {
   return useSuspenseQuery({
     queryKey: ['auctionList', params],
     queryFn: () => getAuctionList(params),
+  });
+};
+
+// 경매장에 판매
+const auctionAvatar = async (data: SaleRequest) => {
+  const response = await fetch(`${domain}/auction/sale`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      authorization: `Bearer ${localStorage.getItem('token')}`,
+    },
+    body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+    // 에러 처리를 더 세세하게 할 수 있을 것 같은데 어떻게 해야 할 지 모르겠따 ( _ _)
+  }
+  return response.json();
+};
+
+export const useAuctionAvatar = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: auctionAvatar,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['userAvatar'] });
+    },
   });
 };

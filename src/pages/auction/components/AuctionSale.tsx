@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 
-import { UserAvatar, useGetUserAvatar, useSaleAvatar } from '@/apis/user';
+import { useAuctionAvatar } from '@/apis/auction';
+import { UserAvatar, useGetUserAvatar } from '@/apis/user';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
@@ -131,13 +132,14 @@ const SaleDialog: React.FC<SaleDialogProps> = ({
 };
 const AuctionSale = () => {
   const { data } = useGetUserAvatar();
-  const { mutate: saleAvatar } = useSaleAvatar();
+  const { mutate: auctionAvatar } = useAuctionAvatar();
   const [selectedAvatar, setSelectedAvatar] = useState<UserAvatar | null>(null);
   const [selectedRarity, setSelectedRarity] = useState<'ALL' | Rarity>('ALL');
 
-  const handleSell = (avatar: UserAvatar) => {
-    saleAvatar({
-      avatars: [avatar],
+  const handleSell = (avatar: UserAvatar, price: number) => {
+    auctionAvatar({
+      id: avatar.ownedAvatarId,
+      price,
     });
   };
 
