@@ -5,7 +5,13 @@ import { toast } from 'sonner';
 import { useAuctionAvatar } from '@/apis/auction';
 import { UserAvatar, useGetUserAvatar } from '@/apis/user';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
@@ -90,24 +96,26 @@ const SaleDialog: React.FC<SaleDialogProps> = ({
         {!isConfirmDialogOpen ? (
           <div className='space-y-4'>
             <DialogTitle>
-              <div className='text-lg font-semibold'>판매</div>
+              <p className='text-center text-2xl'>판매</p>
             </DialogTitle>
-            <div className='space-y-3'>
-              <div className='space-y-2'>
-                <Label htmlFor='price'>판매 가격</Label>
+            <DialogDescription className='text-center text-base text-gray-200'>
+              <div className='flex gap-2'>
+                <Label htmlFor='price' className='flex items-center'>
+                  판매 가격
+                </Label>
                 <Input
                   id='price'
                   type='number'
-                  min={0}
+                  min={1}
                   value={price}
                   onChange={handlePriceChange}
                   onKeyDown={handleKeyPress}
-                  className='border-gray-600 bg-gray-700 text-gray-200'
+                  className='flex-1 border-gray-600 bg-gray-700 text-gray-200'
                 />
-                {error && <p className='text-sm text-red-500'>{error}</p>}
               </div>
-            </div>
-            <div className='flex justify-end space-x-2'>
+              {error && <p className='text-sm text-red-500'>{error}</p>}
+            </DialogDescription>
+            <DialogFooter>
               <Button
                 onClick={handleProceed}
                 disabled={price <= 0}
@@ -115,18 +123,25 @@ const SaleDialog: React.FC<SaleDialogProps> = ({
               >
                 다음
               </Button>
-            </div>
+            </DialogFooter>
           </div>
         ) : (
           <div className='space-y-4'>
             <DialogTitle>
-              <div className='text-lg font-semibold'>확인</div>
+              <p className='text-center text-2xl'>판매 확인</p>
             </DialogTitle>
-            <p className='text-sm text-gray-200'>
-              <span className='font-bold'>{getCatKorName(avatar.name)}</span>
-              을(를) <span className='font-bold'>{price.toLocaleString()}</span>
+            <DialogDescription className='text-center text-base text-gray-200'>
+              <span
+                className={cn('font-bold', rarityConfig[avatar.rarity]?.text)}
+              >
+                {getCatKorName(avatar.name)}
+              </span>
+              을(를){' '}
+              <span className='font-bold text-blue-400'>
+                {price.toLocaleString()}
+              </span>
               냥에 판매하시겠습니까?
-            </p>
+            </DialogDescription>
             <div className='flex justify-end space-x-2'>
               <Button
                 onClick={handleConfirm}
