@@ -2,6 +2,7 @@ import { useState } from 'react';
 
 import { Search } from 'lucide-react';
 
+import { useGetAuctionList } from '@/apis/auction';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -30,6 +31,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { cn } from '@/lib/utils';
+import { getCatKorName } from '@/pages/gacha/constants/catMappings';
 
 type Rarity = 'H' | 'S' | 'A' | 'B' | 'C' | 'D';
 type PurchaseStatus = 'success' | 'already-sold' | 'insufficient-funds' | null;
@@ -61,28 +63,6 @@ const AuctionBrowse = () => {
   const [selectedItem, setSelectedItem] = useState<AuctionItem | null>(null);
   const [purchaseStatus, setPurchaseStatus] = useState<PurchaseStatus>(null);
   const [isResult, setIsResult] = useState(false);
-
-  const dummyItems: AuctionItem[] = [
-    {
-      id: 1,
-      name: '실타래냥',
-      rarity: 'S',
-      currentBid: 5000,
-      image: '/cats/YarnBallCat.svg',
-    },
-    {
-      id: 2,
-      name: '어항냥',
-      rarity: 'A',
-      currentBid: 3000,
-      image: '/cats/FishbowlCat.svg',
-    },
-  ];
-
-  const filteredItems =
-    selectedRarity === 'ALL'
-      ? dummyItems
-      : dummyItems.filter(item => item.rarity === selectedRarity);
 
   const handleSearch = () => {
     // 검색 로직 구현
@@ -129,6 +109,7 @@ const AuctionBrowse = () => {
         return null;
     }
   };
+  const { data } = useGetAuctionList({});
 
   return (
     <div className='flex gap-6'>
@@ -200,23 +181,23 @@ const AuctionBrowse = () => {
               </TableRow>
             </TableHeader>
             <TableBody className='rounded-lg bg-gray-700'>
-              {filteredItems.map(item => (
+              {data?.merchandises.map(item => (
                 <TableRow
                   key={item.id}
                   className='cursor-pointer border-gray-600 text-base hover:bg-gray-600'
-                  onClick={() => setSelectedItem(item)}
+                  // onClick={() => setSelectedItem(item)}
                 >
                   <TableCell className='w-32'>
                     <div className='flex justify-center'>
                       <img
-                        src={item.image}
+                        src={`/cats/${item.name}.svg`}
                         alt={item.name}
                         className='h-16 w-16 object-cover'
                       />
                     </div>
                   </TableCell>
                   <TableCell className='font-medium text-gray-200'>
-                    {item.name}
+                    {getCatKorName(item.name)}
                   </TableCell>
                   <TableCell>
                     <span
@@ -229,7 +210,7 @@ const AuctionBrowse = () => {
                     </span>
                   </TableCell>
                   <TableCell className='font-bold text-blue-400'>
-                    {item.currentBid.toLocaleString()}냥
+                    {item.price.toLocaleString()}냥
                   </TableCell>
                 </TableRow>
               ))}
