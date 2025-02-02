@@ -6,8 +6,8 @@ import {
 
 import { domain } from './avatar';
 
-type SortType = 0 | 1 | 2; // 0(최신순), 1(최고가순), 2(최저가순)
-type RarityType = 'H' | 'S' | 'A' | 'B' | 'C' | 'D';
+export type SortType = 0 | 1 | 2; // 0(최신순), 1(최고가순), 2(최저가순)
+export type RarityType = 'H' | 'S' | 'A' | 'B' | 'C' | 'D';
 
 interface AuctionParams {
   keyword?: string; // 검색어
@@ -21,6 +21,7 @@ interface Merchandise {
   price: number;
   name: string;
   rarity: RarityType;
+  isMine: boolean;
   createdAt: string;
 }
 
@@ -80,6 +81,7 @@ const getAuctionList = async (params: AuctionParams = {}) => {
   const response = await fetch(url, {
     headers: {
       'Content-Type': 'application/json',
+      authorization: `Bearer ${localStorage.getItem('token')}`,
     },
   });
 
