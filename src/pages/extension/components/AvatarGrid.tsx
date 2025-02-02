@@ -1,3 +1,4 @@
+import { useUserExtensionAvatarToggle } from '@/apis/extension';
 import { UserAvatar } from '@/apis/user';
 import { getCatKorName } from '@/pages/gacha/constants/catMappings';
 
@@ -8,14 +9,18 @@ interface AvatarGridProps {
 }
 
 export const AvatarGrid = ({ avatars }: AvatarGridProps) => {
+  const extensionAvatarToggle = useUserExtensionAvatarToggle();
+
+  const handleExtensionAvatarToggle = async (ownedAvatarId: string) => {
+    extensionAvatarToggle(ownedAvatarId);
+  };
+
   return (
     <div className={styles.grid.container}>
       {avatars.map(avatar => (
         <div
           key={avatar.ownedAvatarId}
-          onClick={() => {
-            console.log('Selected Avatar:', avatar);
-          }}
+          onClick={() => handleExtensionAvatarToggle(avatar.ownedAvatarId)}
           className={styles.grid.card(avatar.rarity)}
         >
           <div className={styles.grid.imageContainer}>

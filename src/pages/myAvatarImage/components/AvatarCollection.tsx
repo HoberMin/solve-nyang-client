@@ -12,12 +12,13 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { RARITY_ORDER } from '@/pages/profile/AvatarCollection';
 import { Rarity } from '@/pages/sale/type';
 
 import { styles } from '../style';
 import { AvatarCard } from './AvatarCard';
 import { RarityFilter } from './RarityFilter';
+
+const RARITY_ORDER = ['H', 'S', 'A', 'B', 'C', 'D'];
 
 interface AvatarCollectionProps {
   onToggle: (id: string) => void;

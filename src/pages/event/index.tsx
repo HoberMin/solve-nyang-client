@@ -102,7 +102,7 @@ const EventPage = () => {
             </div>
           </div>
           {isAuthenticated && hasEventAvatar && (
-            <div className='rounded-lg bg-green-500/10 p-3 text-base text-green-300'>
+            <div className='mt-10 rounded-lg bg-green-500/10 p-3 text-base text-green-300'>
               🎉 새해복냥이 지급되었습니다! 인벤토리에서 확인해보세요.
             </div>
           )}
