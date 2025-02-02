@@ -3,8 +3,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@radix-ui/react-tabs';
 import Layout from '@/components/Layout';
 
 import AuctionBrowse from './components/AuctionBrowse';
-import AuctionCompleted from './components/AuctionCompleted';
 import AuctionHeader from './components/AuctionHeader';
+import AuctionHistory from './components/AuctionHistory';
 import AuctionSale from './components/AuctionSale';
 
 const AuctionPage = () => {
@@ -39,7 +39,7 @@ const AuctionPage = () => {
               <AuctionBrowse />
             </TabsContent>
             <TabsContent value='completed'>
-              <AuctionCompleted />
+              <AuctionHistory />
             </TabsContent>
             <TabsContent value='sale'>
               <AuctionSale />
