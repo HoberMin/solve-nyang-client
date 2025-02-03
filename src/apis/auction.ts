@@ -8,6 +8,7 @@ import { domain } from './avatar';
 
 export type SortType = 0 | 1 | 2; // 0(최신순), 1(최고가순), 2(최저가순)
 export type RarityType = 'H' | 'S' | 'A' | 'B' | 'C' | 'D';
+export type FilterType = 0 | 1 | 2 | 3; // 0(전체), 1(판매 완료), 2(판매 중), 3(취소 됨)
 
 interface AuctionParams {
   keyword?: string; // 검색어
@@ -38,8 +39,12 @@ interface SaleRequest {
   id: string;
   price: number;
 }
+interface HistoryParams {
+  filter?: FilterType;
+  page?: number;
+}
 
-interface UserAuctionHistory {
+interface AuctionHistory {
   id: number;
   price: number;
   name: string;
@@ -49,8 +54,8 @@ interface UserAuctionHistory {
   createdAt: string;
 }
 
-interface UserAuctionResponse {
-  history: UserAuctionHistory[];
+interface AuctionResponse {
+  history: AuctionHistory[];
 }
 // 경매장 매물 조회
 const getAuctionList = async (params: AuctionParams = {}) => {
@@ -132,8 +137,22 @@ export const useAuctionAvatar = () => {
 
 // 사용자의 판매 내역 조회
 
-const getUserAuctionList = async () => {
-  const response = await fetch(`${domain}/auction/me`, {
+const getUserAuctionList = async (params: HistoryParams = {}) => {
+  const searchParams = new URLSearchParams();
+
+  if (params.filter !== undefined && params.filter !== 0) {
+    searchParams.append('filter', params.filter?.toString());
+  }
+  if (params.page) {
+    searchParams.append('page', params.page.toString());
+  }
+
+  const queryString = searchParams.toString();
+  const url = queryString
+    ? `${domain}/auction/me?${queryString}`
+    : `${domain}/auction/me`;
+
+  const response = await fetch(url, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -146,13 +165,13 @@ const getUserAuctionList = async () => {
 
   const data = await response.json();
 
-  return data as UserAuctionResponse;
+  return data as AuctionResponse;
 };
 
-export const useGetUserAuctionList = () => {
+export const useGetUserAuctionList = (params: HistoryParams) => {
   return useSuspenseQuery({
-    queryKey: ['userAuctionHistory'],
-    queryFn: getUserAuctionList,
+    queryKey: ['userAuctionHistory', params],
+    queryFn: () => getUserAuctionList(params),
   });
 };
 
