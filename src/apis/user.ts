@@ -31,10 +31,18 @@ interface UserInfo {
   streak: number;
 }
 
-const userInfo = async () => {
-  const response = await axiosInstance.get('user/me');
+const userInfo = async (): Promise<UserInfo | null> => {
+  try {
+    const response = await axiosInstance.get('user/me');
 
-  return response.data;
+    return response.data;
+  } catch (error) {
+    if (error instanceof AxiosError && error.response?.status === 401) {
+      return null;
+    }
+
+    throw error;
+  }
 };
 
 const userCharacterSelecte = async (ownedAvatarId: string) => {
@@ -55,7 +63,6 @@ const userAvatar = async () => {
       console.error('Avatar fetch error:', error);
       throw new Error(`HTTP error! status: ${error.response?.status}`);
     }
-    // axios 에러가 아닌 경우도 처리``
     throw error;
   }
 };
@@ -78,7 +85,7 @@ const saleAvatar = async (avatarList: UserAvatarList) => {
 };
 
 export const useGetUserInfo = () =>
-  useSuspenseQuery<UserInfo>({
+  useSuspenseQuery<UserInfo | null>({
     queryKey: ['userInfo'],
     queryFn: userInfo,
   });
