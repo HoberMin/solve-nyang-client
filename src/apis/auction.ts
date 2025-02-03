@@ -185,3 +185,33 @@ export const useCancelAuctionItem = () => {
     },
   });
 };
+
+// 구매하기
+const buyAuctionItem = async (auctionId: number) => {
+  const response = await fetch(`${domain}/auction/buy`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      authorization: `Bearer ${localStorage.getItem('token')}`,
+    },
+    body: JSON.stringify({
+      id: auctionId,
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+};
+
+export const useBuyAuctionItem = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (auctionId: number) => buyAuctionItem(auctionId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['auctionList'] });
+      queryClient.invalidateQueries({ queryKey: ['userInfo'] });
+    },
+  });
+};
