@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Copy, Expand, Minimize } from 'lucide-react';
 import { toast } from 'sonner';
 
+import { domain } from '@/apis/avatar';
 import { useGetUserAvatar } from '@/apis/user';
 import { cn } from '@/lib/utils';
 
@@ -90,7 +91,7 @@ export const MyImage = ({ username }: MyImageProps) => {
         )}
       >
         <img
-          src={`https://api.solve-nyang.com/compose/${username}?t=${visibleAvatars}`}
+          src={`${domain}/compose/${username}?t=${visibleAvatars}`}
           alt='Farm Preview'
           className={styles.preview.image}
         />
