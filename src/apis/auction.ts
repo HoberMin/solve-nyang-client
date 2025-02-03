@@ -22,6 +22,7 @@ interface Merchandise {
   price: number;
   name: string;
   rarity: RarityType;
+  sold: boolean;
   isMine: boolean;
   createdAt: string;
 }
@@ -57,6 +58,12 @@ interface AuctionHistory {
 interface AuctionResponse {
   history: AuctionHistory[];
 }
+
+export interface AuctionError {
+  status: number;
+  message: string;
+}
+
 // 경매장 매물 조회
 const getAuctionList = async (params: AuctionParams = {}) => {
   const searchParams = new URLSearchParams();
@@ -219,18 +226,25 @@ const buyAuctionItem = async (auctionId: number) => {
   });
 
   if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`);
+    throw { status: response.status, message: response.statusText };
   }
 };
 
-export const useBuyAuctionItem = () => {
+export const useBuyAuctionItem = (options?: {
+  onSuccess?: () => void;
+  onError?: (error: AuctionError) => void;
+}) => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (auctionId: number) => buyAuctionItem(auctionId),
+    mutationFn: buyAuctionItem,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['auctionList'] });
       queryClient.invalidateQueries({ queryKey: ['userInfo'] });
+      options?.onSuccess?.();
+    },
+    onError: (error: AuctionError) => {
+      options?.onError?.(error);
     },
   });
 };
