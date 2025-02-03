@@ -2,17 +2,22 @@ import { useState } from 'react';
 
 import { Search } from 'lucide-react';
 
-import { RarityType, SortType, useGetAuctionList } from '@/apis/auction';
-// import {
-//   AlertDialog,
-//   AlertDialogAction,
-//   AlertDialogCancel,
-//   AlertDialogContent,
-//   AlertDialogDescription,
-//   AlertDialogFooter,
-//   AlertDialogHeader,
-//   AlertDialogTitle,
-// } from '@/components/ui/alert-dialog';
+import {
+  RarityType,
+  SortType,
+  useBuyAuctionItem,
+  useGetAuctionList,
+} from '@/apis/auction';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -36,13 +41,12 @@ import { getCatKorName } from '@/pages/gacha/constants/catMappings';
 import CustomPagination from './CustomPagination';
 
 type RarityFilter = 'ALL' | RarityType;
-// interface AuctionItem {
-//   id: number;
-//   name: string;
-//   rarity: Rarity;
-//   currentBid: number;
-//   image: string;
-// }
+
+interface SelectedItem {
+  id: number;
+  name: string;
+  price: number;
+}
 
 const rarityConfig: Record<
   RarityType,
@@ -57,6 +61,7 @@ const rarityConfig: Record<
 };
 
 const AuctionBrowse = () => {
+  // 필터링 State
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('0');
   const [currentPage, setCurrentPage] = useState(1);
@@ -74,6 +79,15 @@ const AuctionBrowse = () => {
   const { data } = useGetAuctionList(queryParams);
   const { totalPage, merchandises } = data || {};
 
+  // 구매 State
+  const [selectedItem, setSelectedItem] = useState<SelectedItem | null>(null);
+  const [result, setResult] = useState<{
+    title: string;
+    description: string;
+  } | null>(null);
+
+  const { mutateAsync: buyAuctionItem } = useBuyAuctionItem();
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
   };
@@ -87,9 +101,11 @@ const AuctionBrowse = () => {
   const handleRarity = (value: string) => {
     setSelectedRarity(value as RarityFilter);
   };
-  // const handlePurchase = () => {
-  //   // 구매
-  // };
+  const handlePurchase = () => {
+    if (!selectedItem) return;
+
+    buyAuctionItem(selectedItem.id);
+  };
 
   return (
     <div className='flex gap-6'>
@@ -168,7 +184,13 @@ const AuctionBrowse = () => {
                 <TableRow
                   key={item.id}
                   className='cursor-pointer border-gray-600 text-base hover:bg-gray-600'
-                  // onClick={() => setSelectedItem(item)}
+                  onClick={() =>
+                    setSelectedItem({
+                      id: item.id,
+                      name: getCatKorName(item.name),
+                      price: item.price,
+                    })
+                  }
                 >
                   <TableCell className='w-32'>
                     <div className='flex justify-center'>
@@ -209,8 +231,7 @@ const AuctionBrowse = () => {
         </div>
       </div>
 
-      {/* Purchase Confirmation Dialog */}
-      {/* <AlertDialog
+      <AlertDialog
         open={!!selectedItem}
         onOpenChange={() => setSelectedItem(null)}
       >
@@ -224,10 +245,10 @@ const AuctionBrowse = () => {
                 {selectedItem?.name}
               </span>
               을(를){' '}
-              <span className='font-bold text-blue-500'>
-                {selectedItem?.currentBid.toLocaleString()}냥
+              <span className='font-bold text-blue-400'>
+                {selectedItem?.price.toLocaleString()}냥
               </span>
-              에 정말로 구매하시겠습니까?
+              에 구매하시겠습니까?
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -242,31 +263,28 @@ const AuctionBrowse = () => {
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
-      </AlertDialog> */}
+      </AlertDialog>
 
-      {/* Result Dialog */}
-      {/* <AlertDialog open={isResult} onOpenChange={setIsResult}>
+      <AlertDialog open={!!result} onOpenChange={() => setResult(null)}>
         <AlertDialogContent className='border-transparent bg-gray-800 text-gray-400'>
           <AlertDialogHeader>
             <AlertDialogTitle className='text-center text-base text-gray-400'>
-              <p className='text-center text-2xl'>
-                {getPurchaseResultContent()?.title}
-              </p>
+              <p className='text-center text-2xl'>{result?.title}</p>
             </AlertDialogTitle>
             <AlertDialogDescription className='text-center text-base text-gray-200'>
-              {getPurchaseResultContent()?.description}
+              {result?.description}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogAction
-              onClick={() => setIsResult(false)}
+              onClick={() => setResult(null)}
               className='bg-blue-500 hover:bg-blue-600'
             >
-              {getPurchaseResultContent()?.buttonText}
+              확인
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
-      </AlertDialog> */}
+      </AlertDialog>
     </div>
   );
 };
