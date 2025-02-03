@@ -19,7 +19,7 @@ const AuctionPage = () => {
               value='browse'
               className='bg-transparent font-bold text-gray-200 data-[state=active]:bg-gray-800 data-[state=active]:text-lg data-[state=active]:text-blue-400'
             >
-              구매
+              경매 목록
             </TabsTrigger>
             <TabsTrigger
               value='sale'
