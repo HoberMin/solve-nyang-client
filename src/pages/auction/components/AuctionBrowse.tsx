@@ -16,12 +16,6 @@ import { RarityType, SortType, useGetAuctionList } from '@/apis/auction';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-} from '@/components/ui/pagination';
-import {
   Select,
   SelectContent,
   SelectItem,
@@ -38,6 +32,8 @@ import {
 } from '@/components/ui/table';
 import { cn } from '@/lib/utils';
 import { getCatKorName } from '@/pages/gacha/constants/catMappings';
+
+import CustomPagination from './CustomPagination';
 
 type RarityFilter = 'ALL' | RarityType;
 // interface AuctionItem {
@@ -76,7 +72,7 @@ const AuctionBrowse = () => {
   };
 
   const { data } = useGetAuctionList(queryParams);
-  const { hasPrevious, hasNext, merchandises } = data || {};
+  const { totalPage, merchandises } = data || {};
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
@@ -205,35 +201,11 @@ const AuctionBrowse = () => {
           </Table>
 
           {/* 페이지네이션 */}
-          <Pagination>
-            <PaginationContent>
-              {hasPrevious && (
-                <PaginationItem>
-                  <PaginationLink
-                    onClick={() => setCurrentPage(currentPage - 1)}
-                    className='cursor-pointer'
-                  >
-                    {currentPage - 1}
-                  </PaginationLink>
-                </PaginationItem>
-              )}
-              <PaginationItem>
-                <PaginationLink className='cursor-pointer'>
-                  {currentPage}
-                </PaginationLink>
-              </PaginationItem>
-              {hasNext && (
-                <PaginationItem>
-                  <PaginationLink
-                    onClick={() => setCurrentPage(currentPage + 1)}
-                    className='cursor-pointer'
-                  >
-                    {currentPage + 1}
-                  </PaginationLink>
-                </PaginationItem>
-              )}
-            </PaginationContent>
-          </Pagination>
+          <CustomPagination
+            currentPage={currentPage}
+            totalPage={totalPage}
+            onPageChange={setCurrentPage}
+          />
         </div>
       </div>
 
