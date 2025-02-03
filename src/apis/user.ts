@@ -37,6 +37,18 @@ const userInfo = async () => {
     },
   });
 
+  // 401 내려오면 username은 null -> username이 null인 점을 이용해서 처리
+  if (response.status === 401) {
+    localStorage.removeItem('token');
+    window.location.href = '/login';
+    throw new Error('인증이 만료되었습니다.');
+    // toast.error('로그인이 필요한 서비스 입니다.')
+  }
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+
   const data = await response.json();
 
   return data as UserInfo;
