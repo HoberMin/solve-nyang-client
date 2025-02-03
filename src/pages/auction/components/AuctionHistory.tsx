@@ -30,7 +30,7 @@ const rarityConfig: Record<
   RarityType,
   { border: string; text: string; bg: string }
 > = {
-  H: { border: 'border-[#ff0000]', text: 'text-[#ff0000]', bg: 'bg-[#ff0000]' },
+  H: { border: 'border-[#26ffc9]', text: 'text-[#26ffc9]', bg: 'bg-[#26ffc9]' },
   S: { border: 'border-[#f74600]', text: 'text-[#f74600]', bg: 'bg-[#f74600]' },
   A: { border: 'border-[#ffc337]', text: 'text-[#ffc337]', bg: 'bg-[#ffc337]' },
   B: { border: 'border-[#7abf16]', text: 'text-[#7abf16]', bg: 'bg-[#7abf16]' },
