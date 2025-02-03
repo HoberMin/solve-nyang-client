@@ -3,7 +3,7 @@ import { AxiosError } from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
-import { axiosInstance, setAccessToken } from './auth';
+import { axiosInstance, clearAccessToken, setAccessToken } from './auth';
 
 // import { domain } from './avatar';
 
@@ -39,6 +39,19 @@ export const signUp = async (authForm: AuthRequest) =>
     '/account/signup',
     authForm,
   )) as AxiosResponse<SignUpResponse>;
+
+export const logOut = async () => {
+  try {
+    await axiosInstance.post('/account/logout'); // 리프래시 제거? 둘다 제거?
+    clearAccessToken();
+
+    window.location.href = '/';
+  } catch (error) {
+    // 에러 발생해도 클라이언트 토큰 제거?
+    clearAccessToken();
+    window.location.href = '/';
+  }
+};
 
 export const useSignIn = () => {
   const navigate = useNavigate();

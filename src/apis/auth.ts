@@ -47,17 +47,18 @@ axiosInstance.interceptors.response.use(
   // Silent Refresh: 401 없이 access 토큰 자동 반환
   (response: AxiosResponse<ApiResponse>) => {
     // 응답에 새로운 액세스 토큰이 있는 경우 저장
-    if (response.data?.accessToken) {
-      const newToken = response.data.accessToken;
+
+    const newToken = response.headers['new-access-token']; // 헤더로
+    if (newToken) {
       setAccessToken(newToken);
 
       // 원본 요청
-      const originalRequest = response.config;
+      // const originalRequest = response.config;
 
-      if (originalRequest.headers) {
-        originalRequest.headers.Authorization = `Bearer ${newToken}`;
-      }
-      return axiosInstance(originalRequest);
+      // if (originalRequest.headers) {
+      //   originalRequest.headers.Authorization = `Bearer ${newToken}`;
+      // }
+      // return axiosInstance(originalRequest);
     }
     return response;
   },
@@ -117,6 +118,7 @@ const checkAuth = async () => {
     }
     return response.data;
   } catch {
+    // 401 에러일 때 고려해야하나?
     return null;
   }
 };

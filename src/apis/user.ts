@@ -9,7 +9,8 @@ import { toast } from 'sonner';
 import { Rarity } from '@/pages/sale/type';
 
 import { axiosInstance } from './auth';
-import { domain } from './avatar';
+
+// import { domain } from './avatar';
 
 export interface UserAvatar {
   ownedAvatarId: string; // 고유값
@@ -68,20 +69,18 @@ const userAvatar = async () => {
 };
 
 const saleAvatar = async (avatarList: UserAvatarList) => {
-  await fetch(`${domain}/user/me/sale`, {
-    method: 'PATCH',
-    headers: {
-      'Content-Type': 'application/json',
-      authorization: `Bearer ${localStorage.getItem('token')}`,
-    },
-    body: JSON.stringify({
-      soldAvatars: avatarList.avatars.map(e => {
-        return {
-          ownedAvatarId: e.ownedAvatarId,
-        };
-      }),
-    }),
-  });
+  try {
+    await axiosInstance.patch('/user/me/sale', {
+      soldAvatars: avatarList.avatars.map(e => ({
+        ownedAvatarId: e.ownedAvatarId,
+      })),
+    });
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      throw new Error(`HTTP error! status: ${error.response?.status}`);
+    }
+    throw error;
+  }
 };
 
 export const useGetUserInfo = () =>
