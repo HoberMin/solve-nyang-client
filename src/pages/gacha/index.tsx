@@ -20,6 +20,7 @@ import { GachaResultModal } from '@/pages/gacha/components/GachaResultModal';
 import { PointDisplay } from '@/pages/gacha/components/PointDisplay';
 
 import useImagePreloader from './hooks/usePreloader';
+import coinImg from '/assets/coin.svg';
 import greenBallImageUrl from '/assets/gacha-ball-1.svg';
 import orangeBallImageUrl from '/assets/gacha-ball-2.svg';
 import skyblueBallImageUrl from '/assets/gacha-ball-3.svg';
@@ -29,7 +30,6 @@ import blueBallImageUrl from '/assets/gacha-ball-6.svg';
 import yellowBallImageUrl from '/assets/gacha-ball-7.svg';
 import machineImageUrl from '/assets/gacha-machine.svg';
 import handleImageUrl from '/assets/handle.svg';
-import coinImg from '/coin.svg';
 
 interface BallPosition {
   left: string;
