@@ -18,7 +18,7 @@ interface MyImageProps {
 export const MyImage = ({ username }: MyImageProps) => {
   const [isCopied, setIsCopied] = useState(false);
   const [isExpanded, setIsExpanded] = useState(true);
-  // const [background, setBackground] = useState<BackgroundType>('우주배경');
+  const [background, setBackground] = useState<BackgroundType>('우주배경');
 
   const { data: avatarData } = useGetUserAvatar();
   const visibleAvatars = avatarData.avatars.filter(a => a.visible).length;
@@ -49,7 +49,7 @@ export const MyImage = ({ username }: MyImageProps) => {
         <h3 className={styles.preview.title}>MY Image</h3>
         <div className='flex items-center gap-2'>
           <div className={styles.backgroundSelect.wrapper}>
-            {/* <label className={styles.backgroundSelect.label}>배경:</label>
+            <label className={styles.backgroundSelect.label}>배경:</label>
             <select
               className={styles.backgroundSelect.select}
               value={background}
@@ -64,7 +64,7 @@ export const MyImage = ({ username }: MyImageProps) => {
                   {bg}
                 </option>
               ))}
-            </select> */}
+            </select>
           </div>
           <button
             onClick={() => setIsExpanded(!isExpanded)}

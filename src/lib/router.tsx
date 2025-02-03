@@ -4,8 +4,6 @@ import RetroError from '@/components/ErrorBoundary';
 import Root from '@/components/Root';
 import Auction from '@/pages/auction';
 import SaleBackground from '@/pages/background';
-import Gallery from '@/pages/catCollection';
-import CatCollection from '@/pages/catCollection';
 import ChangePassword from '@/pages/changePassword';
 import Contest from '@/pages/contest';
 import EventPage from '@/pages/event';
@@ -55,10 +53,6 @@ export const router = createBrowserRouter([
         element: <Contest />,
       },
       {
-        path: 'gallery',
-        element: <CatCollection />,
-      },
-      {
         path: 'change',
         element: <ChangePassword />,
       },
@@ -69,10 +63,6 @@ export const router = createBrowserRouter([
       {
         path: 'event',
         element: <EventPage />,
-      },
-      {
-        path: 'gallery',
-        element: <Gallery />,
       },
       {
         path: 'extension',
@@ -98,10 +88,6 @@ export const router = createBrowserRouter([
         path: 'event',
         element: <EventPage />,
       },
-      // {
-      //   path: 'gallery',
-      //   element: <Gallery />,
-      // },
       {
         path: 'sale-background',
         element: <SaleBackground />,
