@@ -29,7 +29,7 @@ interface UserInfo {
   streak: number;
 }
 
-const userInfo = async () => {
+const userInfo = async (): Promise<UserInfo | null> => {
   const response = await fetch(`${domain}/user/me`, {
     headers: {
       'Content-Type': 'application/json',
@@ -39,10 +39,7 @@ const userInfo = async () => {
 
   // 401 내려오면 username은 null -> username이 null인 점을 이용해서 처리
   if (response.status === 401) {
-    localStorage.removeItem('token');
-    window.location.href = '/login';
-    throw new Error('인증이 만료되었습니다.');
-    // toast.error('로그인이 필요한 서비스 입니다.')
+    return null;
   }
 
   if (!response.ok) {
@@ -102,7 +99,7 @@ const saleAvatar = async (avatarList: UserAvatarList) => {
 };
 
 export const useGetUserInfo = () =>
-  useSuspenseQuery<UserInfo>({
+  useSuspenseQuery<UserInfo | null>({
     queryKey: ['userInfo'],
     queryFn: userInfo,
   });
