@@ -9,7 +9,6 @@ import SaleBackground from '@/pages/background';
 import CatCollection from '@/pages/catCollection';
 import ChangePassword from '@/pages/changePassword';
 import Contest from '@/pages/contest';
-import EventPage from '@/pages/event';
 import ExtensionPage from '@/pages/extension';
 import FindPassword from '@/pages/findPassword';
 import Gacha from '@/pages/gacha';
@@ -32,10 +31,10 @@ export const router = createBrowserRouter([
         index: true,
         element: <Service />,
       },
-      {
-        path: 'event',
-        element: <EventPage />,
-      },
+      // {
+      //   path: 'event',
+      //   element: <EventPage />,
+      // },
       {
         path: 'contest',
         element: <Contest />,

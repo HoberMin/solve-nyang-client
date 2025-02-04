@@ -191,7 +191,7 @@ const Header = () => {
         </div>
       </div>
       <nav className='relative z-10 flex items-center gap-6'>
-        <RetroMenuItem href='/event'>설 이벤트</RetroMenuItem>
+        {/* <RetroMenuItem href='/event'>설 이벤트</RetroMenuItem> */}
 
         {isLoading ? (
           <LoadingPulse />
