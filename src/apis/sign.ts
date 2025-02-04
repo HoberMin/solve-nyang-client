@@ -25,52 +25,34 @@ const axiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use(
   config => {
-    console.log('Request payload:', config.data); // 요청 데이터 확인
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
     return config;
   },
   error => Promise.reject(error),
 );
 
-// axiosInstance.interceptors.request.use(
-//   config => {
-//     const token = localStorage.getItem('token');
-//     if (token) {
-//       config.headers.Authorization = `Bearer ${token}`;
-//     }
-//     return config;
-//   },
-//   error => Promise.reject(error),
-// );
-
 axiosInstance.interceptors.response.use(
-  response => {
-    console.log('Response data:', response.data); // 응답 데이터 확인
-    return response;
-  },
+  response => response,
   error => {
-    console.error('API Error:', error.response?.data); // 에러 응답 확인
+    if (error.response?.status === 401) {
+      // localStorage.setItem('redirectPath', window.location.pathname);
+      localStorage.removeItem('token');
+      window.location.href = '/login';
+    }
     return Promise.reject(error);
   },
 );
-// axiosInstance.interceptors.response.use(
-//   response => response,
-//   error => {
-//     if (error.response?.status === 401) {
-//       // localStorage.setItem('redirectPath', window.location.pathname);
-//       localStorage.removeItem('token');
-//       window.location.href = '/login';
-//     }
-//     return Promise.reject(error);
-//   },
-// );
 
 interface SignInResponse {
   accessToken: string;
 }
 
-// interface SignUpResponse {
-//   message: string;
-// }
+interface SignUpResponse {
+  message: string;
+}
 
 interface AxiosResponse<T> {
   status: number;
@@ -84,31 +66,11 @@ export const signIn = async (authForm: AuthRequest) =>
     authForm,
   )) as AxiosResponse<SignInResponse>;
 
-// export const signUp = async (authForm: AuthRequest) =>
-//   (await axiosInstance.post(
-//     '/account/signup',
-//     authForm,
-//   )) as AxiosResponse<SignUpResponse>;
-export const signUp = async (authForm: AuthRequest) => {
-  try {
-    // const response = await axiosInstance.post('/account/signup', authForm);
-    const response = await axios.post(`${domain}/account/signup`, authForm, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      withCredentials: false,
-    });
-
-    console.log('Signup response:', response);
-    return response.data;
-  } catch (error) {
-    if (axios.isAxiosError(error)) {
-      console.error('Signup Error:', error.response?.data);
-      throw error;
-    }
-    throw error;
-  }
-};
+export const signUp = async (authForm: AuthRequest) =>
+  (await axiosInstance.post(
+    '/account/signup',
+    authForm,
+  )) as AxiosResponse<SignUpResponse>;
 
 export const useSignIn = () => {
   const navigate = useNavigate();
@@ -128,47 +90,16 @@ export const useSignIn = () => {
   });
 };
 
-// export const useSignUp = () => {
-//   const navigate = useNavigate();
-
-//   const { mutate } = useMutation({
-//     mutationFn: (formData: AuthRequest) => signUp(formData),
-//     onSuccess: () => {
-//       toast.success('회원가입이 완료되었습니다.');
-//       navigate('/login');
-//     },
-//     onError: (error: AxiosError<ErrorResponse>) => {
-//       toast.error(`회원가입에 실패했습니다. ${error.response?.data.message}`);
-//     },
-//   });
-
-//   return mutate;
-// };
 export const useSignUp = () => {
   const navigate = useNavigate();
-
   const { mutate } = useMutation({
     mutationFn: (formData: AuthRequest) => signUp(formData),
-    onSuccess: data => {
-      console.log('Signup success:', data);
+    onSuccess: () => {
       toast.success('회원가입이 완료되었습니다.');
       navigate('/login');
     },
     onError: (error: AxiosError<ErrorResponse>) => {
-      console.error('Signup Error Full:', error);
-      console.error('Error Response:', error.response?.data);
-
-      const errorMessage = error.response?.data?.message;
-
-      if (errorMessage?.includes('solved.ac')) {
-        toast.error(
-          'solved.ac 인증을 확인해주세요. 암호화키를 이름에 정확히 입력했는지 확인해주세요.',
-        );
-      } else if (errorMessage?.includes('이미 가입된')) {
-        toast.error('이미 가입된 회원입니다.');
-      } else {
-        toast.error('회원가입에 실패했습니다. 잠시 후 다시 시도해주세요.');
-      }
+      toast.error(`회원가입에 실패했습니다. ${error.response?.data.message}`);
     },
   });
 
