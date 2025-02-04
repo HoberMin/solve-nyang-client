@@ -1,12 +1,8 @@
 import { useEffect, useState } from 'react';
 
-// import type { MouseEvent } from 'react';
-
-// Avatar 타입 정의 (실제 Avatar 인터페이스에 맞게 수정 필요)
 interface Avatar {
   name: string;
   rarity: 'S' | 'A' | 'B' | 'C' | 'D';
-  // 필요한 다른 속성들 추가
 }
 
 export interface GachaResultModalProps {

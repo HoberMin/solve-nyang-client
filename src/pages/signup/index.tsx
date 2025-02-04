@@ -24,7 +24,6 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 
-// 타입 정의
 interface FormData {
   username: string;
   password: string;
@@ -47,7 +46,6 @@ interface ErrorMessages {
   SIGNUP_FAILED: string;
 }
 
-// error 타입 정의 추가
 interface ApiError extends Error {
   response?: {
     status?: number;
@@ -57,7 +55,6 @@ interface ApiError extends Error {
   };
 }
 
-// 상수 정의
 const VALIDATION: ValidationRules = {
   PASSWORD_MIN_LENGTH: 8,
   PASSWORD_PATTERN:
@@ -77,8 +74,8 @@ const ERROR_MESSAGES: ErrorMessages = {
   PASSWORD_PATTERN: '영문, 숫자, 특수문자를 최소 1자 포함해야 합니다.',
   PASSWORD_MISMATCH: '비밀번호가 일치하지 않습니다.',
   PASSWORD_CHECK: '비밀번호를 확인해주세요.',
-  FAILED_TO_CHECK_USER: '사용자 확인에 실패했습니다.', // verify의 Failed to check user
-  SIGNUP_FAILED: '회원가입에 실패했습니다.', // signup의 failed
+  FAILED_TO_CHECK_USER: '사용자 확인에 실패했습니다.',
+  SIGNUP_FAILED: '회원가입에 실패했습니다.',
 };
 
 const FEEDBACK_MESSAGES = {
@@ -97,7 +94,6 @@ const Signup = () => {
   const [isKeyIssued, setIsKeyIssued] = useState<boolean>(false);
   const [isValid, setIsValid] = useState<boolean>(false);
 
-  // 입력 폼 수정 감지
   const handleInputChange = (
     value: string,
     fieldName: keyof FormData,
@@ -148,7 +144,6 @@ const Signup = () => {
     }
   };
 
-  // 키 발급
   const handleKeyIssuance = (): void => {
     if (!formData.username.trim()) {
       setErrors(prev => ({
@@ -166,21 +161,10 @@ const Signup = () => {
         toast.success(FEEDBACK_MESSAGES.ENCRYPTION_GUIDE);
       },
       onError: (error: ApiError) => {
-        // 디버깅을 위한 에러 로그 추가
         console.log('Error response:', error.response?.data);
         console.log('Error status:', error.response?.status);
 
         toast.error('존재하지 않는 사용자입니다.');
-
-        // 왜 안될까
-        // if (error.response?.status === 403) {
-        //   toast.error('존재하지 않는 사용자입니다.');
-        // } else {
-        //   // 기타 에러
-        //   toast.error(
-        //     '암호화 키 발급에 실패 했습니다. 잠시 후 다시 시도해주세요',
-        //   );
-        // }
       },
     });
   };
@@ -230,7 +214,6 @@ const Signup = () => {
 
   useEffect(() => {
     if (!isKeyIssued) {
-      // setIsValid(!!formData.username.trim());
       setIsValid(false);
       return;
     }
@@ -249,8 +232,6 @@ const Signup = () => {
   return (
     <Layout>
       <div className='flex min-h-[calc(100vh-64px)] flex-col items-center justify-center gap-16 px-4 lg:flex-row lg:px-8'>
-        {/* Left Side - Auth Instructions */}
-        {/* <Card className='p-10 border-zinc-800 bg-zinc-950/50'> */}
         <div className='space-y-2 text-white'>
           <div className='flex justify-center gap-3 text-center'>
             <h3 className='mb-1 text-xl font-bold'>회원가입 방법</h3>
@@ -311,9 +292,7 @@ const Signup = () => {
             * 회원가입 시 작성하는 비밀번호는 솔브냥의 비밀번호 입니다.
           </p>
         </div>
-        {/* </Card> */}
 
-        {/* Right Side - Sign Up Form */}
         <div className='w-full max-w-sm lg:w-[30%]'>
           <Card className='border-zinc-800 bg-zinc-950/50'>
             <CardHeader>

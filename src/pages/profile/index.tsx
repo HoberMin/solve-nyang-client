@@ -27,9 +27,8 @@ const ProfilePage = () => {
   const { data: avatarGallery } = useGetAvatarGallery();
   const [selectedRarity, setSelectedRarity] = useState<Rarity | 'ALL'>('ALL');
 
-  // data가 없는 경우 early return
   if (!userInfo || !avatarGallery) {
-    return null; // 또는 로딩 컴포넌트 반환
+    return null;
   }
 
   const filteredCollections = avatarGallery?.collections.filter(cat =>
