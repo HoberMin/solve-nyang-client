@@ -49,15 +49,24 @@ const SaleDialog: React.FC<SaleDialogProps> = ({
   const [price, setPrice] = useState(0);
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
   const [error, setError] = useState('');
+
   const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseInt(e.target.value);
-    if (!isNaN(value)) {
-      if (value <= 0) {
+    const value = e.target.value;
+
+    if (value === '') {
+      setPrice(0);
+      setError('1냥 이상의 가격을 입력해주세요.');
+      return;
+    }
+
+    const numValue = parseInt(value);
+    if (!isNaN(numValue)) {
+      if (numValue <= 0) {
         setError('1냥 이상의 가격을 입력해주세요.');
       } else {
         setError('');
       }
-      setPrice(value);
+      setPrice(numValue);
     }
   };
 
@@ -98,17 +107,21 @@ const SaleDialog: React.FC<SaleDialogProps> = ({
             <DialogTitle>
               <p className='text-center text-2xl'>판매</p>
             </DialogTitle>
-            <DialogDescription className='text-center text-base text-gray-200'>
+            <DialogDescription className='h-12 text-center text-base text-gray-200'>
               <div className='flex gap-2'>
                 <Label htmlFor='price' className='flex items-center'>
                   판매 가격
                 </Label>
                 <Input
                   id='price'
-                  type='number'
-                  min={1}
-                  value={price}
-                  onChange={handlePriceChange}
+                  type='text'
+                  value={price === 0 ? '' : price}
+                  onChange={e => {
+                    const value = e.target.value;
+                    if (value === '' || /^\d+$/.test(value)) {
+                      handlePriceChange(e);
+                    }
+                  }}
                   onKeyDown={handleKeyPress}
                   className='flex-1 border-gray-600 bg-gray-700 text-gray-200'
                 />
@@ -163,6 +176,7 @@ const SaleDialog: React.FC<SaleDialogProps> = ({
     </Dialog>
   );
 };
+
 const AuctionSale = () => {
   const { data } = useGetUserAvatar();
   const { mutate: auctionAvatar } = useAuctionAvatar();
@@ -202,7 +216,6 @@ const AuctionSale = () => {
 
   return (
     <div className='space-y-6'>
-      {/* 등급 필터 버튼 */}
       <div className='flex gap-2'>
         <Button
           onClick={() => setSelectedRarity('ALL')}
@@ -231,7 +244,6 @@ const AuctionSale = () => {
         ))}
       </div>
 
-      {/* 아이템 목록 */}
       <div className='grid grid-cols-8 gap-4'>
         {filteredAvatars.map(avatar => {
           const rarity = rarityConfig[avatar.rarity as Rarity];
@@ -246,7 +258,6 @@ const AuctionSale = () => {
               onClick={() => setSelectedAvatar(avatar)}
             >
               <div className='relative'>
-                {/* 등급 뱃지 */}
                 <div className={'absolute left-0 top-0 px-2'}>
                   <span className={cn('text-lg font-bold', rarity.text)}>
                     {avatar.rarity}
@@ -279,4 +290,5 @@ const AuctionSale = () => {
     </div>
   );
 };
+
 export default AuctionSale;
