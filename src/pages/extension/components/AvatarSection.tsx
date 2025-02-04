@@ -3,13 +3,11 @@ import { useState } from 'react';
 import { Cat, Puzzle } from 'lucide-react';
 
 import { UserAvatar } from '@/apis/user';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import { Rarity } from '@/pages/sale/type';
 
 import { AvatarGrid } from './AvatarGrid';
 import { RarityFilter } from './RarityFilter';
-import { styles } from './style';
 
 interface AvatarSectionProps {
   title: string;
@@ -29,25 +27,39 @@ export const AvatarSection = ({
   );
 
   return (
-    <Card className={styles.section.card}>
-      <CardHeader className={styles.section.header}>
-        <div className={styles.section.titleWrapper}>
-          {isExtension ? (
-            <Puzzle className={cn(styles.section.icon, 'text-blue-400')} />
-          ) : (
-            <Cat className={cn(styles.section.icon, 'text-purple-400')} />
-          )}
-          <CardTitle className={styles.section.title}>{title}</CardTitle>
-          <span className={styles.section.count}>({avatars.length})</span>
+    <div className='mx-auto w-full max-w-5xl space-y-4'>
+      <div className={cn('flex items-center justify-between px-4')}>
+        <div className='flex items-center space-x-3'>
+          <div
+            className={cn(
+              'flex items-center space-x-2',
+              isExtension ? 'text-blue-400' : 'text-purple-400',
+            )}
+          >
+            {isExtension ? (
+              <Puzzle className='h-5 w-5' />
+            ) : (
+              <Cat className='h-5 w-5' />
+            )}
+            <span className='text-lg font-bold'>{title}</span>
+          </div>
+          <span className='text-sm text-white/60'>({avatars.length})</span>
         </div>
+        <div
+          className={cn(
+            'mx-4 h-px flex-1',
+            isExtension ? 'bg-blue-400/20' : 'bg-purple-400/20',
+          )}
+        />
         <RarityFilter
           selectedRarity={selectedRarity}
           onRarityChange={setSelectedRarity}
         />
-      </CardHeader>
-      <CardContent>
+      </div>
+
+      <div className='px-2'>
         <AvatarGrid avatars={filteredAvatars} />
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 };
