@@ -17,7 +17,7 @@ interface MyImageProps {
 
 export const MyImage = ({ username }: MyImageProps) => {
   const [isCopied, setIsCopied] = useState(false);
-  const [isExpanded, setIsExpanded] = useState(true);
+  const [isExpanded, setIsExpanded] = useState(false);
   const [background, setBackground] = useState<BackgroundType>('우주배경');
 
   const { data: avatarData } = useGetUserAvatar();
