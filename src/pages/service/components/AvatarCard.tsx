@@ -6,8 +6,25 @@ interface CatListCardProps {
 }
 
 const AvatarCard = ({ name, rarity = 'S' }: CatListCardProps) => {
-  const limitedCats = ['MagpieCat', 'TteokgukCat'];
-  const isLimited = limitedCats.includes(name);
+  const newCats = [
+    'CaffeineCat',
+    'SingingCat',
+    'WorkCat',
+    'DiverCat',
+    'AngryCat',
+    'SplashCat',
+    'FarmerCat',
+    'BookCat',
+    'PhoneCat',
+    'BirthdayCat',
+    'JumpCat',
+    'SickCat',
+    'GymCat',
+    'MagpieCat',
+    'TteokgukCat',
+  ];
+
+  const isNew = newCats.includes(name);
 
   const rarityColors = {
     H: 'text-[#26ffc9]',
@@ -20,10 +37,10 @@ const AvatarCard = ({ name, rarity = 'S' }: CatListCardProps) => {
 
   return (
     <div className='relative rounded-lg bg-slate-900/40 p-2'>
-      {isLimited && (
-        <div className='absolute -right-3 top-0 z-10 rotate-12 transform'>
-          <div className='rounded-sm bg-red-500 px-2 py-0.5 shadow-md'>
-            <div className='text-xs font-medium text-white'>기간한정</div>
+      {isNew && (
+        <div className='absolute right-0 top-0 z-10 transform'>
+          <div className='rounded-sm bg-emerald-500 px-2 py-0.5 shadow-md'>
+            <div className='text-xs font-medium text-white'>NEW</div>
           </div>
         </div>
       )}
