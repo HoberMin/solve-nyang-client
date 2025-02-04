@@ -10,7 +10,7 @@ import AuctionSale from './components/AuctionSale';
 const AuctionPage = () => {
   return (
     <Layout>
-      <div className='relative mx-auto flex h-full w-full max-w-7xl flex-col'>
+      <div className='relative mx-auto mb-8 flex h-full w-full max-w-7xl flex-col'>
         <AuctionHeader />
 
         <Tabs defaultValue='browse'>

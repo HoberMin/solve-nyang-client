@@ -190,15 +190,15 @@ const AuctionHistory = () => {
                             </AlertDialogDescription>
                           </AlertDialogHeader>
                           <AlertDialogFooter>
-                            <AlertDialogCancel className='bg-gray-700 text-gray-200 hover:bg-gray-600'>
-                              취소
-                            </AlertDialogCancel>
                             <AlertDialogAction
                               onClick={() => handleCancel(item.id)}
                               className='bg-blue-500 hover:bg-blue-600'
                             >
                               확인
                             </AlertDialogAction>
+                            <AlertDialogCancel className='bg-gray-700 text-gray-200 hover:bg-gray-600'>
+                              취소
+                            </AlertDialogCancel>
                           </AlertDialogFooter>
                         </AlertDialogContent>
                       </AlertDialog>

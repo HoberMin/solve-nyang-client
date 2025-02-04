@@ -47,6 +47,7 @@ type RarityFilter = 'ALL' | RarityType;
 interface SelectedItem {
   id: number;
   name: string;
+  rarity: RarityType;
   price: number;
 }
 
@@ -100,9 +101,9 @@ const AuctionBrowse = () => {
     },
     onError: (error: AuctionError) => {
       if (error?.status === 400) {
-        toast.error('이미 판매된 상품이거나 판매가 취소된 상품입니다.');
+        toast.error('이미 판매된 아바타거나 판매가 취소된 아바타입니다.');
       } else if (error?.status === 402) {
-        toast.error('보유한 포인트가 부족합니다.');
+        toast.error('보유 냥코인이 부족합니다.');
       }
       setSelectedItem(null);
     },
@@ -263,6 +264,7 @@ const AuctionBrowse = () => {
                               id: item.id,
                               name: getCatKorName(item.name),
                               price: item.price,
+                              rarity: item.rarity,
                             });
                           }
                         }}
@@ -300,26 +302,35 @@ const AuctionBrowse = () => {
               <p className='text-center text-2xl'>구매 확인</p>
             </AlertDialogTitle>
             <AlertDialogDescription className='text-center text-base text-gray-200'>
-              <span className='font-bold text-yellow-500'>
-                {selectedItem?.name}
-              </span>
-              을(를){' '}
-              <span className='font-bold text-blue-400'>
-                {selectedItem?.price.toLocaleString()}냥
-              </span>
-              에 구매하시겠습니까?
+              {selectedItem && (
+                <>
+                  <span
+                    className={cn(
+                      'font-bold',
+                      rarityConfig[selectedItem.rarity]?.text,
+                    )}
+                  >
+                    {selectedItem.name}
+                  </span>
+                  을(를){' '}
+                  <span className='font-bold text-blue-400'>
+                    {selectedItem.price.toLocaleString()}냥
+                  </span>
+                  에 구매하시겠습니까?
+                </>
+              )}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel className='bg-gray-700 text-gray-200 hover:bg-gray-600'>
-              취소
-            </AlertDialogCancel>
             <AlertDialogAction
               onClick={handlePurchase}
               className='bg-blue-500 hover:bg-blue-600'
             >
               구매
             </AlertDialogAction>
+            <AlertDialogCancel className='bg-gray-700 text-gray-200 hover:bg-gray-600'>
+              취소
+            </AlertDialogCancel>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
