@@ -1,6 +1,10 @@
 // BackgroundCard.tsx
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
+
+import { useGetUserInfo } from '@/apis/user';
 import Layout from '@/components/Layout';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -14,14 +18,12 @@ import {
 
 import { PointDisplay } from '../gacha/components/PointDisplay';
 
-// types.ts
 interface Background {
   name: string;
   isOwned: boolean;
   price: number;
 }
 
-// mock-data.ts
 export const mockBackgrounds: Background[] = [
   { name: 'forest', isOwned: false, price: 1000 },
   { name: 'beach', isOwned: false, price: 2000 },
@@ -64,7 +66,7 @@ export const BackgroundCard = ({
           {background.name}
         </h3>
         <div className='flex items-center gap-2'>
-          <img src='/coin.svg' alt='coin' className='w-6' />
+          <img src='/assets/coin.svg' alt='coin' className='w-6' />
           <span className='text-white'>
             {background.price.toLocaleString()}냥
           </span>
@@ -177,13 +179,27 @@ export const BackgroundCard = ({
 };
 
 const BackgroundShop = () => {
-  const [userPoint, setUserPoint] = useState(10000); // 실제로는 API나 전역 상태에서 관리
+  const { data: userData, isPending } = useGetUserInfo();
+  const navigate = useNavigate();
+  const userPoint = userData?.point ?? 0;
+
+  useEffect(() => {
+    if (!isPending && (!userData || !userData.username)) {
+      toast.error('로그인이 필요한 서비스입니다.', {
+        description: '로그인 페이지로 이동합니다.',
+        action: {
+          label: '확인',
+          onClick: () => navigate('/login'),
+        },
+      });
+      navigate('/login');
+    }
+  }, [userData, isPending, navigate, userPoint]);
 
   const handlePurchase = (name: string) => {
     const background = mockBackgrounds?.find(bg => bg.name === name);
     if (background && userPoint >= background.price) {
-      setUserPoint(prev => prev - background.price);
-      // 여기에 실제 구매 API 호출 로직 추가
+      // 실제 로직 추가
     }
   };
 

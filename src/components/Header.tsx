@@ -79,6 +79,14 @@ const ActionDropdown = ({ actionText }: ActionDropdownProps) => {
               캐릭터 판매
             </Link>
           </DropdownMenuItem>
+          <DropdownMenuItem asChild className='focus:bg-gray-800'>
+            <Link
+              to='/sale-background'
+              className='text-xl text-white hover:text-white'
+            >
+              배경 상점
+            </Link>
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenuPortal>
     </DropdownMenu>
