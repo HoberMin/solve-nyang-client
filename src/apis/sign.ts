@@ -1,11 +1,9 @@
 import { useMutation } from '@tanstack/react-query';
-import { AxiosError } from 'axios';
+import axios, { AxiosError } from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
-import { axiosInstance, clearAccessToken, setAccessToken } from './auth';
-
-// import { domain } from './avatar';
+import { domain } from './avatar';
 
 export interface AuthRequest {
   username: string;
@@ -16,23 +14,57 @@ interface ErrorResponse {
   message: string;
 }
 
-// interface SignInResponse {
-//   accessToken: string;
-// }
+const axiosInstance = axios.create({
+  baseURL: domain,
+  timeout: 5000,
+  withCredentials: true,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
 
-interface SignUpResponse {
+axiosInstance.interceptors.request.use(
+  config => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  error => Promise.reject(error),
+);
+
+axiosInstance.interceptors.response.use(
+  response => response,
+  error => {
+    if (error.response?.status === 401) {
+      // localStorage.setItem('redirectPath', window.location.pathname);
+      localStorage.removeItem('token');
+      window.location.href = '/login';
+    }
+    return Promise.reject(error);
+  },
+);
+
+interface SignInResponse {
   accessToken: string;
 }
 
-interface AxiosResponse<T> {
-  data: T;
+interface SignUpResponse {
+  message: string;
 }
 
-export const signIn = async (authForm: AuthRequest) => {
-  const response = await axiosInstance.post('/account/signin', authForm);
-  setAccessToken(response.data.accessToken); // 메모리에 저장
-  return response.data;
-};
+interface AxiosResponse<T> {
+  status: number;
+  data: T;
+  message?: string;
+}
+
+export const signIn = async (authForm: AuthRequest) =>
+  (await axiosInstance.post(
+    '/account/signin',
+    authForm,
+  )) as AxiosResponse<SignInResponse>;
 
 export const signUp = async (authForm: AuthRequest) =>
   (await axiosInstance.post(
@@ -40,26 +72,14 @@ export const signUp = async (authForm: AuthRequest) =>
     authForm,
   )) as AxiosResponse<SignUpResponse>;
 
-export const logOut = async () => {
-  try {
-    await axiosInstance.post('/account/logout'); // 리프래시 제거? 둘다 제거?
-    clearAccessToken();
-
-    window.location.href = '/';
-  } catch (error) {
-    // 에러 발생해도 클라이언트 토큰 제거?
-    clearAccessToken();
-    window.location.href = '/';
-  }
-};
-
 export const useSignIn = () => {
   const navigate = useNavigate();
 
   return useMutation({
-    mutationFn: signIn,
+    mutationFn: (authForm: AuthRequest) => signIn(authForm),
     onSuccess: response => {
-      setAccessToken(response.data.accessToken);
+      const { accessToken } = response.data;
+      localStorage.setItem('token', accessToken);
       toast.success('로그인에 성공했습니다.');
       navigate('/');
     },
@@ -72,9 +92,8 @@ export const useSignIn = () => {
 
 export const useSignUp = () => {
   const navigate = useNavigate();
-
   const { mutate } = useMutation({
-    mutationFn: signUp,
+    mutationFn: (formData: AuthRequest) => signUp(formData),
     onSuccess: () => {
       toast.success('회원가입이 완료되었습니다.');
       navigate('/login');

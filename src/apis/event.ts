@@ -3,40 +3,32 @@ import {
   useQueryClient,
   useSuspenseQuery,
 } from '@tanstack/react-query';
-import { AxiosError } from 'axios';
 import { toast } from 'sonner';
 
-// import { domain } from './avatar';
-import { axiosInstance } from './auth';
+import { domain } from './avatar';
 
 interface GetEventParticipantResponse {
   hasEventAvatar: boolean;
 }
 
-export const getEventParticipant =
-  async (): Promise<GetEventParticipantResponse> => {
-    try {
-      const response = await axiosInstance.get('/gacha/event');
+export const getEventParticipant = async () =>
+  await fetch(`${domain}/gacha/event`, {
+    headers: {
+      'Content-Type': 'application/json',
+      authorization: `Bearer ${localStorage.getItem('token')}`,
+    },
+  })
+    .then(res => res.json())
+    .then(data => data as GetEventParticipantResponse);
 
-      return response.data;
-    } catch (error) {
-      if (error instanceof AxiosError) {
-        throw new Error(`HTTP error! status: ${error.response?.status}`);
-      }
-      throw error;
-    }
-  };
-
-export const getEventAvatar = async (): Promise<void> => {
-  try {
-    await axiosInstance.post('/gacha/event');
-  } catch (error) {
-    if (error instanceof AxiosError) {
-      throw new Error(`HTTP error! status: ${error.response?.status}`);
-    }
-    throw error;
-  }
-};
+export const getEventAvatar = async () =>
+  await fetch(`${domain}/gacha/event`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      authorization: `Bearer ${localStorage.getItem('token')}`,
+    },
+  });
 
 export const useGetEventParticipant = () =>
   useSuspenseQuery({

@@ -3,12 +3,9 @@ import {
   useQueryClient,
   useSuspenseQuery,
 } from '@tanstack/react-query';
-import { AxiosError } from 'axios';
 import { toast } from 'sonner';
 
-import { axiosInstance } from './auth';
-
-export const domain = 'https://api.solve-nyang.com';
+export const domain = 'http://54.180.123.67:8080';
 
 export type RarityType = 'S' | 'A' | 'B' | 'C' | 'D';
 export interface Avatar {
@@ -23,29 +20,43 @@ export interface AvatarList {
   avatars: Avatar[];
 }
 
-export const gachaAvatar = async (count: number) => {
-  const response = await axiosInstance.post('/gacha/draw', { count });
+export const gachaAvatar = async (count: number) =>
+  await fetch(`${domain}/gacha/draw`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      authorization: `Bearer ${localStorage.getItem('token')}`,
+    },
+    body: JSON.stringify({
+      count,
+    }),
+  })
+    .then(res => res.json())
+    .then(data => data as AvatarList);
 
-  return response.data as AvatarList;
-};
-
-export const getAvatarList = async () => {
-  const response = await axiosInstance.get('/avatar');
-
-  return response.data as AvatarList;
-};
+export const getAvatarList = async () =>
+  await fetch(`${domain}/avatar`, {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+    .then(res => res.json())
+    .then(data => data as AvatarList);
 
 const resetAvatar = async () => {
-  try {
-    const response = await axiosInstance.patch('/user/me/avatar/reset');
+  const response = await fetch(`${domain}/user/me/avatar/reset`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      authorization: `Bearer ${localStorage.getItem('token')}`,
+    },
+  });
 
-    return response.data;
-  } catch (error) {
-    if (error instanceof AxiosError) {
-      throw new Error(`HTTP error! status: ${error.response?.status}`);
-    }
-    throw error;
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
   }
+
+  return response;
 };
 
 export const useResetAvatar = () => {

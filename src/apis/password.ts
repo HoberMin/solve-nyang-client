@@ -1,13 +1,15 @@
 import { useMutation } from '@tanstack/react-query';
-import { AxiosError } from 'axios';
 
-import { axiosInstance } from './auth';
-
-// import { domain } from './avatar';
+import { domain } from './avatar';
 
 interface ChangePassword {
   currentPassword: string;
   newPassword: string;
+}
+
+interface FindPassword {
+  username: string;
+  password: string;
 }
 
 interface FindPasswordRequest {
@@ -22,42 +24,38 @@ interface FindPasswordResponse {
 export const useChangePassword = () =>
   useMutation({
     mutationFn: async ({ currentPassword, newPassword }: ChangePassword) => {
-      try {
-        const response = await axiosInstance.post('/account/password/change', {
-          currentPassword,
-          newPassword,
-        });
+      const response = await fetch(`${domain}/account/password/change`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+        body: JSON.stringify({ currentPassword, newPassword }),
+      });
 
-        return response.data;
-      } catch (error) {
-        if (error instanceof AxiosError) {
-          throw new Error(
-            error.response?.data?.message || '비밀번호 변경 중 오류 발생',
-          );
-        }
-        throw error;
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.message || '비밀번호 변경 중 오류 발생');
       }
+      return data;
     },
   });
 
 // 비밀번호 찾기(재설정/재가입)
 export const useFindPassword = () =>
   useMutation<FindPasswordResponse, Error, FindPasswordRequest>({
-    mutationFn: async ({ username, password }: FindPasswordRequest) => {
-      try {
-        const response = await axiosInstance.post('/account/password/find', {
-          username,
-          password,
-        });
+    mutationFn: async ({ username, password }: FindPassword) => {
+      const response = await fetch(`${domain}/account/password/find`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password }),
+      });
 
-        return response.data;
-      } catch (error) {
-        if (error instanceof AxiosError) {
-          throw new Error(
-            error.response?.data?.message || '비밀번호 재설정 중 오류 발생',
-          );
-        }
-        throw error;
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.message || '비밀번호 재설정 중 오류 발생');
       }
+
+      return data;
     },
   });
