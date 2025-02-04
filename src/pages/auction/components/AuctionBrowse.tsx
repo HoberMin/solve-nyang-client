@@ -1,7 +1,15 @@
 import { useState } from 'react';
 
 import { Search } from 'lucide-react';
+import { toast } from 'sonner';
 
+import {
+  AuctionError,
+  RarityType,
+  SortType,
+  useBuyAuctionItem,
+  useGetAuctionList,
+} from '@/apis/auction';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -30,20 +38,21 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { cn } from '@/lib/utils';
+import { getCatKorName } from '@/pages/gacha/constants/catMappings';
 
-type Rarity = 'H' | 'S' | 'A' | 'B' | 'C' | 'D';
-type PurchaseStatus = 'success' | 'already-sold' | 'insufficient-funds' | null;
+import CustomPagination from './CustomPagination';
 
-interface AuctionItem {
+type RarityFilter = 'ALL' | RarityType;
+
+interface SelectedItem {
   id: number;
   name: string;
-  rarity: Rarity;
-  currentBid: number;
-  image: string;
+  rarity: RarityType;
+  price: number;
 }
 
 const rarityConfig: Record<
-  Rarity,
+  RarityType,
   { border: string; text: string; bg: string }
 > = {
   H: { border: 'border-[#26ffc9]', text: 'text-[#26ffc9]', bg: 'bg-[#26ffc9]' },
@@ -54,79 +63,72 @@ const rarityConfig: Record<
   D: { border: 'border-[#a663ee]', text: 'text-[#a663ee]', bg: 'bg-[#a663ee]' },
 };
 
+const formatDate = (dateString: string) => {
+  const date = new Date(dateString);
+
+  return `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`;
+};
+
 const AuctionBrowse = () => {
+  // 필터링 State
   const [searchTerm, setSearchTerm] = useState('');
-  const [sortBy, setSortBy] = useState('latest');
-  const [selectedRarity, setSelectedRarity] = useState('ALL');
-  const [selectedItem, setSelectedItem] = useState<AuctionItem | null>(null);
-  const [purchaseStatus, setPurchaseStatus] = useState<PurchaseStatus>(null);
-  const [isResult, setIsResult] = useState(false);
+  const [sortBy, setSortBy] = useState('0');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [selectedRarity, setSelectedRarity] = useState<RarityFilter>('ALL');
+  const [inputValue, setInputValue] = useState('');
 
-  const dummyItems: AuctionItem[] = [
-    {
-      id: 1,
-      name: '실타래냥',
-      rarity: 'S',
-      currentBid: 5000,
-      image: '/cats/YarnBallCat.svg',
-    },
-    {
-      id: 2,
-      name: '어항냥',
-      rarity: 'A',
-      currentBid: 3000,
-      image: '/cats/FishbowlCat.svg',
-    },
-  ];
-
-  const filteredItems =
-    selectedRarity === 'ALL'
-      ? dummyItems
-      : dummyItems.filter(item => item.rarity === selectedRarity);
-
-  const handleSearch = () => {
-    // 검색 로직 구현
-    console.log('Searching for:', searchTerm);
+  const queryParams = {
+    keyword: searchTerm || undefined,
+    rarity: selectedRarity === 'ALL' ? undefined : selectedRarity,
+    sort: Number(sortBy) as SortType,
+    page: currentPage,
   };
 
-  const handlePurchase = () => {
-    const random = Math.random();
-    if (random < 0.33) {
-      setPurchaseStatus('success');
-    } else if (random < 0.66) {
-      setPurchaseStatus('already-sold');
-    } else {
-      setPurchaseStatus('insufficient-funds');
-    }
-    setSelectedItem(null);
-    setIsResult(true);
+  const { data } = useGetAuctionList(queryParams);
+  const { totalPage, merchandises } = data || {};
+
+  // 구매 State
+  const [selectedItem, setSelectedItem] = useState<SelectedItem | null>(null);
+  const [result, setResult] = useState<{
+    title: string;
+    description: string;
+  } | null>(null);
+
+  const { mutateAsync: buyAuctionItem } = useBuyAuctionItem({
+    onSuccess: () => {
+      toast.success('성공적으로 구매하였습니다.');
+      setSelectedItem(null);
+    },
+    onError: (error: AuctionError) => {
+      if (error?.status === 400) {
+        toast.error('이미 판매된 아바타거나 판매가 취소된 아바타입니다.');
+      } else if (error?.status === 402) {
+        toast.error('보유 냥코인이 부족합니다.');
+      }
+      setSelectedItem(null);
+    },
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(e.target.value);
   };
 
-  const getPurchaseResultContent = () => {
-    switch (purchaseStatus) {
-      case 'success':
-        return {
-          title: '구매 성공',
-          description: '성공적으로 구매하였습니다.',
-          buttonText: '확인',
-          variant: 'default',
-        };
-      case 'already-sold':
-        return {
-          title: '구매 실패',
-          description: '이미 거래된 아바타입니다.',
-          buttonText: '확인',
-          variant: 'destructive',
-        };
-      case 'insufficient-funds':
-        return {
-          title: '구매 실패',
-          description: '냥코인이 부족합니다.',
-          buttonText: '확인',
-          variant: 'destructive',
-        };
-      default:
-        return null;
+  const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setSearchTerm(inputValue);
+    setCurrentPage(1);
+  };
+
+  const handleRarity = (value: string) => {
+    setSelectedRarity(value as RarityFilter);
+  };
+
+  const handlePurchase = async () => {
+    if (!selectedItem) return;
+    try {
+      await buyAuctionItem(selectedItem.id);
+    } catch (error) {
+      console.error('Purchase failed:', error);
     }
   };
 
@@ -134,20 +136,23 @@ const AuctionBrowse = () => {
     <div className='flex gap-6'>
       {/* 왼쪽 사이드바 */}
       <div className='w-72 space-y-6'>
-        <div className='space-y-4 rounded-lg bg-gray-800 p-4'>
+        <form
+          onSubmit={handleSearch}
+          className='space-y-4 rounded-lg bg-gray-800 p-4'
+        >
           <div className='space-y-2'>
             <div className='relative'>
               <Input
                 placeholder='고양이 이름을 입력하세요.'
-                value={searchTerm}
-                onChange={e => setSearchTerm(e.target.value)}
+                value={inputValue}
+                onChange={handleChange}
                 className='h-12 border-transparent bg-gray-700 pl-12 text-gray-200'
               />
               <Search className='absolute left-3 top-3 h-6 w-6 text-gray-400' />
             </div>
             <Button
+              type='submit'
               className='w-full bg-blue-500 hover:bg-blue-600'
-              onClick={handleSearch}
             >
               검색
             </Button>
@@ -155,18 +160,18 @@ const AuctionBrowse = () => {
 
           <div className='space-y-2'>
             <p className='text-sm text-gray-400'>등급</p>
-            <Select value={selectedRarity} onValueChange={setSelectedRarity}>
+            <Select value={selectedRarity} onValueChange={handleRarity}>
               <SelectTrigger className='h-12 w-full border-transparent bg-gray-700 text-gray-200'>
                 <SelectValue placeholder='등급' />
               </SelectTrigger>
               <SelectContent className='border-transparent bg-gray-800 text-gray-200'>
                 <SelectItem value='ALL'>전체</SelectItem>
+                <SelectItem value='H'>H등급</SelectItem>
                 <SelectItem value='S'>S등급</SelectItem>
                 <SelectItem value='A'>A등급</SelectItem>
                 <SelectItem value='B'>B등급</SelectItem>
                 <SelectItem value='C'>C등급</SelectItem>
                 <SelectItem value='D'>D등급</SelectItem>
-                <SelectItem value='H'>Hidden</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -178,13 +183,13 @@ const AuctionBrowse = () => {
                 <SelectValue placeholder='정렬 기준' />
               </SelectTrigger>
               <SelectContent className='border-transparent bg-gray-800 text-gray-200'>
-                <SelectItem value='latest'>최신순</SelectItem>
-                <SelectItem value='price-high'>가격 높은순</SelectItem>
-                <SelectItem value='price-low'>가격 낮은순</SelectItem>
+                <SelectItem value='0'>최신순</SelectItem>
+                <SelectItem value='1'>가격 높은순</SelectItem>
+                <SelectItem value='2'>가격 낮은순</SelectItem>
               </SelectContent>
             </Select>
           </div>
-        </div>
+        </form>
       </div>
 
       {/* 오른쪽 테이블 영역 */}
@@ -193,52 +198,100 @@ const AuctionBrowse = () => {
           <Table>
             <TableHeader>
               <TableRow className='rounded-lg border-gray-700 hover:bg-transparent'>
-                <TableHead className='text-gray-200'></TableHead>
-                <TableHead className='text-gray-200'>이름</TableHead>
-                <TableHead className='text-gray-200'>등급</TableHead>
-                <TableHead className='text-gray-200'>가격</TableHead>
+                <TableHead className='text-center text-gray-200'></TableHead>
+                <TableHead className='text-center text-gray-200'>
+                  등급
+                </TableHead>
+                <TableHead className='text-center text-gray-200'>
+                  이름
+                </TableHead>
+                <TableHead className='text-center text-gray-200'>
+                  가격
+                </TableHead>
+                <TableHead className='text-center text-gray-200'>
+                  등록일
+                </TableHead>
+                <TableHead className='text-center text-gray-200'></TableHead>
               </TableRow>
             </TableHeader>
             <TableBody className='rounded-lg bg-gray-700'>
-              {filteredItems.map(item => (
+              {merchandises.map(item => (
                 <TableRow
                   key={item.id}
-                  className='cursor-pointer border-gray-600 text-base hover:bg-gray-600'
-                  onClick={() => setSelectedItem(item)}
+                  className='border-gray-600 text-base hover:bg-transparent'
                 >
                   <TableCell className='w-32'>
                     <div className='flex justify-center'>
                       <img
-                        src={item.image}
+                        src={`/cats/${item.name}.svg`}
                         alt={item.name}
                         className='h-16 w-16 object-cover'
                       />
                     </div>
                   </TableCell>
-                  <TableCell className='font-medium text-gray-200'>
-                    {item.name}
-                  </TableCell>
-                  <TableCell>
+                  <TableCell className='text-center'>
                     <span
                       className={cn(
                         'font-bold',
                         rarityConfig[item.rarity]?.text,
                       )}
                     >
-                      {item.rarity}등급
+                      {item.rarity}
                     </span>
                   </TableCell>
-                  <TableCell className='font-bold text-blue-400'>
-                    {item.currentBid.toLocaleString()}냥
+                  <TableCell className='text-center text-gray-200'>
+                    {getCatKorName(item.name)}
+                  </TableCell>
+                  <TableCell className='text-center font-bold text-blue-400'>
+                    {item.price.toLocaleString()}냥
+                  </TableCell>
+                  <TableCell className='text-center text-sm text-gray-300'>
+                    {formatDate(item.createdAt)}
+                  </TableCell>
+                  <TableCell className='w-36'>
+                    <div className='flex justify-center'>
+                      <Button
+                        disabled={item.sold}
+                        onClick={() => {
+                          if (item.isMine) {
+                            toast.error(
+                              '자신이 올린 상품은 구매할 수 없습니다.',
+                            );
+                            return;
+                          }
+                          if (!item.sold) {
+                            setSelectedItem({
+                              id: item.id,
+                              name: getCatKorName(item.name),
+                              price: item.price,
+                              rarity: item.rarity,
+                            });
+                          }
+                        }}
+                        className={cn(
+                          'w-22',
+                          item.sold
+                            ? 'bg-gray-500 hover:bg-gray-500'
+                            : 'bg-blue-500 hover:bg-blue-600',
+                        )}
+                      >
+                        {item.sold ? '판매완료' : '구매하기'}
+                      </Button>
+                    </div>
                   </TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
+
+          <CustomPagination
+            currentPage={currentPage}
+            totalPage={totalPage}
+            onPageChange={setCurrentPage}
+          />
         </div>
       </div>
 
-      {/* Purchase Confirmation Dialog */}
       <AlertDialog
         open={!!selectedItem}
         onOpenChange={() => setSelectedItem(null)}
@@ -249,49 +302,55 @@ const AuctionBrowse = () => {
               <p className='text-center text-2xl'>구매 확인</p>
             </AlertDialogTitle>
             <AlertDialogDescription className='text-center text-base text-gray-200'>
-              <span className='font-bold text-yellow-500'>
-                {selectedItem?.name}
-              </span>
-              을(를){' '}
-              <span className='font-bold text-blue-500'>
-                {selectedItem?.currentBid.toLocaleString()}냥
-              </span>
-              에 정말로 구매하시겠습니까?
+              {selectedItem && (
+                <>
+                  <span
+                    className={cn(
+                      'font-bold',
+                      rarityConfig[selectedItem.rarity]?.text,
+                    )}
+                  >
+                    {selectedItem.name}
+                  </span>
+                  을(를){' '}
+                  <span className='font-bold text-blue-400'>
+                    {selectedItem.price.toLocaleString()}냥
+                  </span>
+                  에 구매하시겠습니까?
+                </>
+              )}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel className='bg-gray-700 text-gray-200 hover:bg-gray-600'>
-              취소
-            </AlertDialogCancel>
             <AlertDialogAction
               onClick={handlePurchase}
               className='bg-blue-500 hover:bg-blue-600'
             >
               구매
             </AlertDialogAction>
+            <AlertDialogCancel className='bg-gray-700 text-gray-200 hover:bg-gray-600'>
+              취소
+            </AlertDialogCancel>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
 
-      {/* Result Dialog */}
-      <AlertDialog open={isResult} onOpenChange={setIsResult}>
+      <AlertDialog open={!!result} onOpenChange={() => setResult(null)}>
         <AlertDialogContent className='border-transparent bg-gray-800 text-gray-400'>
           <AlertDialogHeader>
             <AlertDialogTitle className='text-center text-base text-gray-400'>
-              <p className='text-center text-2xl'>
-                {getPurchaseResultContent()?.title}
-              </p>
+              <p className='text-center text-2xl'>{result?.title}</p>
             </AlertDialogTitle>
             <AlertDialogDescription className='text-center text-base text-gray-200'>
-              {getPurchaseResultContent()?.description}
+              {result?.description}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogAction
-              onClick={() => setIsResult(false)}
+              onClick={() => setResult(null)}
               className='bg-blue-500 hover:bg-blue-600'
             >
-              {getPurchaseResultContent()?.buttonText}
+              확인
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
