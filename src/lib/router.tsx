@@ -1,9 +1,12 @@
 import { createBrowserRouter } from 'react-router-dom';
 
 import RetroError from '@/components/ErrorBoundary';
+import ProtectedRoute from '@/components/ProtectdRoute';
 import Root from '@/components/Root';
 import Auction from '@/pages/auction';
 import SaleBackground from '@/pages/background';
+// import Gallery from '@/pages/catCollection';
+import CatCollection from '@/pages/catCollection';
 import ChangePassword from '@/pages/changePassword';
 import Contest from '@/pages/contest';
 import EventPage from '@/pages/event';
@@ -24,73 +27,84 @@ export const router = createBrowserRouter([
     element: <Root />,
     errorElement: <RetroError />,
     children: [
+      // 모든 사용자 접근 가능
       {
         index: true,
         element: <Service />,
       },
       {
-        path: 'profile',
-        element: <ProfilePage />,
-      },
-      {
-        path: 'sale',
-        element: <SalePage />,
-      },
-      {
-        path: 'gacha',
-        element: <Gacha />,
-      },
-      {
-        path: 'signup',
-        element: <Signup />,
-      },
-      {
-        path: 'login',
-        element: <Login />,
+        path: 'event',
+        element: <EventPage />,
       },
       {
         path: 'contest',
         element: <Contest />,
       },
+
+      // 로그인 전용
+      {
+        path: 'auction',
+        element: <ProtectedRoute element={<Auction />} requireAuth={true} />,
+      },
+      {
+        path: 'profile',
+        element: (
+          <ProtectedRoute element={<ProfilePage />} requireAuth={true} />
+        ),
+      },
+      {
+        path: 'sale',
+        element: <ProtectedRoute element={<SalePage />} requireAuth={true} />,
+      },
+      {
+        path: 'gacha',
+        element: <ProtectedRoute element={<Gacha />} requireAuth={true} />,
+      },
       {
         path: 'change',
-        element: <ChangePassword />,
-      },
-      {
-        path: 'image',
-        element: <AvatarImagePage />,
-      },
-      {
-        path: 'event',
-        element: <EventPage />,
+        element: (
+          <ProtectedRoute element={<ChangePassword />} requireAuth={true} />
+        ),
       },
       {
         path: 'extension',
-        element: <ExtensionPage />,
-      },
-      {
-        path: 'auction',
-        element: <Auction />,
-      },
-      {
-        path: 'find',
-        element: <FindPassword />,
-      },
-      {
-        path: 'change',
-        element: <ChangePassword />,
+        element: (
+          <ProtectedRoute element={<ExtensionPage />} requireAuth={true} />
+        ),
       },
       {
         path: 'image',
-        element: <AvatarImagePage />,
+        element: (
+          <ProtectedRoute element={<AvatarImagePage />} requireAuth={true} />
+        ),
       },
       {
-        path: 'event',
-        element: <EventPage />,
+        path: 'gallery',
+        element: (
+          <ProtectedRoute element={<CatCollection />} requireAuth={true} />
+        ),
       },
       {
         path: 'sale-background',
-        element: <SaleBackground />,
+        element: (
+          <ProtectedRoute element={<SaleBackground />} requireAuth={true} />
+        ),
+      },
+
+      // 비로그인 전용
+      {
+        path: 'signup',
+        element: <ProtectedRoute element={<Signup />} requireAuth={false} />,
+      },
+      {
+        path: 'login',
+        element: <ProtectedRoute element={<Login />} requireAuth={false} />,
+      },
+      {
+        path: 'find',
+        element: (
+          <ProtectedRoute element={<FindPassword />} requireAuth={false} />
+        ),
       },
     ],
   },
