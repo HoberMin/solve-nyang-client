@@ -8,35 +8,135 @@ import {
   Upload,
   Vote,
 } from 'lucide-react';
+import { toast } from 'sonner';
 
+import { domain } from '@/apis/avatar';
+import { useSubmitContestAvatar } from '@/apis/event';
 import Layout from '@/components/Layout';
 
 interface ContestFile {
   file: File | null;
   preview: string | null;
+  imageUrl: string | null;
+  originalFilename: string | null;
+  storedFilename: string | null;
 }
 
 const ContestPage = () => {
-  const [{ file, preview }, setFileState] = useState<ContestFile>({
+  const submitContestAvatar = useSubmitContestAvatar();
+  const [
+    { file, preview, imageUrl, originalFilename, storedFilename },
+    setFileState,
+  ] = useState<ContestFile>({
     file: null,
     preview: null,
+    imageUrl: null,
+    originalFilename: null,
+    storedFilename: null,
   });
+
+  const getPresignedUrl = async (filename: string, contentType: string) => {
+    try {
+      const response = await fetch(
+        `${domain}/images/presigned-url?filename=${filename}&contentType=${contentType}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        },
+      );
+      const data = await response.json();
+
+      return data.presignedUrl;
+    } catch (error) {
+      toast.error('이미지 업로드 준비 중 오류가 발생했습니다.');
+      throw error;
+    }
+  };
+
+  const uploadFileToPresignedUrl = async (presignedUrl: string, file: File) => {
+    try {
+      const response = await fetch(presignedUrl, {
+        method: 'PUT',
+        body: file,
+        headers: {
+          'Content-Type': file.type,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to upload file');
+      }
+
+      const baseUrl = presignedUrl.split('?')[0];
+      const storedFilename = baseUrl.split('/').pop() || '';
+
+      return { baseUrl, storedFilename };
+    } catch (error) {
+      toast.error('이미지 업로드에 실패했습니다.');
+      throw error;
+    }
+  };
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
-    if (selectedFile) {
+    if (!selectedFile) return;
+
+    try {
       const reader = new FileReader();
       reader.onloadend = () => {
         setFileState({
           file: selectedFile,
           preview: reader.result as string,
+          imageUrl: null,
+          originalFilename: selectedFile.name,
+          storedFilename: null,
         });
       };
       reader.readAsDataURL(selectedFile);
+
+      const presignedUrl = await getPresignedUrl(
+        selectedFile.name,
+        selectedFile.type,
+      );
+
+      const { baseUrl, storedFilename } = await uploadFileToPresignedUrl(
+        presignedUrl,
+        selectedFile,
+      );
+
+      setFileState(prev => ({
+        ...prev,
+        imageUrl: baseUrl,
+        storedFilename,
+      }));
+    } catch (error) {
+      console.error('Image upload failed:', error);
+      toast.error('이미지 업로드에 실패했습니다. 다시 시도해주세요.');
+      resetFile();
     }
   };
 
-  const resetFile = () => setFileState({ file: null, preview: null });
+  const handleSubmit = () => {
+    if (imageUrl && originalFilename && storedFilename) {
+      submitContestAvatar({
+        originalFilename,
+        storedFilename,
+      });
+      resetFile();
+    }
+  };
+
+  const resetFile = () =>
+    setFileState({
+      file: null,
+      preview: null,
+      imageUrl: null,
+      originalFilename: null,
+      storedFilename: null,
+    });
 
   return (
     <Layout>
@@ -95,7 +195,10 @@ const ContestPage = () => {
               </div>
 
               {file && (
-                <button className='rounded-lg bg-blue-600 px-6 py-3 font-medium text-white transition-all hover:bg-blue-700'>
+                <button
+                  onClick={handleSubmit}
+                  className='rounded-lg bg-blue-600 px-6 py-3 font-medium text-white transition-all hover:bg-blue-700'
+                >
                   제출하기
                 </button>
               )}
