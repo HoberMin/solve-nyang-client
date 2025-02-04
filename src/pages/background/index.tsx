@@ -1,8 +1,5 @@
 // BackgroundCard.tsx
-import { useEffect, useState } from 'react';
-
-import { useNavigate } from 'react-router-dom';
-import { toast } from 'sonner';
+import { useState } from 'react';
 
 import {
   Background,
@@ -27,13 +24,11 @@ import { getKoreanName } from './constant';
 interface BackgroundCardProps {
   background: Background;
   userPoint: number;
-  onPurchase: (name: string) => void;
 }
 
 export const BackgroundCard = ({
   background,
   userPoint,
-  onPurchase,
 }: BackgroundCardProps) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isConfirmed, setIsConfirmed] = useState(false);
@@ -42,7 +37,6 @@ export const BackgroundCard = ({
 
   const handlePurchase = (backgroundId: string) => {
     buyBackground(backgroundId);
-    onPurchase(background.name);
     setIsDialogOpen(false);
     setIsConfirmed(false);
   };
@@ -140,32 +134,11 @@ export const BackgroundCard = ({
 };
 
 const BackgroundShop = () => {
-  const { data: userData, isPending } = useGetUserInfo();
-  const navigate = useNavigate();
+  const { data: userData } = useGetUserInfo();
   const userPoint = userData?.point ?? 0;
 
   const { data } = useGetBackgroundImage();
   const { backgrounds } = data;
-
-  useEffect(() => {
-    if (!isPending && (!userData || !userData.username)) {
-      toast.error('로그인이 필요한 서비스입니다.', {
-        description: '로그인 페이지로 이동합니다.',
-        action: {
-          label: '확인',
-          onClick: () => navigate('/login'),
-        },
-      });
-      navigate('/login');
-    }
-  }, [userData, isPending, navigate, userPoint]);
-
-  const handlePurchase = (name: string) => {
-    const background = backgrounds?.find(bg => bg.name === name);
-    if (background && userPoint >= background.price) {
-      // 실제 로직 추가
-    }
-  };
 
   return (
     <Layout>
@@ -180,7 +153,6 @@ const BackgroundShop = () => {
               key={background.name}
               background={background}
               userPoint={userPoint}
-              onPurchase={handlePurchase}
             />
           ))}
         </div>
