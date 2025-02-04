@@ -16,6 +16,11 @@ export const CAT_MAPPINGS: Record<string, CatInfo> = {
   UFOCat: { korName: 'UFO냥', engName: 'UFOCat' },
   MagpieCat: { korName: '까치냥', engName: 'MagpieCat' },
   TteokgukCat: { korName: '떡국냥', engName: 'TteokgukCat' },
+  CaffeineCat: { korName: '카페인냥', engName: 'CaffeineCat' },
+  SingingCat: { korName: '노래냥', engName: 'SingingCat' },
+  WorkCat: { korName: '출근냥', engName: 'WorkCat' },
+  DiverCat: { korName: '다이버냥', engName: 'DiverCat' },
+  AngryCat: { korName: '화났냥', engName: 'AngryCat' },
 
   // A 등급
   EatingCat: { korName: '밥먹냥', engName: 'EatingCat' },
@@ -29,6 +34,14 @@ export const CAT_MAPPINGS: Record<string, CatInfo> = {
   AnonymousCat: { korName: 'Anonymous냥', engName: 'AnonymousCat' },
   YarnBallCat: { korName: '실타래냥', engName: 'YarnBallCat' },
   ComfortableCat: { korName: '편안하냥', engName: 'ComfortableCat' },
+  SplashCat: { korName: '첨벙냥', engName: 'SplashCat' },
+  FarmerCat: { korName: '농사냥', engName: 'FarmerCat' },
+  BookCat: { korName: '독서냥', engName: 'BookCat' },
+  PhoneCat: { korName: '폰하냥', engName: 'PhoneCat' },
+  BirthdayCat: { korName: '생일냥', engName: 'BirthdayCat' },
+  JumpCat: { korName: '점프냥', engName: 'JumpCat' },
+  SickCat: { korName: '아프냥', engName: 'SickCat' },
+  GymCat: { korName: '헬스냥', engName: 'GymCat' },
 
   // B 등급
   SpringCat: { korName: '스프링냥', engName: 'SpringCat' },
@@ -119,24 +132,24 @@ export type AnimationStep =
 
 export const RARITY_TO_IMAGE = {
   S: {
-    capsule: '/cats/ball/S1-3.svg',
-    opened: '/cats/ball/S1-4.svg',
+    capsule: '/ball/S1-3.svg',
+    opened: '/ball/S1-4.svg',
   },
   A: {
-    capsule: '/cats/ball/A1-3.svg',
-    opened: '/cats/ball/A1-4.svg',
+    capsule: '/ball/A1-3.svg',
+    opened: '/ball/A1-4.svg',
   },
   B: {
-    capsule: '/cats/ball/B1-3.svg',
-    opened: '/cats/ball/B1-4.svg',
+    capsule: '/ball/B1-3.svg',
+    opened: '/ball/B1-4.svg',
   },
   C: {
-    capsule: '/cats/ball/C1-3.svg',
-    opened: '/cats/ball/C1-4.svg',
+    capsule: '/ball/C1-3.svg',
+    opened: '/ball/C1-4.svg',
   },
   D: {
-    capsule: '/cats/ball/D1-3.svg',
-    opened: '/cats/ball/D1-4.svg',
+    capsule: '/ball/D1-3.svg',
+    opened: '/ball/D1-4.svg',
   },
 } as const;
 

@@ -1,4 +1,3 @@
-// styles.ts
 import { cn } from '@/lib/utils';
 
 import { Rarity } from '../sale/type';

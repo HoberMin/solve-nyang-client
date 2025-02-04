@@ -24,9 +24,9 @@ const ExtensionPage = () => {
         <div className='space-y-12 text-center'>
           <div className='space-y-4'>
             <div className='flex items-center justify-center gap-4'>
-              <span className='text-3xl font-bold tracking-tight text-white'>
-                솔브냥 익스텐션 <span className='text-blue-400'>!</span>
-              </span>
+              <h2 className='text-3xl font-bold tracking-tight text-white'>
+                솔브냥 익스텐션
+              </h2>
               <Button
                 variant='ghost' // 더 부드러운 스타일
                 size='sm'
@@ -37,7 +37,12 @@ const ExtensionPage = () => {
                   'bg-blue-950/30 hover:bg-blue-900/50',
                   'transition-all',
                 )}
-                onClick={() => window.open('https://solve-nyang.com', '_blank')}
+                onClick={() =>
+                  window.open(
+                    'https://chromewebstore.google.com/detail/%EC%86%94%EB%B8%8C%EB%83%A5/bibhjmaoaegjfcnbmdapmjomcgacidjc?hl=ko',
+                    '_blank',
+                  )
+                }
               >
                 <span className='text-sm'>바로가기</span>
                 <ArrowUpRight className='ml-1 h-4 w-4' />

@@ -26,7 +26,7 @@ const EventPage = () => {
   return (
     <Layout>
       <div className='flex items-center justify-center'>
-        <div className='mx-auto max-w-4xl px-4 py-8 pt-20'>
+        <div className='mx-auto max-w-4xl px-4 py-8 pt-16'>
           <div className='flex flex-col items-center space-y-6'>
             <h1 className='text-3xl font-bold text-blue-400'>
               솔브냥의 설날 이벤트 🎊
@@ -51,7 +51,7 @@ const EventPage = () => {
                 <ul className='space-y-2 text-base text-blue-200'>
                   <li className='flex items-center gap-2'>
                     <span className='text-blue-400'>•</span>
-                    이벤트 기간: 2024.01.31 ~ 2024.02.04
+                    이벤트 기간: 2025.01.31 ~ 2025.02.04
                   </li>
                   <li className='flex items-center gap-2'>
                     <span className='text-blue-400'>•</span>
@@ -102,7 +102,7 @@ const EventPage = () => {
             </div>
           </div>
           {isAuthenticated && hasEventAvatar && (
-            <div className='rounded-lg bg-green-500/10 p-3 text-base text-green-300'>
+            <div className='mt-10 rounded-lg bg-green-500/10 p-3 text-base text-green-300'>
               🎉 새해복냥이 지급되었습니다! 인벤토리에서 확인해보세요.
             </div>
           )}
