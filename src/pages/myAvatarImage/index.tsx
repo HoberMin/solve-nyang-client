@@ -1,8 +1,7 @@
-import { useEffect } from 'react';
-
-import { useNavigate } from 'react-router-dom';
-import { toast } from 'sonner';
-
+// import { useEffect } from 'react';
+// import { useNavigate } from 'react-router-dom';
+// import { toast } from 'sonner';
+// import { useToggleAvatar } from '@/apis/user';
 import { useGetUserInfo, useToggleAvatar } from '@/apis/user';
 import Layout from '@/components/Layout';
 
@@ -11,22 +10,22 @@ import { MyImage } from './components/MyImage';
 import { styles } from './style';
 
 const AvatarImagePage = () => {
-  const navigate = useNavigate();
-  const { data: userData, isPending } = useGetUserInfo();
+  // const navigate = useNavigate();
+  const { data: userInfo } = useGetUserInfo();
   const mutate = useToggleAvatar();
 
-  useEffect(() => {
-    if (!isPending && !userData?.username) {
-      toast.error('로그인이 필요한 서비스입니다.', {
-        description: '로그인 페이지로 이동합니다.',
-        action: {
-          label: '확인',
-          onClick: () => navigate('/login'),
-        },
-      });
-      navigate('/login');
-    }
-  }, [userData, isPending, navigate]);
+  // useEffect(() => {
+  //   if (!isPending && !userData?.username) {
+  //     toast.error('로그인이 필요한 서비스입니다.', {
+  //       description: '로그인 페이지로 이동합니다.',
+  //       action: {
+  //         label: '확인',
+  //         onClick: () => navigate('/login'),
+  //       },
+  //     });
+  //     navigate('/login');
+  //   }
+  // }, [userData, isPending, navigate]);
 
   return (
     <Layout>
@@ -41,7 +40,7 @@ const AvatarImagePage = () => {
             GitHub README.md에 추가하여 나만의 개성을 표현할 수 있습니다.
           </p>
         </div>
-        <MyImage username={userData.username} />
+        {userInfo && <MyImage username={userInfo?.username} />}
         <AvatarCollection onToggle={mutate} />
       </div>
     </Layout>

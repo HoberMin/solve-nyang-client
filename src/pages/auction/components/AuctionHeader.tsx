@@ -4,6 +4,10 @@ import { PointDisplay } from '@/pages/gacha/components/PointDisplay';
 const AuctionHeader = () => {
   const { data } = useGetUserInfo();
 
+  if (!data) {
+    return null;
+  }
+
   const { point } = data;
 
   return (
