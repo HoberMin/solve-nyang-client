@@ -5,8 +5,6 @@ import ProtectedRoute from '@/components/ProtectdRoute';
 import Root from '@/components/Root';
 import Auction from '@/pages/auction';
 import SaleBackground from '@/pages/background';
-// import Gallery from '@/pages/catCollection';
-import CatCollection from '@/pages/catCollection';
 import ChangePassword from '@/pages/changePassword';
 import Contest from '@/pages/contest';
 import ExtensionPage from '@/pages/extension';
@@ -26,7 +24,6 @@ export const router = createBrowserRouter([
     element: <Root />,
     errorElement: <RetroError />,
     children: [
-      // 모든 사용자 접근 가능
       {
         index: true,
         element: <Service />,
@@ -78,19 +75,12 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: 'gallery',
-        element: (
-          <ProtectedRoute element={<CatCollection />} requireAuth={true} />
-        ),
-      },
-      {
         path: 'sale-background',
         element: (
           <ProtectedRoute element={<SaleBackground />} requireAuth={true} />
         ),
       },
 
-      // 비로그인 전용
       {
         path: 'signup',
         element: <ProtectedRoute element={<Signup />} requireAuth={false} />,
