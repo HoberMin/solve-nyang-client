@@ -1,8 +1,8 @@
 import { PropsWithChildren } from 'react';
 
 import { Link } from 'react-router-dom';
-import { toast } from 'sonner';
 
+import { useSignOut } from '@/apis/sign';
 import { useGetUserInfo } from '@/apis/user';
 import {
   DropdownMenu,
@@ -94,10 +94,10 @@ const ActionDropdown = ({ actionText }: ActionDropdownProps) => {
 };
 
 const UserDropdown: React.FC<UserDropdownProps> = ({ username }) => {
+  const { mutate: signOut } = useSignOut();
+
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    toast.success('로그아웃 되었습니다.');
-    window.location.href = '/';
+    signOut();
   };
 
   return (
