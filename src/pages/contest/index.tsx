@@ -171,7 +171,7 @@ const ContestPage = () => {
                     />
                     <button
                       onClick={resetFile}
-                      className='text-sm text-gray-300 hover:text-white'
+                      className='bg-gray-200 text-sm text-black hover:bg-gray-300'
                     >
                       이미지 변경
                     </button>

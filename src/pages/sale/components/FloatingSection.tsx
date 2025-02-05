@@ -111,11 +111,7 @@ export const FloatingSection = ({
                 <div className='rounded-lg border border-yellow-500/50 bg-yellow-500/10 p-4 text-yellow-400'>
                   <p className='font-medium'>⚠️ 주의!</p>
                   <p className='mt-2'>
-                    다음 업데이트에서 경매장 시스템이 등장할 예정입니다.
-                  </p>
-                  <p>
-                    지금 판매하시면 경매장에서 더 높은 가격에 판매할 기회를
-                    놓치실 수 있습니다.
+                    판매한 아바타는 환불, 거래가 불가능합니다.
                   </p>
                   <p className='mt-2 font-medium'>정말로 판매하시겠습니까?</p>
                 </div>
