@@ -24,18 +24,27 @@ interface UserAvatarList {
 interface UserInfo {
   username: string;
   point: number;
-  // solvedacStrick: number;
-  // solvedCount: number;
-  // solvedacTier: number;
+  tier: string;
+  solvedCount: number;
+  streak: number;
 }
 
-const userInfo = async () => {
+const userInfo = async (): Promise<UserInfo | null> => {
   const response = await fetch(`${domain}/user/me`, {
     headers: {
       'Content-Type': 'application/json',
       authorization: `Bearer ${localStorage.getItem('token')}`,
     },
   });
+
+  // 401 내려오면 username은 null -> username이 null인 점을 이용해서 처리
+  if (response.status === 401) {
+    return null;
+  }
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
 
   const data = await response.json();
 
@@ -90,7 +99,7 @@ const saleAvatar = async (avatarList: UserAvatarList) => {
 };
 
 export const useGetUserInfo = () =>
-  useSuspenseQuery<UserInfo>({
+  useSuspenseQuery<UserInfo | null>({
     queryKey: ['userInfo'],
     queryFn: userInfo,
   });

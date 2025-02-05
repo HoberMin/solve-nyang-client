@@ -23,17 +23,6 @@ const axiosInstance = axios.create({
   },
 });
 
-axiosInstance.interceptors.response.use(
-  response => response,
-  error => {
-    if (error.response?.status === 401) {
-      localStorage.setItem('redirectPath', window.location.pathname);
-      window.location.href = '/login';
-    }
-    return Promise.reject(error);
-  },
-);
-
 axiosInstance.interceptors.request.use(
   config => {
     const token = localStorage.getItem('token');
@@ -45,6 +34,18 @@ axiosInstance.interceptors.request.use(
   error => Promise.reject(error),
 );
 
+axiosInstance.interceptors.response.use(
+  response => response,
+  error => {
+    if (error.response?.status === 401) {
+      // localStorage.setItem('redirectPath', window.location.pathname);
+      localStorage.removeItem('token');
+      window.location.href = '/login';
+    }
+    return Promise.reject(error);
+  },
+);
+
 interface SignInResponse {
   accessToken: string;
 }
@@ -54,7 +55,9 @@ interface SignUpResponse {
 }
 
 interface AxiosResponse<T> {
+  status: number;
   data: T;
+  message?: string;
 }
 
 export const signIn = async (authForm: AuthRequest) =>
@@ -89,7 +92,6 @@ export const useSignIn = () => {
 
 export const useSignUp = () => {
   const navigate = useNavigate();
-
   const { mutate } = useMutation({
     mutationFn: (formData: AuthRequest) => signUp(formData),
     onSuccess: () => {

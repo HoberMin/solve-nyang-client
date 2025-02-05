@@ -69,14 +69,22 @@ const ActionDropdown = ({ actionText }: ActionDropdownProps) => {
           side='bottom'
           align='start'
         >
-          {/* <DropdownMenuItem asChild className='focus:bg-gray-800'>
+          <DropdownMenuItem asChild className='focus:bg-gray-800'>
             <Link to='/auction' className='text-xl text-white hover:text-white'>
               경매장
             </Link>
-          </DropdownMenuItem> */}
+          </DropdownMenuItem>
           <DropdownMenuItem asChild className='focus:bg-gray-800'>
             <Link to='/sale' className='text-xl text-white hover:text-white'>
               캐릭터 판매
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild className='focus:bg-gray-800'>
+            <Link
+              to='/sale-background'
+              className='text-xl text-white hover:text-white'
+            >
+              배경 상점
             </Link>
           </DropdownMenuItem>
         </DropdownMenuContent>
@@ -111,27 +119,22 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ username }) => {
           side='bottom'
           align='start'
         >
-          {/* <DropdownMenuItem asChild className='focus:bg-gray-800'>
+          <DropdownMenuItem asChild className='focus:bg-gray-800'>
             <Link to='/profile' className='text-xl text-white hover:text-white'>
               프로필
             </Link>
-          </DropdownMenuItem> */}
+          </DropdownMenuItem>
           <DropdownMenuItem asChild className='focus:bg-gray-800'>
             <Link to='/image' className='text-xl text-white hover:text-white'>
               나만의 이미지
             </Link>
           </DropdownMenuItem>
-          {/* <DropdownMenuItem asChild className='focus:bg-gray-800'>
+          <DropdownMenuItem asChild className='focus:bg-gray-800'>
             <Link
               to='/extension'
               className='text-xl text-white hover:text-white'
             >
               솔브냥 익스텐션
-            </Link>
-          </DropdownMenuItem> */}
-          <DropdownMenuItem asChild className='focus:bg-gray-800'>
-            <Link to='/change' className='text-xl text-white hover:text-white'>
-              비밀번호 변경
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem
@@ -188,7 +191,7 @@ const Header = () => {
         </div>
       </div>
       <nav className='relative z-10 flex items-center gap-6'>
-        <RetroMenuItem href='/event'>설 이벤트</RetroMenuItem>
+        {/* <RetroMenuItem href='/event'>설 이벤트</RetroMenuItem> */}
 
         {isLoading ? (
           <LoadingPulse />
@@ -197,7 +200,7 @@ const Header = () => {
         ) : (
           <>
             <RetroMenuItem href='/contest'>공모전</RetroMenuItem>
-            <RetroMenuItem href='/gacha'>뽑기</RetroMenuItem>
+            <RetroMenuItem href='/gacha'>뽑기 </RetroMenuItem>
             <ActionDropdown actionText='상점' />
             <UserDropdown username={data?.username || 'User'} />
           </>

@@ -3,10 +3,13 @@ import { useState } from 'react';
 import { Copy, Expand, Minimize } from 'lucide-react';
 import { toast } from 'sonner';
 
+import { domain } from '@/apis/avatar';
+import { useGetUserBackgroundImage } from '@/apis/background';
 import { useGetUserAvatar } from '@/apis/user';
 import { cn } from '@/lib/utils';
 
 import { styles } from '../style';
+import OwnImageSelector from './OwnImageSelector';
 
 export type BackgroundType = '우주배경' | '지구배경' | '공원배경';
 
@@ -16,11 +19,16 @@ interface MyImageProps {
 
 export const MyImage = ({ username }: MyImageProps) => {
   const [isCopied, setIsCopied] = useState(false);
-  const [isExpanded, setIsExpanded] = useState(true);
-  // const [background, setBackground] = useState<BackgroundType>('우주배경');
-
+  const [isExpanded, setIsExpanded] = useState(false);
+  const { data: backgroundData } = useGetUserBackgroundImage();
   const { data: avatarData } = useGetUserAvatar();
-  const visibleAvatars = avatarData.avatars.filter(a => a.visible).length;
+
+  const visibleBackground = backgroundData?.backgrounds.find(bg => bg.visible);
+  const [selectedBackground, setSelectedBackground] = useState(
+    visibleBackground?.id || '',
+  );
+
+  const visibleAvatars = avatarData?.avatars.filter(a => a.visible).length ?? 0;
 
   const handleCopy = async () => {
     try {
@@ -47,24 +55,10 @@ export const MyImage = ({ username }: MyImageProps) => {
       <div className={styles.preview.header}>
         <h3 className={styles.preview.title}>MY Image</h3>
         <div className='flex items-center gap-2'>
-          <div className={styles.backgroundSelect.wrapper}>
-            {/* <label className={styles.backgroundSelect.label}>배경:</label>
-            <select
-              className={styles.backgroundSelect.select}
-              value={background}
-              onChange={e => {
-                const value = e.target.value as BackgroundType;
-                setBackground(value);
-                console.log('Selected background:', value);
-              }}
-            >
-              {['우주배경', '지구배경', '공원배경'].map(bg => (
-                <option key={bg} value={bg}>
-                  {bg}
-                </option>
-              ))}
-            </select> */}
-          </div>
+          <OwnImageSelector
+            selectedBackground={selectedBackground}
+            onBackgroundChange={setSelectedBackground}
+          />
           <button
             onClick={() => setIsExpanded(!isExpanded)}
             className={styles.preview.iconButton}
@@ -90,7 +84,7 @@ export const MyImage = ({ username }: MyImageProps) => {
         )}
       >
         <img
-          src={`https://api.solve-nyang.com/compose/${username}?t=${visibleAvatars}`}
+          src={`${domain}/compose/${username}?t=${visibleAvatars}&bg=${selectedBackground}`}
           alt='Farm Preview'
           className={styles.preview.image}
         />

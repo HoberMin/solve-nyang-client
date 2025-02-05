@@ -15,7 +15,7 @@ const RetroLoading = () => {
           </div>
           <div className='text-center'>
             <h2 className='flex items-center gap-4 text-2xl font-bold tracking-wider'>
-              <span className='bg-gradient-to-r from-indigo-400 to-blue-400 bg-clip-text text-transparent'>
+              <span className='bg-gradient-to-r from-indigo-400 to-blue-400 bg-clip-text p-4 text-transparent'>
                 Loading...
               </span>
             </h2>
