@@ -5,7 +5,8 @@ import {
 } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
-export const domain = 'https://api.solve-nyang.com';
+// export const domain = 'https://api.solve-nyang.com';
+export const domain = 'http://54.180.123.67:8080';
 
 export type RarityType = 'S' | 'A' | 'B' | 'C' | 'D';
 export interface Avatar {
