@@ -28,12 +28,6 @@ export const router = createBrowserRouter([
         index: true,
         element: <Service />,
       },
-      // {
-      //   path: 'event',
-      //   element: <EventPage />,
-      // },
-
-      // 로그인 전용
       {
         path: 'contest',
         element: <ProtectedRoute element={<Contest />} requireAuth={true} />,
@@ -80,7 +74,6 @@ export const router = createBrowserRouter([
           <ProtectedRoute element={<SaleBackground />} requireAuth={true} />
         ),
       },
-
       {
         path: 'signup',
         element: <ProtectedRoute element={<Signup />} requireAuth={false} />,
