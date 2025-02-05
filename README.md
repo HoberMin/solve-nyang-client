@@ -1,7 +1,7 @@
 [![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fsolve-nyang%2Fsolve-nyang-client&count_bg=%233B82F6&title_bg=%23151D32&icon=&icon_color=%23000000&title=hits&edge_flat=true)](https://hits.seeyoufarm.com)
 
 <div align="center">
-
+ 
 
 # [![image](/public/og.jpg)](https://www.solve-nyang.com/)
 
