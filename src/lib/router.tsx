@@ -32,12 +32,12 @@ export const router = createBrowserRouter([
       //   path: 'event',
       //   element: <EventPage />,
       // },
-      {
-        path: 'contest',
-        element: <Contest />,
-      },
 
       // 로그인 전용
+      {
+        path: 'contest',
+        element: <ProtectedRoute element={<Contest />} requireAuth={true} />,
+      },
       {
         path: 'auction',
         element: <ProtectedRoute element={<Auction />} requireAuth={true} />,
