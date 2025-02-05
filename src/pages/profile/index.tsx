@@ -27,6 +27,10 @@ const ProfilePage = () => {
   const { data: avatarGallery } = useGetAvatarGallery();
   const [selectedRarity, setSelectedRarity] = useState<Rarity | 'ALL'>('ALL');
 
+  if (!userInfo || !avatarGallery) {
+    return null;
+  }
+
   const filteredCollections = avatarGallery?.collections.filter(cat =>
     selectedRarity === 'ALL' ? true : cat.rarity === selectedRarity,
   );

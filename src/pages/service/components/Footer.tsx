@@ -4,16 +4,9 @@ interface TeamMember {
   github: string;
 }
 
-// interface Designer {
-//   role: string;
-//   name: string;
-//   email: string;
-// }
-
 export const Footer = () => {
   const backendMembers: TeamMember[] = [
     { role: 'Backend', name: '이동규 팀장', github: 'leedongkyu0407' },
-    // { role: 'Backend', name: '김지영', github: 'famo1245' },
     { role: 'Backend', name: '조성빈', github: 'Foxrain119' },
     { role: 'Backend', name: '박찬영', github: 'cygiraffe' },
   ];
@@ -23,12 +16,6 @@ export const Footer = () => {
     { role: 'Frontend', name: '이다이', github: 'ebeleey' },
     { role: 'Frontend', name: '박희원', github: 'heeeeeeeeeee1' },
   ];
-
-  // const designer: Designer = {
-  //   role: 'Designer',
-  //   name: '박희진',
-  //   email: '1223phjin@naver.com',
-  // };
 
   const TeamSection = ({
     title,
@@ -56,20 +43,6 @@ export const Footer = () => {
       </div>
     </div>
   );
-
-  // const DesignerSection = () => (
-  //   <div className='min-w-[140px]'>
-  //     <h4 className='mb-3 text-sm font-bold text-white/90'>Designer</h4>
-  //     <a
-  //       href={`mailto:${designer.email}`}
-  //       className='block rounded p-2 text-gray-300/90 transition-colors hover:bg-white/5 hover:text-white'
-  //     >
-  //       <div className='space-y-0.5'>
-  //         <div className='text-xs text-gray-400/90'>{designer.name}</div>
-  //       </div>
-  //     </a>
-  //   </div>
-  // );
 
   return (
     <footer className='mx-auto w-[80%] border-t border-white/10 bg-black/20 py-4'>

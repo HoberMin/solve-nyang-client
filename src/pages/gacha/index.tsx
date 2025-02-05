@@ -1,6 +1,5 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 
-import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
 import { Avatar, useGachaAvatarApi } from '@/apis/avatar';
@@ -20,6 +19,7 @@ import { GachaResultModal } from '@/pages/gacha/components/GachaResultModal';
 import { PointDisplay } from '@/pages/gacha/components/PointDisplay';
 
 import useImagePreloader from './hooks/usePreloader';
+import coinImg from '/assets/coin.svg';
 import greenBallImageUrl from '/assets/gacha-ball-1.svg';
 import orangeBallImageUrl from '/assets/gacha-ball-2.svg';
 import skyblueBallImageUrl from '/assets/gacha-ball-3.svg';
@@ -29,7 +29,6 @@ import blueBallImageUrl from '/assets/gacha-ball-6.svg';
 import yellowBallImageUrl from '/assets/gacha-ball-7.svg';
 import machineImageUrl from '/assets/gacha-machine.svg';
 import handleImageUrl from '/assets/handle.svg';
-import coinImg from '/coin.svg';
 
 interface BallPosition {
   left: string;
@@ -117,7 +116,6 @@ const DrawButton = ({
   return button;
 };
 const Gacha = () => {
-  const navigate = useNavigate();
   const getGacha = useGachaAvatarApi();
   const { data: userData, isPending } = useGetUserInfo();
   const rotationRef = useRef<number>(0);
@@ -133,23 +131,6 @@ const Gacha = () => {
   const [pendingDraw, setPendingDraw] = useState<DrawConfig | null>(null);
   const [gachaResults, setGachaResults] = useState<Avatar[]>([]);
   const [drawMode, setDrawMode] = useState<'single' | 'multi' | null>(null);
-
-  useEffect(() => {
-    if (!isPending && !userData?.username) {
-      const timer = setTimeout(() => {
-        toast.error('로그인이 필요한 서비스입니다.', {
-          description: '로그인 페이지로 이동합니다.',
-          action: {
-            label: '확인',
-            onClick: () => {},
-          },
-        });
-        navigate('/login');
-      }, 100);
-
-      return () => clearTimeout(timer);
-    }
-  }, [userData, isPending, navigate]);
 
   if (isPending || !isImageLoaded) {
     return <RetroLoading />;

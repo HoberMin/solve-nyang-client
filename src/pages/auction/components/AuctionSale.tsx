@@ -1,8 +1,17 @@
 import React, { useState } from 'react';
 
-import { UserAvatar, useGetUserAvatar, useSaleAvatar } from '@/apis/user';
+import { toast } from 'sonner';
+
+import { useAuctionAvatar } from '@/apis/auction';
+import { UserAvatar, useGetUserAvatar } from '@/apis/user';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent } from '@/components/ui/dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
@@ -22,12 +31,6 @@ const rarityConfig: Record<
   D: { border: 'border-[#a663ee]', text: 'text-[#a663ee]', bg: 'bg-[#a663ee]' },
 };
 
-const defaultRarityStyle = {
-  border: 'border-gray-400',
-  text: 'text-gray-400',
-  bg: 'bg-gray-400',
-};
-
 const rarityOrder: Rarity[] = ['H', 'S', 'A', 'B', 'C', 'D'];
 
 interface SaleDialogProps {
@@ -45,16 +48,40 @@ const SaleDialog: React.FC<SaleDialogProps> = ({
 }) => {
   const [price, setPrice] = useState(0);
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
+  const [error, setError] = useState('');
 
   const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseInt(e.target.value);
-    if (!isNaN(value) && value >= 0) {
-      setPrice(value);
+    const value = e.target.value;
+
+    if (value === '') {
+      setPrice(0);
+      setError('1냥 이상의 가격을 입력해주세요.');
+      return;
+    }
+
+    const numValue = parseInt(value);
+    if (!isNaN(numValue)) {
+      if (numValue <= 0) {
+        setError('1냥 이상의 가격을 입력해주세요.');
+      } else if (numValue > 1000000) {
+        setError('100만냥 이하의 가격을 입력해주세요.');
+      } else {
+        setError('');
+      }
+      setPrice(numValue);
+    }
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (isConfirmDialogOpen) {
+      handleConfirm();
+    } else if (e.key === 'Enter') {
+      handleProceed();
     }
   };
 
   const handleProceed = () => {
-    if (price >= 0) {
+    if (price > 0 && price <= 1000000) {
       setIsConfirmDialogOpen(true);
     }
   };
@@ -73,54 +100,76 @@ const SaleDialog: React.FC<SaleDialogProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className='border-transparent bg-gray-800 text-gray-200 sm:max-w-md'>
+      <DialogContent
+        className='border-transparent bg-gray-800 text-gray-200 sm:max-w-md'
+        onKeyDown={handleKeyPress}
+      >
         {!isConfirmDialogOpen ? (
           <div className='space-y-4'>
-            <h3 className='text-lg font-semibold'>판매</h3>
-            <div className='space-y-3'>
-              <div className='space-y-2'>
-                <Label htmlFor='price'>판매 가격</Label>
+            <DialogTitle>
+              <p className='text-center text-2xl'>판매</p>
+            </DialogTitle>
+            <DialogDescription className='h-12 text-center text-base text-gray-200'>
+              <div className='flex gap-2'>
+                <Label htmlFor='price' className='flex items-center'>
+                  판매 가격
+                </Label>
                 <Input
                   id='price'
-                  type='number'
-                  min={0}
-                  value={price}
-                  onChange={handlePriceChange}
-                  className='border-gray-600 bg-gray-700 text-gray-200'
+                  type='text'
+                  value={price === 0 ? '' : price}
+                  onChange={e => {
+                    const value = e.target.value;
+                    if (value === '' || /^\d+$/.test(value)) {
+                      handlePriceChange(e);
+                    }
+                  }}
+                  onKeyDown={handleKeyPress}
+                  className='flex-1 border-gray-600 bg-gray-700 text-gray-200'
                 />
               </div>
-            </div>
-
-            <div className='flex justify-end space-x-2'>
+              {error && <p className='text-sm text-red-500'>{error}</p>}
+            </DialogDescription>
+            <DialogFooter>
               <Button
                 onClick={handleProceed}
-                disabled={price < 0}
+                disabled={price <= 0 || price > 1000000}
                 className='bg-blue-500 text-white hover:bg-blue-600'
               >
                 다음
               </Button>
-            </div>
+            </DialogFooter>
           </div>
         ) : (
           <div className='space-y-4'>
-            <p className='text-sm text-gray-200'>
-              <span className='font-bold'>{getCatKorName(avatar.name)}</span>
-              을(를) <span className='font-bold'>{price.toLocaleString()}</span>
+            <DialogTitle>
+              <p className='text-center text-2xl'>판매 확인</p>
+            </DialogTitle>
+            <DialogDescription className='text-center text-base text-gray-200'>
+              <span
+                className={cn('font-bold', rarityConfig[avatar.rarity]?.text)}
+              >
+                {getCatKorName(avatar.name)}
+              </span>
+              을(를){' '}
+              <span className='font-bold text-blue-400'>
+                {price.toLocaleString()}
+              </span>
               냥에 판매하시겠습니까?
-            </p>
+            </DialogDescription>
             <div className='flex justify-end space-x-2'>
+              <Button
+                onClick={handleConfirm}
+                className='bg-blue-500 text-white hover:bg-blue-600'
+              >
+                판매
+              </Button>
               <Button
                 variant='outline'
                 onClick={() => setIsConfirmDialogOpen(false)}
                 className='border-gray-600 bg-transparent text-gray-200 hover:bg-gray-700'
               >
                 이전
-              </Button>
-              <Button
-                onClick={handleConfirm}
-                className='bg-blue-500 text-white hover:bg-blue-600'
-              >
-                판매
               </Button>
             </div>
           </div>
@@ -129,16 +178,27 @@ const SaleDialog: React.FC<SaleDialogProps> = ({
     </Dialog>
   );
 };
+
 const AuctionSale = () => {
   const { data } = useGetUserAvatar();
-  const { mutate: saleAvatar } = useSaleAvatar();
+  const { mutate: auctionAvatar } = useAuctionAvatar();
   const [selectedAvatar, setSelectedAvatar] = useState<UserAvatar | null>(null);
   const [selectedRarity, setSelectedRarity] = useState<'ALL' | Rarity>('ALL');
 
-  const handleSell = (avatar: UserAvatar) => {
-    saleAvatar({
-      avatars: [avatar],
-    });
+  const handleSell = (avatar: UserAvatar, price: number) => {
+    auctionAvatar(
+      {
+        id: avatar.ownedAvatarId,
+        price,
+      },
+      {
+        onSuccess: () => {
+          toast.success(
+            `${getCatKorName(avatar.name)}을(를) ${price.toLocaleString()}냥에 판매 등록하였습니다.`,
+          );
+        },
+      },
+    );
   };
 
   const avatars = data?.avatars || [];
@@ -156,16 +216,8 @@ const AuctionSale = () => {
     {} as Record<Rarity, number>,
   );
 
-  const getRarityStyle = (avatarRarity: string | undefined) => {
-    if (!avatarRarity || !rarityOrder.includes(avatarRarity as Rarity)) {
-      return defaultRarityStyle;
-    }
-    return rarityConfig[avatarRarity as Rarity];
-  };
-
   return (
     <div className='space-y-6'>
-      {/* 등급 필터 버튼 */}
       <div className='flex gap-2'>
         <Button
           onClick={() => setSelectedRarity('ALL')}
@@ -194,10 +246,9 @@ const AuctionSale = () => {
         ))}
       </div>
 
-      {/* 아이템 목록 */}
       <div className='grid grid-cols-8 gap-4'>
         {filteredAvatars.map(avatar => {
-          const rarity = getRarityStyle(avatar.rarity);
+          const rarity = rarityConfig[avatar.rarity as Rarity];
 
           return (
             <div
@@ -209,7 +260,6 @@ const AuctionSale = () => {
               onClick={() => setSelectedAvatar(avatar)}
             >
               <div className='relative'>
-                {/* 등급 뱃지 */}
                 <div className={'absolute left-0 top-0 px-2'}>
                   <span className={cn('text-lg font-bold', rarity.text)}>
                     {avatar.rarity}
@@ -242,4 +292,5 @@ const AuctionSale = () => {
     </div>
   );
 };
+
 export default AuctionSale;

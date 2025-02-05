@@ -52,7 +52,7 @@ interface ActionDropdownProps {
 const ActionDropdown = ({ actionText }: ActionDropdownProps) => {
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className='cursor-pointer bg-gray-900 outline-none ring-0 focus:outline-none focus:ring-0 focus:ring-offset-0 active:outline-none active:ring-0'>
+      <DropdownMenuTrigger className='cursor-pointer bg-transparent outline-none ring-0 focus:outline-none focus:ring-0 focus:ring-offset-0 active:outline-none active:ring-0'>
         <span
           className='relative inline-block bg-gradient-to-b from-blue-300 to-blue-500 bg-clip-text text-xl text-transparent'
           style={{
@@ -77,6 +77,14 @@ const ActionDropdown = ({ actionText }: ActionDropdownProps) => {
           <DropdownMenuItem asChild className='focus:bg-gray-800'>
             <Link to='/sale' className='text-xl text-white hover:text-white'>
               캐릭터 판매
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild className='focus:bg-gray-800'>
+            <Link
+              to='/sale-background'
+              className='text-xl text-white hover:text-white'
+            >
+              배경 상점
             </Link>
           </DropdownMenuItem>
         </DropdownMenuContent>
@@ -183,7 +191,7 @@ const Header = () => {
         </div>
       </div>
       <nav className='relative z-10 flex items-center gap-6'>
-        <RetroMenuItem href='/event'>설 이벤트</RetroMenuItem>
+        {/* <RetroMenuItem href='/event'>설 이벤트</RetroMenuItem> */}
 
         {isLoading ? (
           <LoadingPulse />

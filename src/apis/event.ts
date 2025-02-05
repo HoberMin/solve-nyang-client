@@ -49,3 +49,29 @@ export const useGetEventAvatar = () => {
 
   return mutateAsync;
 };
+
+interface ContestAvatarPayload {
+  originalFilename: string;
+  storedFilename: string;
+}
+
+export const submitContestAvatar = async (payload: ContestAvatarPayload) =>
+  await fetch(`${domain}/images`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      authorization: `Bearer ${localStorage.getItem('token')}`,
+    },
+    body: JSON.stringify(payload),
+  });
+
+export const useSubmitContestAvatar = () => {
+  const { mutate } = useMutation({
+    mutationFn: (payload: ContestAvatarPayload) => submitContestAvatar(payload),
+    onSuccess: () => {
+      toast.success('공모전 이미지 제출을 성공했습니다 !');
+    },
+  });
+
+  return mutate;
+};

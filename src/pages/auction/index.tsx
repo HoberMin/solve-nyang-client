@@ -3,14 +3,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@radix-ui/react-tabs';
 import Layout from '@/components/Layout';
 
 import AuctionBrowse from './components/AuctionBrowse';
-import AuctionCompleted from './components/AuctionCompleted';
 import AuctionHeader from './components/AuctionHeader';
+import AuctionHistory from './components/AuctionHistory';
 import AuctionSale from './components/AuctionSale';
 
 const AuctionPage = () => {
   return (
     <Layout>
-      <div className='relative mx-auto flex h-full w-full max-w-7xl flex-col'>
+      <div className='relative mx-auto mb-8 flex h-full w-full max-w-7xl flex-col'>
         <AuctionHeader />
 
         <Tabs defaultValue='browse'>
@@ -19,7 +19,7 @@ const AuctionPage = () => {
               value='browse'
               className='bg-transparent font-bold text-gray-200 data-[state=active]:bg-gray-800 data-[state=active]:text-lg data-[state=active]:text-blue-400'
             >
-              구매
+              경매 목록
             </TabsTrigger>
             <TabsTrigger
               value='sale'
@@ -39,7 +39,7 @@ const AuctionPage = () => {
               <AuctionBrowse />
             </TabsContent>
             <TabsContent value='completed'>
-              <AuctionCompleted />
+              <AuctionHistory />
             </TabsContent>
             <TabsContent value='sale'>
               <AuctionSale />
