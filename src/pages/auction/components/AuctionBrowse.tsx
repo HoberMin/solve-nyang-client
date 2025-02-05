@@ -121,6 +121,12 @@ const AuctionBrowse = () => {
 
   const handleRarity = (value: string) => {
     setSelectedRarity(value as RarityFilter);
+    setCurrentPage(1);
+  };
+
+  const handleSort = (value: string) => {
+    setSortBy(value);
+    setCurrentPage(1);
   };
 
   const handlePurchase = async () => {
@@ -178,7 +184,7 @@ const AuctionBrowse = () => {
 
           <div className='space-y-2'>
             <p className='text-sm text-gray-400'>정렬</p>
-            <Select value={sortBy} onValueChange={setSortBy}>
+            <Select value={sortBy} onValueChange={handleSort}>
               <SelectTrigger className='h-12 w-full border-transparent bg-gray-700 text-gray-200'>
                 <SelectValue placeholder='정렬 기준' />
               </SelectTrigger>
