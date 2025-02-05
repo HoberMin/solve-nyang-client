@@ -75,17 +75,18 @@ export const BackgroundCard = ({
       )}
 
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className='border-gray-600 bg-gray-900'>
+        <DialogContent className='border-gray-600 bg-gray-900 p-8'>
           <DialogHeader>
             <DialogTitle className='text-xl text-blue-400'>
               배경 구매 확인
             </DialogTitle>
             <DialogDescription className='space-y-4 text-base text-gray-400'>
-              <p>
-                {getKoreanName(background.name)} 배경의 가격은
-                {background.price.toLocaleString()}냥 입니다.
+              <p className='mt-3'>
+                {getKoreanName(background.name)}의 가격은{' '}
+                {background.price.toLocaleString()}냥 입니다. <br />
+                정말로 구매하시겠습니까?
               </p>
-              <p>정말로 구매하시겠습니까?</p>
+              <p></p>
 
               <div className='rounded-lg border border-yellow-500/50 bg-yellow-500/10 p-4 text-yellow-400'>
                 <p className='font-medium'>⚠️ 주의!</p>
