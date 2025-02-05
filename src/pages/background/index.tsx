@@ -75,17 +75,18 @@ export const BackgroundCard = ({
       )}
 
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className='border-gray-600 bg-gray-900'>
+        <DialogContent className='border-gray-600 bg-gray-900 p-8'>
           <DialogHeader>
             <DialogTitle className='text-xl text-blue-400'>
               배경 구매 확인
             </DialogTitle>
             <DialogDescription className='space-y-4 text-base text-gray-400'>
-              <p>
-                {getKoreanName(background.name)} 배경의 가격은
-                {background.price.toLocaleString()}냥 입니다.
+              <p className='mt-3'>
+                {getKoreanName(background.name)}의 가격은{' '}
+                {background.price.toLocaleString()}냥 입니다. <br />
+                정말로 구매하시겠습니까?
               </p>
-              <p>정말로 구매하시겠습니까?</p>
+              <p></p>
 
               <div className='rounded-lg border border-yellow-500/50 bg-yellow-500/10 p-4 text-yellow-400'>
                 <p className='font-medium'>⚠️ 주의!</p>
@@ -142,19 +143,34 @@ const BackgroundShop = () => {
 
   return (
     <Layout>
-      <div className='mx-auto max-w-7xl px-4 py-12'>
-        <div className='absolute right-8 top-20'>
-          <PointDisplay point={userPoint} />
+      <div className='relative mx-auto mb-8 flex h-full w-full max-w-7xl flex-col'>
+        <div className='sticky top-0 z-10 flex bg-gray-900/95 px-6 py-4 backdrop-blur-sm'>
+          <div className='flex-1'>
+            <div className='mb-2 mt-8 text-2xl font-bold text-blue-400 shadow-blue-400/50 drop-shadow-lg'>
+              배경 상점
+            </div>
+            <p className='text-lg text-gray-400'>
+              냥코인으로 배경 이미지를 구매하여 나만의 이미지를 개성있게
+              꾸며보세요.
+            </p>
+            <p className='mt-5 text-base text-gray-400'>
+              * 구매 후 환불이나 유저 간 거래는 불가합니다.
+            </p>
+          </div>
+          <div className='my-8'>
+            <PointDisplay point={userPoint} />
+          </div>
         </div>
-        <h1 className='mb-12 text-3xl font-bold text-white'>배경 상점</h1>
-        <div className='grid grid-cols-1 gap-12 md:grid-cols-2'>
-          {backgrounds?.map(background => (
-            <BackgroundCard
-              key={background.name}
-              background={background}
-              userPoint={userPoint}
-            />
-          ))}
+        <div className='mx-auto max-w-7xl px-4 py-12'>
+          <div className='grid grid-cols-1 gap-12 md:grid-cols-2'>
+            {backgrounds?.map(background => (
+              <BackgroundCard
+                key={background.name}
+                background={background}
+                userPoint={userPoint}
+              />
+            ))}
+          </div>
         </div>
       </div>
     </Layout>
