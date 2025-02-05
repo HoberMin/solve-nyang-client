@@ -20,42 +20,48 @@ interface FindPasswordRequest {
 interface FindPasswordResponse {
   message: string;
 }
-// 비밀번호 변경
-export const useChangePassword = () =>
-  useMutation({
-    mutationFn: async ({ currentPassword, newPassword }: ChangePassword) => {
-      const response = await fetch(`${domain}/account/password/change`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-        body: JSON.stringify({ currentPassword, newPassword }),
-      });
 
-      const data = await response.json();
-      if (!response.ok) {
-        throw new Error(data.message || '비밀번호 변경 중 오류 발생');
-      }
-      return data;
+export const changePassword = async ({
+  currentPassword,
+  newPassword,
+}: ChangePassword) => {
+  const response = await fetch(`${domain}/account/password/change`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
     },
+    body: JSON.stringify({ currentPassword, newPassword }),
   });
 
-// 비밀번호 찾기(재설정/재가입)
+  const data = await response.json();
+  if (!response.ok) {
+    throw new Error(data.message || '비밀번호 변경 중 오류 발생');
+  }
+  return data;
+};
+
+export const findPassword = async ({ username, password }: FindPassword) => {
+  const response = await fetch(`${domain}/account/password/find`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username, password }),
+  });
+
+  const data = await response.json();
+  if (!response.ok) {
+    throw new Error(data.message || '비밀번호 재설정 중 오류 발생');
+  }
+
+  return data;
+};
+
+export const useChangePassword = () =>
+  useMutation({
+    mutationFn: changePassword,
+  });
+
 export const useFindPassword = () =>
   useMutation<FindPasswordResponse, Error, FindPasswordRequest>({
-    mutationFn: async ({ username, password }: FindPassword) => {
-      const response = await fetch(`${domain}/account/password/find`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password }),
-      });
-
-      const data = await response.json();
-      if (!response.ok) {
-        throw new Error(data.message || '비밀번호 재설정 중 오류 발생');
-      }
-
-      return data;
-    },
+    mutationFn: findPassword,
   });

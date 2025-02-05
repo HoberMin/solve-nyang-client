@@ -1,8 +1,9 @@
-import { useMutation } from '@tanstack/react-query';
-import axios, { AxiosError } from 'axios';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { AxiosError } from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
+import { axiosInstance } from './auth';
 import { domain } from './avatar';
 
 export interface AuthRequest {
@@ -14,37 +15,37 @@ interface ErrorResponse {
   message: string;
 }
 
-const axiosInstance = axios.create({
-  baseURL: domain,
-  timeout: 5000,
-  withCredentials: true,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
+// const axiosInstance = axios.create({
+//   baseURL: domain,
+//   timeout: 5000,
+//   withCredentials: true,
+//   headers: {
+//     'Content-Type': 'application/json',
+//   },
+// });
 
-axiosInstance.interceptors.request.use(
-  config => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  error => Promise.reject(error),
-);
+// axiosInstance.interceptors.request.use(
+//   config => {
+//     const token = localStorage.getItem('token');
+//     if (token) {
+//       config.headers.Authorization = `Bearer ${token}`;
+//     }
+//     return config;
+//   },
+//   error => Promise.reject(error),
+// );
 
-axiosInstance.interceptors.response.use(
-  response => response,
-  error => {
-    if (error.response?.status === 401) {
-      // localStorage.setItem('redirectPath', window.location.pathname);
-      localStorage.removeItem('token');
-      window.location.href = '/login';
-    }
-    return Promise.reject(error);
-  },
-);
+// axiosInstance.interceptors.response.use(
+//   response => response,
+//   error => {
+//     if (error.response?.status === 401) {
+//       // localStorage.setItem('redirectPath', window.location.pathname);
+//       localStorage.removeItem('token');
+//       window.location.href = '/login';
+//     }
+//     return Promise.reject(error);
+//   },
+// );
 
 interface SignInResponse {
   accessToken: string;
@@ -71,6 +72,37 @@ export const signUp = async (authForm: AuthRequest) =>
     '/account/signup',
     authForm,
   )) as AxiosResponse<SignUpResponse>;
+
+export const signOut = async () => {
+  await fetch(`${domain}/signout`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      authorization: `Bearer ${localStorage.getItem('token')}`,
+    },
+    credentials: 'include',
+  });
+};
+
+export const useSignOut = () => {
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: signOut,
+    onSuccess: () => {
+      localStorage.removeItem('token');
+      queryClient.clear();
+      toast.success('로그아웃 되었습니다.');
+      navigate('/');
+    },
+    onError: () => {
+      localStorage.removeItem('token');
+      queryClient.clear();
+      navigate('/');
+    },
+  });
+};
 
 export const useSignIn = () => {
   const navigate = useNavigate();
