@@ -131,6 +131,15 @@ export const router = sentryCreateBrowserRouter([
           <ProtectedRoute element={<Pages.NameGamePage />} requireAuth={true} />
         ),
       },
+      {
+        path: 'attendance',
+        element: (
+          <ProtectedRoute
+            element={<Pages.AttendancePage />}
+            requireAuth={true}
+          />
+        ),
+      },
     ],
   },
   {
