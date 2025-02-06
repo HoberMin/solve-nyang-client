@@ -211,8 +211,8 @@ const buyAuctionItem = async (auctionId: number) => {
         status: error.response?.status,
         message: error.response?.statusText,
       };
-      throw error;
     }
+    throw error;
   }
 };
 
