@@ -196,7 +196,7 @@ export const useCancelAuctionItem = () => {
 export const useBuyAuctionItem = () => {
   const queryClient = useQueryClient();
 
-  const { mutate } = useMutation({
+  const { mutateAsync } = useMutation({
     mutationFn: buyAuctionItem,
     onSuccess: data => {
       queryClient.invalidateQueries({ queryKey: ['auctionList'] });
@@ -214,5 +214,5 @@ export const useBuyAuctionItem = () => {
     },
   });
 
-  return mutate;
+  return mutateAsync;
 };
