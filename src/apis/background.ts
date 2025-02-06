@@ -7,7 +7,7 @@ import { toast } from 'sonner';
 
 import { BackgroundKey } from '@/lib/type';
 
-import { domain } from './avatar';
+import { axiosInstance } from './auth';
 
 export interface Background {
   id: string;
@@ -30,16 +30,9 @@ interface OwnedBackgroundList {
 }
 
 const getBackground = async () => {
-  const response = await fetch(`${domain}/background`, {
-    headers: {
-      'Content-Type': 'application/json',
-      authorization: `Bearer ${localStorage.getItem('token')}`,
-    },
-  });
+  const response = await axiosInstance.get('/background');
 
-  const data = await response.json();
-
-  return data as BackgroundList;
+  return response.data as BackgroundList;
 };
 
 export const useGetBackgroundImage = () =>
@@ -49,16 +42,9 @@ export const useGetBackgroundImage = () =>
   });
 
 const getUserBackground = async () => {
-  const response = await fetch(`${domain}/background/owned`, {
-    headers: {
-      'Content-Type': 'application/json',
-      authorization: `Bearer ${localStorage.getItem('token')}`,
-    },
-  });
+  const response = await axiosInstance.get('/background/owned');
 
-  const data = await response.json();
-
-  return data as OwnedBackgroundList;
+  return response.data as OwnedBackgroundList;
 };
 
 export const useGetUserBackgroundImage = () =>
@@ -67,14 +53,13 @@ export const useGetUserBackgroundImage = () =>
     queryFn: getUserBackground,
   });
 
-const changeUserBackground = async (ownedBackgroundId: string) =>
-  await fetch(`${domain}/background/owned/${ownedBackgroundId}`, {
-    method: 'PATCH',
-    headers: {
-      'Content-Type': 'application/json',
-      authorization: `Bearer ${localStorage.getItem('token')}`,
-    },
-  });
+const changeUserBackground = async (ownedBackgroundId: string) => {
+  const response = await axiosInstance.patch(
+    `/background/owned/${ownedBackgroundId}`,
+  );
+
+  return response.data;
+};
 
 export const useChangeBackgroundAPI = () => {
   const { mutateAsync } = useMutation({
@@ -86,13 +71,9 @@ export const useChangeBackgroundAPI = () => {
 };
 
 const buyBackground = async (backgroundId: string) => {
-  await fetch(`${domain}/background/${backgroundId}`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      authorization: `Bearer ${localStorage.getItem('token')}`,
-    },
-  });
+  const response = await axiosInstance.post(`/background/${backgroundId}`);
+
+  return response.data;
 };
 
 export const useBuyBackgroundImage = () => {
