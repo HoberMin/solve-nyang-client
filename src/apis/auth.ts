@@ -50,21 +50,19 @@ axiosInstance.interceptors.response.use(
 
     if (
       error.response?.status === 401 &&
-      error.response?.data?.message === '유효하지 않은 토큰입니다.' &&
+      error.response?.data?.message === '토큰이 만료되었습니다.' &&
       !originalRequest?._retry
     ) {
       originalRequest._retry = true; // 무한루프 방지
       try {
-        // 리프래시 토큰으로 액세스 토큰 재발급 요청
         const reissueResponse = await axiosInstance.post('/jwt/reissue');
         const newAccessToken = reissueResponse.data.accessToken;
 
-        // 새로운 액세스 토큰이 있다면 로컬스토리지에 저장
         if (newAccessToken) {
           localStorage.setItem('token', newAccessToken);
           originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
 
-          return axiosInstance(originalRequest); // 원래 요청 재시도
+          return axiosInstance(originalRequest);
         }
       } catch (error) {
         const reissueError = error as AxiosError<ApiResponse>;

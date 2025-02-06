@@ -4,7 +4,6 @@ import {
   useSuspenseQuery,
 } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
-import { error } from 'console';
 import { toast } from 'sonner';
 
 import { FullRarity } from '@/lib/type';
@@ -88,19 +87,11 @@ const getAuctionList = async (params: AuctionParams = {}) => {
     searchParams.append('page', params.page.toString());
   }
 
-  try {
-    const response = await axiosInstance.get(
-      searchParams.toString()
-        ? `auction?${searchParams.toString()}`
-        : '/auction',
-    );
+  const response = await axiosInstance.get(
+    searchParams.toString() ? `auction?${searchParams.toString()}` : '/auction',
+  );
 
-    return response.data as AuctionResponse;
-  } catch (error) {
-    if (error instanceof AxiosError)
-      throw new Error(`HTTP error! status: ${error.response?.status}`);
-  }
-  throw error;
+  return response.data as AuctionResponse;
 };
 
 export const useGetAuctionList = (params: AuctionParams = {}) => {
