@@ -1,5 +1,4 @@
-import { useMutation } from '@tanstack/react-query';
-// import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -49,19 +48,19 @@ export const signOut = async () => {
 
 export const useSignOut = () => {
   const navigate = useNavigate();
-  // const queryClient = useQueryClient();
+  const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: signOut,
     onSuccess: () => {
       localStorage.removeItem('token');
-      // queryClient.clear();
+      queryClient.invalidateQueries({ queryKey: ['userInfo'] });
       toast.success('로그아웃 되었습니다.');
       navigate('/');
     },
     onError: () => {
       localStorage.removeItem('token');
-      // queryClient.clear();
+      queryClient.invalidateQueries({ queryKey: ['userInfo'] });
       navigate('/');
     },
   });
