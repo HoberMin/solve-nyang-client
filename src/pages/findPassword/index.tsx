@@ -41,7 +41,6 @@ interface ErrorMessages {
   FAILED_MODIFY_PASSWORD: string;
 }
 
-// error 타입 정의 추가
 interface ApiError extends Error {
   response?: {
     status: number;
@@ -90,7 +89,6 @@ interface FindPasswordResponse {
   message: string;
 }
 
-// 비밀번호 찾기이지만 사실상 재가입 로직
 const FindPassword = () => {
   const navigate = useNavigate();
   const findPasswordMutation: UseMutationResult<

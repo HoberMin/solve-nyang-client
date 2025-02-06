@@ -1,10 +1,16 @@
+import { useGetUserInfo } from '@/apis/user';
+
 import coinImg from '/assets/coin.svg';
 
-interface PointDisplayProps {
-  point: number;
-}
+const PointDisplay = () => {
+  const { data } = useGetUserInfo();
 
-export const PointDisplay = ({ point }: PointDisplayProps) => {
+  if (!data) {
+    throw new Error();
+  }
+
+  const { point } = data;
+
   return (
     <div className='w-48 rounded-lg bg-white/10 px-6 py-4 shadow-md backdrop-blur-sm'>
       <div className='mb-2 text-center text-lg font-bold text-white'>
@@ -18,3 +24,5 @@ export const PointDisplay = ({ point }: PointDisplayProps) => {
     </div>
   );
 };
+
+export default PointDisplay;

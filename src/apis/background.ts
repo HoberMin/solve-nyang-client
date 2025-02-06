@@ -5,7 +5,7 @@ import {
 } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
-import { BackgroundKey } from '@/pages/background/constant';
+import { BackgroundKey } from '@/lib/type';
 
 import { domain } from './avatar';
 

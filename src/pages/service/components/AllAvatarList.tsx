@@ -1,20 +1,21 @@
 import _ from 'lodash';
 
-import { RarityType, useGetAvatarList } from '@/apis/avatar';
+import { useGetAvatarList } from '@/apis/avatar';
+import { BASE_RARITY_ORDER } from '@/constant/rarityconfig';
+import { BaseRarity } from '@/lib/type';
 
 import RaritySection from './ServiceRaritySection';
 
 export interface Character {
   id: string;
   name: string;
-  rarity: RarityType;
+  rarity: BaseRarity;
 }
 
 const AllAvatarList = () => {
   const { data } = useGetAvatarList();
   const { avatars = [] } = data || {};
   const groupedCharacters = _.groupBy(avatars, 'rarity');
-  const rarityOrder: Character['rarity'][] = ['S', 'A', 'B', 'C', 'D'];
 
   return (
     <div className='mb-[100px] hidden h-full items-center justify-center py-8 lg:flex'>
@@ -30,7 +31,7 @@ const AllAvatarList = () => {
         </div>
 
         <div className='flex flex-col gap-3'>
-          {rarityOrder.map(
+          {BASE_RARITY_ORDER.map(
             rarity =>
               groupedCharacters[rarity] && (
                 <RaritySection

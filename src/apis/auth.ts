@@ -50,7 +50,6 @@ axiosInstance.interceptors.response.use(
       _retry?: boolean;
     };
 
-    // 엑세스 토큰 만료된 경우 401 "유효하지 않은 토큰입니다."
     if (
       error.response?.status === 401 &&
       error.response?.data?.message === '유효하지 않은 토큰입니다.' &&

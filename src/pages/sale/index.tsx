@@ -1,31 +1,20 @@
 import { useState } from 'react';
 
-import {
-  UserAvatar,
-  useGetUserAvatar,
-  useGetUserInfo,
-  useSaleAvatar,
-} from '@/apis/user';
+import { UserAvatar, useGetUserAvatar, useSaleAvatar } from '@/apis/user';
 import Layout from '@/components/Layout';
-import { cn } from '@/lib/utils';
+import { RARITY_CONFIG, RARITY_ORDER } from '@/constant/rarityconfig';
+import { FullRarity, RarityFilterType } from '@/lib/type';
+import { cn, getCatKorName } from '@/lib/utils';
 
-import { getCatKorName } from '../gacha/constants/catMappings';
 import FloatingSection from './components/FloatingSection';
-import HeaderSection, {
-  POINT_PER_AVATAR,
-  rarityConfig,
-  rarityOrder,
-} from './components/HeaderSection';
-import { Rarity } from './type';
+import HeaderSection, { POINT_PER_AVATAR } from './components/HeaderSection';
 
 export const AvatarSalePage = () => {
   const [selectedAvatars, setSelectedAvatars] = useState<UserAvatar[]>([]);
   const [, setIsDialogOpen] = useState(false);
-  const [selectedRarity, setSelectedRarity] = useState<'ALL' | Rarity>('ALL');
+  const [selectedRarity, setSelectedRarity] = useState<RarityFilterType>('ALL');
 
   const { data } = useGetUserAvatar();
-  const { data: userInfo } = useGetUserInfo();
-  const { point } = userInfo ?? { point: 0 };
   const { mutate: saleAvatars } = useSaleAvatar();
 
   const totalPoints = selectedAvatars.length * POINT_PER_AVATAR;
@@ -68,14 +57,14 @@ export const AvatarSalePage = () => {
 
   const hasDuplicates = getDuplicateAvatars().length > 0;
 
-  const rarityCounts = rarityOrder.reduce<Record<Rarity, number>>(
+  const rarityCounts = RARITY_ORDER.reduce<Record<FullRarity, number>>(
     (counts, rarity) => {
       counts[rarity] = (data?.avatars ?? []).filter(
         char => char.rarity === rarity,
       ).length;
       return counts;
     },
-    {} as Record<Rarity, number>,
+    {} as Record<FullRarity, number>,
   );
 
   const filteredAvatars = (data?.avatars ?? []).filter(avatar =>
@@ -84,9 +73,8 @@ export const AvatarSalePage = () => {
 
   return (
     <Layout>
-      <div className='relative mx-auto flex h-full w-full max-w-7xl flex-col'>
+      <div className='relative mx-auto flex h-full w-full max-w-5xl flex-col'>
         <HeaderSection
-          point={point}
           totalPoints={totalPoints}
           selectedRarity={selectedRarity}
           setSelectedRarity={setSelectedRarity}
@@ -94,12 +82,12 @@ export const AvatarSalePage = () => {
         />
 
         <div className='flex-1 overflow-y-auto px-1 pb-32 pt-16'>
-          <div className='grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8'>
+          <div className='grid grid-cols-8 gap-3'>
             {filteredAvatars.map(avatar => {
               const isSelected = selectedAvatars.some(
                 item => item.ownedAvatarId === avatar.ownedAvatarId,
               );
-              const rarity = rarityConfig[avatar.rarity];
+              const rarity = RARITY_CONFIG[avatar.rarity];
 
               return (
                 <div

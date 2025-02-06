@@ -5,14 +5,14 @@ import {
 } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
-import { Rarity } from '@/pages/sale/type';
+import { BaseRarity } from '@/lib/type';
 
 import { domain } from './avatar';
 
 export interface UserAvatar {
-  ownedAvatarId: string; // 고유값
+  ownedAvatarId: string;
   name: string;
-  rarity: Rarity;
+  rarity: BaseRarity;
   visible: boolean;
   visibleExtension: boolean;
 }
@@ -21,7 +21,7 @@ interface UserAvatarList {
   avatars: UserAvatar[];
 }
 
-interface UserInfo {
+export interface UserInfo {
   username: string;
   point: number;
   tier: string;

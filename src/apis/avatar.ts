@@ -5,14 +5,15 @@ import {
 } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
+import { BaseRarity } from '@/lib/type';
+
 export const domain = 'http://54.180.123.67:8080';
 
-export type RarityType = 'S' | 'A' | 'B' | 'C' | 'D';
 export interface Avatar {
-  id: string; // 고유값
+  id: string;
   avatarId: number;
   name: string;
-  rarity: RarityType;
+  rarity: BaseRarity;
   dropRate: number;
 }
 

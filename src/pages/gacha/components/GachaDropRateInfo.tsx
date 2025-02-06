@@ -1,5 +1,7 @@
+import { BaseRarity } from '@/lib/type';
+
 interface RarityInfo {
-  rarity: string;
+  rarity: BaseRarity;
   dropRate: string;
   color: string;
 }

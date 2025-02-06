@@ -67,26 +67,22 @@ const ERROR_MESSAGES: ErrorMessages = {
 const ChangePassword = () => {
   const navigate = useNavigate();
   const changeMutation = useChangePassword();
-  // const getEncryptionMutation = useGetEncryption();
 
   const [formData, setFormData] = useState<FormData>(INITIAL_FORM_STATE);
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [isShowCurrentPassword, setIsShowCurrentPassword] =
-    useState<boolean>(false);
-  const [isShowNewPassword, setIsShowNewPassword] = useState<boolean>(false);
+  const [isShowCurrentPassword, setIsShowCurrentPassword] = useState(false);
+  const [isShowNewPassword, setIsShowNewPassword] = useState(false);
 
-  // 유효성 검사 통과 여부
   const isValid =
     formData.currentPassword &&
     formData.newPassword &&
     formData.passwordConfirm &&
     formData.newPassword === formData.passwordConfirm;
 
-  // 입력 폼 수정 감지(새 비밀번호 입력)
   const handleInputChange = (
     value: string,
     fieldName: keyof FormData, // FormData의 키 중 하나로 제한
-  ): void => {
+  ) => {
     setFormData(prev => ({ ...prev, [fieldName]: value }));
 
     if (fieldName === 'newPassword') {
@@ -137,7 +133,6 @@ const ChangePassword = () => {
   const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
 
-    // 현재 비밀번호와 새 비밀번호가 동일한 경우 요청 보내지 않음
     if (formData.currentPassword === formData.newPassword) {
       toast.error('새 비밀번호는 현재 비밀번호와 달라야 합니다.');
       return;
@@ -170,7 +165,6 @@ const ChangePassword = () => {
     <Layout>
       <div className='flex min-h-[calc(100vh-64px)] flex-col items-center justify-center gap-16 px-4 lg:flex-row lg:px-8'>
         <div className='w-full max-w-sm lg:w-[30%]'>
-          {/* <Card className='border-zinc-800 bg-zinc-950/50'> */}
           <Card className='border-zinc-800 bg-white/15'>
             <CardHeader>
               <CardTitle className='text-center text-2xl text-zinc-100'>

@@ -1,15 +1,6 @@
-import { useGetUserInfo } from '@/apis/user';
-import { PointDisplay } from '@/pages/gacha/components/PointDisplay';
+import PointDisplay from '@/pages/gacha/components/PointDisplay';
 
 const AuctionHeader = () => {
-  const { data } = useGetUserInfo();
-
-  if (!data) {
-    return null;
-  }
-
-  const { point } = data;
-
   return (
     <div className='sticky top-0 z-10 flex bg-gray-900/95 px-6 py-4 backdrop-blur-sm'>
       <div className='flex-1'>
@@ -24,7 +15,7 @@ const AuctionHeader = () => {
         </p>
       </div>
       <div className='my-8'>
-        <PointDisplay point={point} />
+        <PointDisplay />
       </div>
     </div>
   );

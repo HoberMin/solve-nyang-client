@@ -28,7 +28,7 @@ const ExtensionPage = () => {
                 솔브냥 익스텐션
               </h2>
               <Button
-                variant='ghost' // 더 부드러운 스타일
+                variant='ghost'
                 size='sm'
                 className={cn(
                   'rounded-full px-4 py-1.5',

@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
 
+import { BaseRarity } from '@/lib/type';
+
 interface Avatar {
   name: string;
-  rarity: 'S' | 'A' | 'B' | 'C' | 'D';
+  rarity: BaseRarity;
 }
 
 export interface GachaResultModalProps {
@@ -23,11 +25,9 @@ export interface SummaryItemProps {
 
 export interface SummaryViewProps {
   results: Avatar[];
-  // onBackdropClick: (e: MouseEvent<HTMLDivElement>) => void;
   onOpenChange: (open: boolean) => void;
 }
 
-// 이미지 캐시 관리를 위한 전역 Map
 const IMAGE_CACHE = new Map<string, boolean>();
 
 export const useImagePreloader = (imageUrls: string[]) => {
@@ -55,7 +55,6 @@ export const useImagePreloader = (imageUrls: string[]) => {
             resolve();
           };
           img.onerror = () => {
-            // 에러 처리를 명시적으로 추가
             console.error(`Failed to load image: ${url}`);
             resolve();
           };

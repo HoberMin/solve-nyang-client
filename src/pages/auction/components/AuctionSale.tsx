@@ -14,24 +14,9 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { cn } from '@/lib/utils';
-import { getCatKorName } from '@/pages/gacha/constants/catMappings';
-
-type Rarity = 'H' | 'S' | 'A' | 'B' | 'C' | 'D';
-
-const rarityConfig: Record<
-  Rarity,
-  { border: string; text: string; bg: string }
-> = {
-  H: { border: 'border-[#26ffc9]', text: 'text-[#26ffc9]', bg: 'bg-[#26ffc9]' },
-  S: { border: 'border-[#f74600]', text: 'text-[#f74600]', bg: 'bg-[#f74600]' },
-  A: { border: 'border-[#ffc337]', text: 'text-[#ffc337]', bg: 'bg-[#ffc337]' },
-  B: { border: 'border-[#7abf16]', text: 'text-[#7abf16]', bg: 'bg-[#7abf16]' },
-  C: { border: 'border-[#108df1]', text: 'text-[#108df1]', bg: 'bg-[#108df1]' },
-  D: { border: 'border-[#a663ee]', text: 'text-[#a663ee]', bg: 'bg-[#a663ee]' },
-};
-
-const rarityOrder: Rarity[] = ['H', 'S', 'A', 'B', 'C', 'D'];
+import { RARITY_CONFIG, RARITY_ORDER } from '@/constant/rarityconfig';
+import { FullRarity, RarityFilterType } from '@/lib/type';
+import { cn, getCatKorName } from '@/lib/utils';
 
 interface SaleDialogProps {
   avatar: UserAvatar;
@@ -147,11 +132,11 @@ const SaleDialog: React.FC<SaleDialogProps> = ({
             </DialogTitle>
             <DialogDescription className='text-center text-base text-gray-200'>
               <span
-                className={cn('font-bold', rarityConfig[avatar.rarity]?.text)}
+                className={cn('font-bold', RARITY_CONFIG[avatar.rarity].text)}
               >
                 {getCatKorName(avatar.name)}
               </span>
-              을(를){' '}
+              을(를)
               <span className='font-bold text-blue-400'>
                 {price.toLocaleString()}
               </span>
@@ -181,9 +166,9 @@ const SaleDialog: React.FC<SaleDialogProps> = ({
 
 const AuctionSale = () => {
   const { data } = useGetUserAvatar();
-  const { mutate: auctionAvatar } = useAuctionAvatar();
+  const auctionAvatar = useAuctionAvatar();
   const [selectedAvatar, setSelectedAvatar] = useState<UserAvatar | null>(null);
-  const [selectedRarity, setSelectedRarity] = useState<'ALL' | Rarity>('ALL');
+  const [selectedRarity, setSelectedRarity] = useState<RarityFilterType>('ALL');
 
   const handleSell = (avatar: UserAvatar, price: number) => {
     auctionAvatar(
@@ -208,12 +193,12 @@ const AuctionSale = () => {
       ? avatars
       : avatars.filter(avatar => avatar.rarity === selectedRarity);
 
-  const rarityCounts = rarityOrder.reduce<Record<Rarity, number>>(
+  const rarityCounts = RARITY_ORDER.reduce<Record<FullRarity, number>>(
     (counts, rarity) => {
       counts[rarity] = avatars.filter(char => char.rarity === rarity).length;
       return counts;
     },
-    {} as Record<Rarity, number>,
+    {} as Record<FullRarity, number>,
   );
 
   return (
@@ -230,15 +215,15 @@ const AuctionSale = () => {
         >
           전체 ({avatars.length})
         </Button>
-        {rarityOrder.map(rarity => (
+        {RARITY_ORDER.map(rarity => (
           <Button
             key={rarity}
             onClick={() => setSelectedRarity(rarity)}
             className={cn(
               'border-2',
               selectedRarity === rarity
-                ? `${rarityConfig[rarity].bg} text-white`
-                : `${rarityConfig[rarity].bg} bg-opacity-20 ${rarityConfig[rarity].text}`,
+                ? `${RARITY_CONFIG[rarity].bg} text-white`
+                : `${RARITY_CONFIG[rarity].bg} bg-opacity-20 ${RARITY_CONFIG[rarity].text}`,
             )}
           >
             {rarity}등급 ({rarityCounts[rarity] || 0})
@@ -248,7 +233,7 @@ const AuctionSale = () => {
 
       <div className='grid grid-cols-8 gap-4'>
         {filteredAvatars.map(avatar => {
-          const rarity = rarityConfig[avatar.rarity as Rarity];
+          const rarity = RARITY_CONFIG[avatar.rarity];
 
           return (
             <div

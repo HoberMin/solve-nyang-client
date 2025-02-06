@@ -1,20 +1,6 @@
 import { UserAvatar } from '@/apis/user';
-import { cn } from '@/lib/utils';
-import { getCatKorName } from '@/pages/gacha/constants/catMappings';
-
-import { RarityType } from './AvatarCollection';
-
-export const rarityColors: Record<
-  RarityType,
-  { bg: string; text: string; border: string }
-> = {
-  H: { bg: 'bg-[#26ffc9]', text: 'text-[#26ffc9]', border: 'border-[#26ffc9]' },
-  S: { bg: 'bg-[#f74600]', text: 'text-[#f74600]', border: 'border-[#f74600]' },
-  A: { bg: 'bg-[#ffc337]', text: 'text-[#ffc337]', border: 'border-[#ffc337]' },
-  B: { bg: 'bg-[#7abf16]', text: 'text-[#7abf16]', border: 'border-[#7abf16]' },
-  C: { bg: 'bg-[#108df1]', text: 'text-[#108df1]', border: 'border-[#108df1]' },
-  D: { bg: 'bg-[#a663ee]', text: 'text-[#a663ee]', border: 'border-[#a663ee]' },
-};
+import { RARITY_CONFIG } from '@/constant/rarityconfig';
+import { cn, getCatKorName } from '@/lib/utils';
 
 interface AvatarCardProps {
   avatar: UserAvatar;
@@ -22,7 +8,7 @@ interface AvatarCardProps {
 }
 
 export const AvatarCard = ({ avatar, onClick }: AvatarCardProps) => {
-  const rarity = avatar.rarity as RarityType;
+  const rarity = avatar.rarity;
 
   return (
     <div
@@ -38,7 +24,7 @@ export const AvatarCard = ({ avatar, onClick }: AvatarCardProps) => {
         <div
           className={cn(
             'absolute right-1 top-1 text-xs font-bold',
-            rarityColors[rarity].text,
+            RARITY_CONFIG[rarity].text,
           )}
         >
           {rarity}

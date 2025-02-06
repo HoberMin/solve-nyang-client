@@ -1,4 +1,3 @@
-// 로그인 여부에 따른 라우터 보호
 import { useEffect } from 'react';
 
 import { Navigate } from 'react-router-dom';
@@ -6,8 +5,6 @@ import { toast } from 'sonner';
 
 import { useAuth } from '@/hooks/useAuth';
 
-// requireAuth가 true면 로그인 필요
-// requireAuth가 false면 로그인하면 안되는 페이지(회원가입, 로그인, 비밀번호 찾기)
 const ProtectedRoute = ({
   element,
   requireAuth,

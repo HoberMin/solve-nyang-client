@@ -1,8 +1,9 @@
-import { getCatKorName } from '@/pages/gacha/constants/catMappings';
+import { FullRarity } from '@/lib/type';
+import { getCatKorName } from '@/lib/utils';
 
 interface CatListCardProps {
   name: string;
-  rarity?: 'H' | 'S' | 'A' | 'B' | 'C' | 'D';
+  rarity: FullRarity;
 }
 
 const AvatarCard = ({ name, rarity = 'S' }: CatListCardProps) => {
