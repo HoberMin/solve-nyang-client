@@ -1,15 +1,14 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { domain } from './avatar';
+import { axiosInstance } from './auth';
 
-export const userExtensionAvatarToggle = async (ownedAvatarId: string) =>
-  await fetch(`${domain}/user/me/extension/${ownedAvatarId}`, {
-    method: 'PATCH',
-    headers: {
-      'Content-Type': 'application/json',
-      authorization: `Bearer ${localStorage.getItem('token')}`,
-    },
-  });
+export const userExtensionAvatarToggle = async (ownedAvatarId: string) => {
+  const response = await axiosInstance.patch(
+    `/user/me/extension/${ownedAvatarId}`,
+  );
+
+  return response.data;
+};
 
 export const useUserExtensionAvatarToggle = () => {
   const queryClient = useQueryClient();

@@ -2,7 +2,7 @@ import { useSuspenseQuery } from '@tanstack/react-query';
 
 import { BaseRarity } from '@/lib/type';
 
-import { domain } from './avatar';
+import { axiosInstance } from './auth';
 
 export interface AvatarGallery {
   name: string;
@@ -14,15 +14,11 @@ interface AvatarGalleryList {
   collections: AvatarGallery[];
 }
 
-export const getAvatarGallery = async () =>
-  await fetch(`${domain}/user/me/collection`, {
-    headers: {
-      'Content-Type': 'application/json',
-      authorization: `Bearer ${localStorage.getItem('token')}`,
-    },
-  })
-    .then(res => res.json())
-    .then(data => data as AvatarGalleryList);
+export const getAvatarGallery = async () => {
+  const response = await axiosInstance('/user/me/collection');
+
+  return response.data as AvatarGalleryList;
+};
 
 export const useGetAvatarGallery = () =>
   useSuspenseQuery({
