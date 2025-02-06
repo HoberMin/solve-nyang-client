@@ -23,7 +23,7 @@ declare module 'axios' {
 export const axiosInstance = axios.create({
   baseURL: domain,
   timeout: 5000,
-  withCredentials: true, // HTTP-Only 쿠키(refresh)
+  withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -52,7 +52,7 @@ axiosInstance.interceptors.response.use(
 
     if (
       error.response?.status === 401 &&
-      error.response?.data?.message === '유효하지 않은 토큰입니다.' &&
+      error.response?.data?.message === '토큰이 만료되었습니다.' &&
       !originalRequest?._retry
     ) {
       originalRequest._retry = true; // 무한루프 방지
