@@ -3,11 +3,13 @@ import {
   useQueryClient,
   useSuspenseQuery,
 } from '@tanstack/react-query';
+import { AxiosError } from 'axios';
+import { error } from 'console';
 import { toast } from 'sonner';
 
 import { FullRarity } from '@/lib/type';
 
-import { domain } from './avatar';
+import { axiosInstance } from './auth';
 
 export type SortType = 0 | 1 | 2;
 export type FilterType = 0 | 1 | 2 | 3;
@@ -86,25 +88,19 @@ const getAuctionList = async (params: AuctionParams = {}) => {
     searchParams.append('page', params.page.toString());
   }
 
-  const queryString = searchParams.toString();
-  const url = queryString
-    ? `${domain}/auction?${queryString}`
-    : `${domain}/auction`;
+  try {
+    const response = await axiosInstance.get(
+      searchParams.toString()
+        ? `auction?${searchParams.toString()}`
+        : '/auction',
+    );
 
-  const response = await fetch(url, {
-    headers: {
-      'Content-Type': 'application/json',
-      authorization: `Bearer ${localStorage.getItem('token')}`,
-    },
-  });
-
-  if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`);
+    return response.data as AuctionResponse;
+  } catch (error) {
+    if (error instanceof AxiosError)
+      throw new Error(`HTTP error! status: ${error.response?.status}`);
   }
-
-  const data = await response.json();
-
-  return data as AuctionResponse;
+  throw error;
 };
 
 export const useGetAuctionList = (params: AuctionParams = {}) => {
@@ -115,19 +111,16 @@ export const useGetAuctionList = (params: AuctionParams = {}) => {
 };
 
 const auctionAvatar = async (data: SaleRequest) => {
-  const response = await fetch(`${domain}/auction/sale`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      authorization: `Bearer ${localStorage.getItem('token')}`,
-    },
-    body: JSON.stringify(data),
-  });
+  try {
+    const response = await axiosInstance.post('/auction/sale', data);
 
-  if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`);
+    return response.data;
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      throw new Error(`HTTP error! status: ${error.response?.status}`);
+    }
+    throw error;
   }
-  return response.json();
 };
 
 export const useAuctionAvatar = () => {
@@ -153,25 +146,20 @@ const getUserAuctionList = async (params: HistoryParams = {}) => {
     searchParams.append('page', params.page.toString());
   }
 
-  const queryString = searchParams.toString();
-  const url = queryString
-    ? `${domain}/auction/me?${queryString}`
-    : `${domain}/auction/me`;
+  try {
+    const response = await axiosInstance.get(
+      searchParams.toString()
+        ? `/auction/me${searchParams.toString()}`
+        : '/auction/me',
+    );
 
-  const response = await fetch(url, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      authorization: `Bearer ${localStorage.getItem('token')}`,
-    },
-  });
-  if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`);
+    return response.data as AuctionResponse;
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      throw new Error(`HTTP error! status: ${error.response?.status}`);
+    }
+    throw error;
   }
-
-  const data = await response.json();
-
-  return data as AuctionResponse;
 };
 
 export const useGetUserAuctionList = (params: HistoryParams) => {
@@ -182,19 +170,17 @@ export const useGetUserAuctionList = (params: HistoryParams) => {
 };
 
 const cancelAuctionItem = async (auctionId: number) => {
-  const response = await fetch(`${domain}/auction/sale`, {
-    method: 'PATCH',
-    headers: {
-      'Content-Type': 'application/json',
-      authorization: `Bearer ${localStorage.getItem('token')}`,
-    },
-    body: JSON.stringify({
+  try {
+    const response = await axiosInstance.patch('/auction/sale', {
       id: auctionId,
-    }),
-  });
+    });
 
-  if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`);
+    return response.data;
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      throw new Error(`HTTP error! status: ${error.response?.status}`);
+    }
+    throw error;
   }
 };
 
@@ -213,19 +199,20 @@ export const useCancelAuctionItem = () => {
 };
 
 const buyAuctionItem = async (auctionId: number) => {
-  const response = await fetch(`${domain}/auction/buy`, {
-    method: 'PATCH',
-    headers: {
-      'Content-Type': 'application/json',
-      authorization: `Bearer ${localStorage.getItem('token')}`,
-    },
-    body: JSON.stringify({
+  try {
+    const response = await axiosInstance.patch('/auction/buy', {
       id: auctionId,
-    }),
-  });
+    });
 
-  if (!response.ok) {
-    throw { status: response.status, message: response.statusText };
+    return response.data;
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      throw {
+        status: error.response?.status,
+        message: error.response?.statusText,
+      };
+      throw error;
+    }
   }
 };
 
