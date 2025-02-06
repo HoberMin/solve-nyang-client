@@ -34,6 +34,7 @@ const userInfo = async (): Promise<UserInfo | null> => {
     headers: {
       'Content-Type': 'application/json',
       authorization: `Bearer ${localStorage.getItem('token')}`,
+      credentials: 'include',
     },
   });
 
