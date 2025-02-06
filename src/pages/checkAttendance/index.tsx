@@ -1,11 +1,15 @@
+import Layout from '@/components/Layout';
+
 import AttendanceCalendar from './componenets/AttendanceCalendar';
 import AttendanceStamp from './componenets/AttendanceStamp';
 
 const CheckAttendance = () => {
   return (
     <>
-      <AttendanceStamp />
-      <AttendanceCalendar />
+      <Layout>
+        <AttendanceStamp />
+        <AttendanceCalendar />
+      </Layout>
     </>
   );
 };

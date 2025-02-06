@@ -117,7 +117,7 @@ export const AttendanceCalendar: React.FC = () => {
         >
           <ChevronLeft className='h-5 w-5' />
         </button>
-        <h2 className='text-xl font-bold'>{`${year}년 ${month}월`}</h2>
+        <h2 className='text-xl text-white'>{`${year}년 ${month}월`}</h2>
         <button
           onClick={handleNextMonth}
           className='rounded p-2 hover:bg-gray-100'
