@@ -3,12 +3,10 @@ import {
   useQueryClient,
   useSuspenseQuery,
 } from '@tanstack/react-query';
-import axios from 'axios';
 import { toast } from 'sonner';
 
 import { BaseRarity } from '@/lib/type';
 
-import { axiosInstance } from './auth';
 import { domain } from './avatar';
 
 export interface UserAvatar {
@@ -32,16 +30,26 @@ export interface UserInfo {
 }
 
 const userInfo = async (): Promise<UserInfo | null> => {
-  try {
-    const response = await axiosInstance.get<UserInfo>('/user/me');
+  const response = await fetch(`${domain}/user/me`, {
+    headers: {
+      'Content-Type': 'application/json',
+      authorization: `Bearer ${localStorage.getItem('token')}`,
+    },
+    credentials: 'include',
+  });
 
-    return response.data;
-  } catch (error) {
-    if (axios.isAxiosError(error) && error.response?.status === 401) {
-      return null;
-    }
-    throw error;
+  // 401 내려오면 username은 null -> username이 null인 점을 이용해서 처리
+  if (response.status === 401) {
+    return null;
   }
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+
+  const data = await response.json();
+
+  return data as UserInfo;
 };
 
 const userCharacterSelecte = async (ownedAvatarId: string) =>
