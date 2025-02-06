@@ -1,12 +1,12 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
 
-import { Rarity } from '@/pages/sale/type';
+import { BaseRarity } from '@/lib/type';
 
 import { domain } from './avatar';
 
 export interface AvatarGallery {
   name: string;
-  rarity: Rarity;
+  rarity: BaseRarity;
   owned: boolean;
 }
 

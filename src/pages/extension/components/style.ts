@@ -1,30 +1,34 @@
+import { FullRarity } from '@/lib/type';
 import { cn } from '@/lib/utils';
-import { Rarity } from '@/pages/sale/type';
 
-export const RARITY_COLORS = {
+export const RARITY_STYLES = {
+  ALL: {
+    selected: 'bg-gray-800 text-white',
+    default: 'text-blue-200 hover:bg-blue-900/50',
+  },
   H: {
-    color: '#26ffc9',
-    text: 'text-black',
+    selected: 'bg-[#26ffc9] text-black',
+    default: 'text-[#26ffc9] hover:bg-[#26ffc9]/20',
   },
   S: {
-    color: '#f74600',
-    text: 'text-white',
+    selected: 'bg-[#f74600] text-white',
+    default: 'text-[#f74600] hover:bg-[#f74600]/20',
   },
   A: {
-    color: '#ffc337',
-    text: 'text-black',
+    selected: 'bg-[#ffc337] text-black',
+    default: 'text-[#ffc337] hover:bg-[#ffc337]/20',
   },
   B: {
-    color: '#7abf16',
-    text: 'text-black',
+    selected: 'bg-[#7abf16] text-black',
+    default: 'text-[#7abf16] hover:bg-[#7abf16]/20',
   },
   C: {
-    color: '#108df1',
-    text: 'text-white',
+    selected: 'bg-[#108df1] text-white',
+    default: 'text-[#108df1] hover:bg-[#108df1]/20',
   },
   D: {
-    color: '#a663ee',
-    text: 'text-white',
+    selected: 'bg-[#a663ee] text-white',
+    default: 'text-[#a663ee] hover:bg-[#a663ee]/20',
   },
 } as const;
 
@@ -56,9 +60,8 @@ export const styles = {
       ),
   },
   grid: {
-    container:
-      'grid grid-cols-3 md:grid-cols-6 lg:grid-cols-6 xl:grid-cols-8 gap-3', // 그리드 컬럼 수 증가 및 갭 감소
-    card: (rarity: Rarity) =>
+    container: 'grid md:grid-cols-8 lg:grid-cols-8 xl:grid-cols-8 gap-3', // 그리드 컬럼 수 증가 및 갭 감소
+    card: (rarity: FullRarity) =>
       cn(
         'relative cursor-pointer rounded-lg border p-2 transition-all', // 패딩 감소
         'hover:scale-105 hover:shadow-lg hover:brightness-110', // hover 효과 개선
@@ -73,7 +76,7 @@ export const styles = {
       ),
     imageContainer: 'aspect-square relative',
     image: 'w-full h-full object-contain p-1',
-    rarityBadge: (rarity: Rarity) =>
+    rarityBadge: (rarity: FullRarity) =>
       cn('absolute right-1 top-1 text-xs font-bold', {
         // 위치 및 크기 조정
         'text-[#26ffc9]': rarity === 'H',

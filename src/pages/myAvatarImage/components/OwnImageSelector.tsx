@@ -4,7 +4,7 @@ import {
   useChangeBackgroundAPI,
   useGetUserBackgroundImage,
 } from '@/apis/background';
-import { getKoreanName } from '@/pages/background/constant';
+import { getKoreanName } from '@/lib/utils';
 
 import { styles } from '../style';
 

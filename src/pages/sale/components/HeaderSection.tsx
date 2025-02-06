@@ -1,23 +1,12 @@
+import { RARITY_CONFIG, RARITY_FILTER } from '@/constant/rarityconfig';
 import { cn } from '@/lib/utils';
-import { PointDisplay } from '@/pages/gacha/components/PointDisplay';
+import PointDisplay from '@/pages/gacha/components/PointDisplay';
 
-import { HeaderSectionProps, Rarity, RarityStyle } from '../type';
+import { HeaderSectionProps } from '../type';
 
 export const POINT_PER_AVATAR = 30;
 
-export const rarityOrder: Rarity[] = ['H', 'S', 'A', 'B', 'C', 'D'];
-
-export const rarityConfig: Record<Rarity, RarityStyle> = {
-  H: { border: 'border-[#26ffc9]', text: 'text-[#26ffc9]' },
-  S: { border: 'border-[#f74600]', text: 'text-[#f74600]' },
-  A: { border: 'border-[#ffc337]', text: 'text-[#ffc337]' },
-  B: { border: 'border-[#7abf16]', text: 'text-[#7abf16]' },
-  C: { border: 'border-[#108df1]', text: 'text-[#108df1]' },
-  D: { border: 'border-[#a663ee]', text: 'text-[#a663ee]' },
-};
-
 const HeaderSection = ({
-  point,
   totalPoints,
   selectedRarity,
   setSelectedRarity,
@@ -46,7 +35,7 @@ const HeaderSection = ({
           </div>
 
           <div className='flex cursor-pointer gap-2'>
-            {(['ALL' as const, ...rarityOrder] as const).map(rarity => (
+            {RARITY_FILTER.map(rarity => (
               <span
                 key={rarity}
                 onClick={() => setSelectedRarity(rarity)}
@@ -55,7 +44,7 @@ const HeaderSection = ({
                   selectedRarity === rarity
                     ? rarity === 'ALL'
                       ? 'bg-black text-white'
-                      : `bg-${rarityConfig[rarity as Rarity].text.split('-')[1]} text-white`
+                      : `bg-${RARITY_CONFIG[rarity].text.split('-')[1]} text-white`
                     : 'text-blue-400',
                 )}
               >
@@ -78,7 +67,7 @@ const HeaderSection = ({
                         : 'text-gray-500',
                     )}
                   >
-                    ({rarityCounts[rarity as Rarity] || 0})
+                    ({rarityCounts[rarity] || 0})
                   </span>
                 )}
               </span>
@@ -87,7 +76,7 @@ const HeaderSection = ({
         </div>
 
         <div className='mt-8'>
-          <PointDisplay point={point} />
+          <PointDisplay />
         </div>
       </div>
     </div>

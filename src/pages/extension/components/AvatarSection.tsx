@@ -3,8 +3,8 @@ import { useState } from 'react';
 import { Cat, Puzzle } from 'lucide-react';
 
 import { UserAvatar } from '@/apis/user';
+import { RarityFilterType } from '@/lib/type';
 import { cn } from '@/lib/utils';
-import { Rarity } from '@/pages/sale/type';
 
 import { AvatarGrid } from './AvatarGrid';
 import { RarityFilter } from './RarityFilter';
@@ -20,7 +20,7 @@ export const AvatarSection = ({
   avatars,
   isExtension,
 }: AvatarSectionProps) => {
-  const [selectedRarity, setSelectedRarity] = useState<Rarity | 'ALL'>('ALL');
+  const [selectedRarity, setSelectedRarity] = useState<RarityFilterType>('ALL');
 
   const filteredAvatars = avatars.filter(
     avatar => selectedRarity === 'ALL' || avatar.rarity === selectedRarity,

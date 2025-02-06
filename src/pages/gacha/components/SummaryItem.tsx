@@ -1,6 +1,9 @@
 import { memo } from 'react';
 
-import { CAT_MAPPINGS, RARITY_TO_IMAGE } from '../constants/catMappings';
+import { CAT_MAPPINGS } from '@/constant/catMapping';
+import { BaseRarity } from '@/lib/type';
+
+import { RARITY_TO_IMAGE } from '../constants/gacha';
 import { SummaryItemProps } from '../hooks/usePreloader';
 
 interface RarityInfo {
@@ -8,7 +11,7 @@ interface RarityInfo {
   color: string;
 }
 
-const RARITY_INFO: Record<string, RarityInfo> = {
+export const RARITY_INFO: Record<BaseRarity, RarityInfo> = {
   S: { dropRate: '1', color: '#f74600' },
   A: { dropRate: '4', color: '#ffc337' },
   B: { dropRate: '30', color: '#7abf16' },

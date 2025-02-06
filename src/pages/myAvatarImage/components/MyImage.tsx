@@ -11,8 +11,6 @@ import { cn } from '@/lib/utils';
 import { styles } from '../style';
 import OwnImageSelector from './OwnImageSelector';
 
-export type BackgroundType = '우주배경' | '지구배경' | '공원배경';
-
 interface MyImageProps {
   username: string;
 }

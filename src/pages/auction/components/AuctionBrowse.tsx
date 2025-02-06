@@ -4,8 +4,7 @@ import { Search } from 'lucide-react';
 import { toast } from 'sonner';
 
 import {
-  AuctionError,
-  RarityType,
+  Merchandise,
   SortType,
   useBuyAuctionItem,
   useGetAuctionList,
@@ -37,45 +36,23 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { cn } from '@/lib/utils';
-import { getCatKorName } from '@/pages/gacha/constants/catMappings';
+import { FullRarity, RarityFilterType } from '@/lib/type';
+import { cn, formatDate, getCatKorName } from '@/lib/utils';
 
+import { RARITY_CONFIG } from '../../../constant/rarityconfig';
 import CustomPagination from './CustomPagination';
 
-type RarityFilter = 'ALL' | RarityType;
-
-interface SelectedItem {
-  id: number;
-  name: string;
-  rarity: RarityType;
-  price: number;
-}
-
-const rarityConfig: Record<
-  RarityType,
-  { border: string; text: string; bg: string }
-> = {
-  H: { border: 'border-[#26ffc9]', text: 'text-[#26ffc9]', bg: 'bg-[#26ffc9]' },
-  S: { border: 'border-[#f74600]', text: 'text-[#f74600]', bg: 'bg-[#f74600]' },
-  A: { border: 'border-[#ffc337]', text: 'text-[#ffc337]', bg: 'bg-[#ffc337]' },
-  B: { border: 'border-[#7abf16]', text: 'text-[#7abf16]', bg: 'bg-[#7abf16]' },
-  C: { border: 'border-[#108df1]', text: 'text-[#108df1]', bg: 'bg-[#108df1]' },
-  D: { border: 'border-[#a663ee]', text: 'text-[#a663ee]', bg: 'bg-[#a663ee]' },
-};
-
-const formatDate = (dateString: string) => {
-  const date = new Date(dateString);
-
-  return `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`;
-};
-
 const AuctionBrowse = () => {
-  // 필터링 State
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('0');
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedRarity, setSelectedRarity] = useState<RarityFilter>('ALL');
+  const [selectedRarity, setSelectedRarity] = useState<RarityFilterType>('ALL');
   const [inputValue, setInputValue] = useState('');
+  const [selectedItem, setSelectedItem] = useState<Merchandise | null>(null);
+  const [result, setResult] = useState<{
+    title: string;
+    description: string;
+  } | null>(null);
 
   const queryParams = {
     keyword: searchTerm || undefined,
@@ -87,27 +64,7 @@ const AuctionBrowse = () => {
   const { data } = useGetAuctionList(queryParams);
   const { totalPage, merchandises } = data || {};
 
-  // 구매 State
-  const [selectedItem, setSelectedItem] = useState<SelectedItem | null>(null);
-  const [result, setResult] = useState<{
-    title: string;
-    description: string;
-  } | null>(null);
-
-  const { mutateAsync: buyAuctionItem } = useBuyAuctionItem({
-    onSuccess: () => {
-      toast.success('성공적으로 구매하였습니다.');
-      setSelectedItem(null);
-    },
-    onError: (error: AuctionError) => {
-      if (error?.status === 400) {
-        toast.error('이미 판매된 아바타거나 판매가 취소된 아바타입니다.');
-      } else if (error?.status === 402) {
-        toast.error('보유 냥코인이 부족합니다.');
-      }
-      setSelectedItem(null);
-    },
-  });
+  const { mutateAsync: buyAuctionItem } = useBuyAuctionItem();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
@@ -119,8 +76,8 @@ const AuctionBrowse = () => {
     setCurrentPage(1);
   };
 
-  const handleRarity = (value: string) => {
-    setSelectedRarity(value as RarityFilter);
+  const handleRarity = (value: FullRarity) => {
+    setSelectedRarity(value);
     setCurrentPage(1);
   };
 
@@ -131,16 +88,21 @@ const AuctionBrowse = () => {
 
   const handlePurchase = async () => {
     if (!selectedItem) return;
-    try {
-      await buyAuctionItem(selectedItem.id);
-    } catch (error) {
-      console.error('Purchase failed:', error);
+    await buyAuctionItem(selectedItem.id);
+    setSelectedItem(null);
+  };
+
+  const handleItemSelect = (item: Merchandise) => {
+    if (item.isMine) {
+      toast.error('자신이 올린 상품은 구매할 수 없습니다.');
+      return;
     }
+
+    setSelectedItem(item);
   };
 
   return (
     <div className='flex gap-6'>
-      {/* 왼쪽 사이드바 */}
       <div className='w-72 space-y-6'>
         <form
           onSubmit={handleSearch}
@@ -198,7 +160,6 @@ const AuctionBrowse = () => {
         </form>
       </div>
 
-      {/* 오른쪽 테이블 영역 */}
       <div className='flex-1'>
         <div className='rounded-lg bg-gray-800'>
           <Table>
@@ -239,7 +200,7 @@ const AuctionBrowse = () => {
                     <span
                       className={cn(
                         'font-bold',
-                        rarityConfig[item.rarity]?.text,
+                        RARITY_CONFIG[item.rarity]?.text,
                       )}
                     >
                       {item.rarity}
@@ -258,22 +219,7 @@ const AuctionBrowse = () => {
                     <div className='flex justify-center'>
                       <Button
                         disabled={item.sold}
-                        onClick={() => {
-                          if (item.isMine) {
-                            toast.error(
-                              '자신이 올린 상품은 구매할 수 없습니다.',
-                            );
-                            return;
-                          }
-                          if (!item.sold) {
-                            setSelectedItem({
-                              id: item.id,
-                              name: getCatKorName(item.name),
-                              price: item.price,
-                              rarity: item.rarity,
-                            });
-                          }
-                        }}
+                        onClick={() => handleItemSelect(item)}
                         className={cn(
                           'w-22',
                           item.sold
@@ -313,12 +259,12 @@ const AuctionBrowse = () => {
                   <span
                     className={cn(
                       'font-bold',
-                      rarityConfig[selectedItem.rarity]?.text,
+                      RARITY_CONFIG[selectedItem.rarity]?.text,
                     )}
                   >
                     {selectedItem.name}
                   </span>
-                  을(를){' '}
+                  을(를)
                   <span className='font-bold text-blue-400'>
                     {selectedItem.price.toLocaleString()}냥
                   </span>

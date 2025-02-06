@@ -5,7 +5,7 @@ import { toast } from 'sonner';
 import { Avatar, useGachaAvatarApi } from '@/apis/avatar';
 import { useGetUserInfo } from '@/apis/user';
 import Layout from '@/components/Layout';
-import RetroLoading from '@/components/RetroLoading';
+import LoadingScreen from '@/components/LoadingScreen';
 import {
   Tooltip,
   TooltipContent,
@@ -16,7 +16,7 @@ import { queryClient } from '@/lib/queryClient';
 import { GachaConfirmDialog } from '@/pages/gacha/components/GachaConfirmDialog';
 import { GachaDropRateInfo } from '@/pages/gacha/components/GachaDropRateInfo';
 import { GachaResultModal } from '@/pages/gacha/components/GachaResultModal';
-import { PointDisplay } from '@/pages/gacha/components/PointDisplay';
+import PointDisplay from '@/pages/gacha/components/PointDisplay';
 
 import useImagePreloader from './hooks/usePreloader';
 import coinImg from '/assets/coin.svg';
@@ -117,7 +117,7 @@ const DrawButton = ({
 };
 const Gacha = () => {
   const getGacha = useGachaAvatarApi();
-  const { data: userData, isPending } = useGetUserInfo();
+  const { data: userData } = useGetUserInfo();
   const rotationRef = useRef<number>(0);
 
   const isImageLoaded = useImagePreloader(ALL_IMAGES);
@@ -132,8 +132,8 @@ const Gacha = () => {
   const [gachaResults, setGachaResults] = useState<Avatar[]>([]);
   const [drawMode, setDrawMode] = useState<'single' | 'multi' | null>(null);
 
-  if (isPending || !isImageLoaded) {
-    return <RetroLoading />;
+  if (!isImageLoaded) {
+    return <LoadingScreen />;
   }
 
   if (!userData?.username) {
@@ -206,7 +206,7 @@ const Gacha = () => {
   return (
     <Layout>
       <div className='fixed right-20 top-24 flex items-start gap-2'>
-        <PointDisplay point={point} />
+        <PointDisplay />
         <GachaDropRateInfo />
       </div>
 
