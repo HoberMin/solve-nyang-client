@@ -7,7 +7,7 @@ import { toast } from 'sonner';
 
 import { BaseRarity } from '@/lib/type';
 
-export const domain = 'http://54.180.123.67:8080';
+export const domain = 'https://dev.api.solve-nyang.com/';
 
 export interface Avatar {
   id: string;
