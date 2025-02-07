@@ -128,7 +128,7 @@ export const AttendanceCalendar: React.FC = () => {
 
       <div className='grid grid-cols-7 gap-2'>
         {weekdays.map(day => (
-          <div key={day} className='py-2 text-center font-medium'>
+          <div key={day} className='py-2 text-center font-medium text-white'>
             {day}
           </div>
         ))}
