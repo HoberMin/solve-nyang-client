@@ -83,7 +83,6 @@ const FEEDBACK_MESSAGES = {
 const FindPassword = () => {
   const navigate = useNavigate();
   const findPasswordMutation = useFindPassword();
-
   const getEncryptionMutation = useGetEncryption();
 
   const [formData, setFormData] = useState<FormData>(INITIAL_FORM_STATE);
@@ -202,7 +201,6 @@ const FindPassword = () => {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
-
     if (!formData.password.trim() || !formData.passwordConfirm.trim()) {
       toast.error(ERROR_MESSAGES.PASSWORD_SPACE);
       return;
