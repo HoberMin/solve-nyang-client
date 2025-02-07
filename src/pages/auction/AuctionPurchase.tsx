@@ -9,13 +9,13 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { RARITY_CONFIG } from '@/constant/rarityconfig';
 import { RarityFilterType } from '@/lib/type';
 import { cn, formatDate, getCatKorName } from '@/lib/utils';
 
-import { RARITY_CONFIG } from '../../../constant/rarityconfig';
-import CustomPagination from './CustomPagination';
-import FilterSidebar from './FilterSidebar';
-import PurchaseButton from './PurchaseButton';
+import CustomPagination from './components/CustomPagination';
+import FilterSidebar from './components/FilterSidebar';
+import PurchaseButton from './components/PurchaseButton';
 
 const AuctionBrowse = () => {
   const [searchTerm, setSearchTerm] = useState('');
