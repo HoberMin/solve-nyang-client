@@ -93,10 +93,11 @@ const createApiMethod = <T>(method: HttpMethod) => {
 
     try {
       const response = await axiosInstance<R>(config);
+      const isSuccess = response.status >= 200 && response.status < 300;
 
       return {
         data: response.data,
-        isSuccess: true,
+        isSuccess,
         status: response.status,
         message: response.statusText,
       };
