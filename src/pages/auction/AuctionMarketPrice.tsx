@@ -1,8 +1,9 @@
 import { useState } from 'react';
 
 import { ArrowUpDown } from 'lucide-react';
+import { useSearchParams } from 'react-router-dom';
 
-import { SortType, useGetAuctionList } from '@/apis/auction';
+import { useGetAuctionList } from '@/apis/auction';
 import {
   Table,
   TableBody,
@@ -19,58 +20,78 @@ import CustomPagination from './components/CustomPagination';
 import FilterSidebar from './components/FilterSidebar';
 
 const AuctionMarketPrice = () => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [sortBy, setSortBy] = useState<SortType>(0);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [selectedRarity, setSelectedRarity] = useState<RarityFilterType>('ALL');
-  const [inputValue, setInputValue] = useState('');
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const queryParams = {
-    keyword: searchTerm || undefined,
-    rarity: selectedRarity === 'ALL' ? undefined : selectedRarity,
-    sort: sortBy,
-    page: currentPage,
-  };
+  const [inputValue, setInputValue] = useState(''); // 검색어 입력
 
-  const { data } = useGetAuctionList(queryParams);
+  const { data } = useGetAuctionList(searchParams);
   const { totalPage, merchandises } = data || {};
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
   };
 
   const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setSearchTerm(inputValue);
-    setCurrentPage(1);
+    setSearchParams(prev => {
+      if (inputValue) {
+        prev.set('keyword', inputValue);
+      } else {
+        prev.delete('keyword');
+      }
+      prev.set('page', '1');
+      return prev;
+    });
   };
 
   const handleRarity = (value: RarityFilterType) => {
-    setSelectedRarity(value);
-    setCurrentPage(1);
+    setSearchParams(prev => {
+      if (value === 'ALL') {
+        prev.delete('rarity');
+      } else {
+        prev.set('rarity', value);
+      }
+      prev.set('page', '1');
+      return prev;
+    });
   };
 
   const handleSortPrice = () => {
-    setSortBy(current => {
-      if (current === 0 || current === 2) return 1;
-      return 2;
+    setSearchParams(prev => {
+      const currentSort = Number(prev.get('sort')) || 0;
+      if (currentSort === 0 || currentSort === 2) {
+        prev.set('sort', '1');
+      } else {
+        prev.set('sort', '2');
+      }
+      prev.set('page', '1');
+      return prev;
     });
-    setCurrentPage(1);
   };
 
   const handleSortDate = () => {
-    setSortBy(() => {
-      return 0;
+    setSearchParams(prev => {
+      prev.delete('sort');
+      prev.set('page', '1');
+      return prev;
     });
-    setCurrentPage(1);
+  };
+
+  const handlePageChange = (page: number) => {
+    setSearchParams(prev => {
+      prev.set('page', page.toString());
+      return prev;
+    });
   };
 
   return (
     <div className='flex gap-6'>
       <FilterSidebar
         inputValue={inputValue}
-        selectedRarity={selectedRarity}
-        onInputChange={handleChange}
+        selectedRarity={
+          (searchParams.get('rarity') as RarityFilterType) || 'ALL'
+        }
+        onInputChange={handleInputChange}
         onSearch={handleSearch}
         onRarityChange={handleRarity}
       />
@@ -147,9 +168,9 @@ const AuctionMarketPrice = () => {
           </Table>
 
           <CustomPagination
-            currentPage={currentPage}
+            currentPage={Number(searchParams.get('page')) || 1}
             totalPage={totalPage}
-            onPageChange={setCurrentPage}
+            onPageChange={handlePageChange}
           />
         </div>
       </div>
