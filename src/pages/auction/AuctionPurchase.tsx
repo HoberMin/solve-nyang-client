@@ -1,5 +1,7 @@
 import { useState } from 'react';
 
+import { ArrowUpDown } from 'lucide-react';
+
 import { SortType, useBuyAuctionItem, useGetAuctionList } from '@/apis/auction';
 import {
   Table,
@@ -19,7 +21,7 @@ import PurchaseButton from './components/PurchaseButton';
 
 const AuctionBrowse = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [sortBy, setSortBy] = useState('0');
+  const [sortBy, setSortBy] = useState<SortType>(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRarity, setSelectedRarity] = useState<RarityFilterType>('ALL');
   const [inputValue, setInputValue] = useState('');
@@ -27,7 +29,7 @@ const AuctionBrowse = () => {
   const queryParams = {
     keyword: searchTerm || undefined,
     rarity: selectedRarity === 'ALL' ? undefined : selectedRarity,
-    sort: Number(sortBy) as SortType,
+    sort: sortBy,
     page: currentPage,
   };
 
@@ -50,8 +52,18 @@ const AuctionBrowse = () => {
     setCurrentPage(1);
   };
 
-  const handleSort = (value: string) => {
-    setSortBy(value);
+  const handleSortPrice = () => {
+    setSortBy(current => {
+      if (current === 0 || current === 2) return 1;
+      return 2;
+    });
+    setCurrentPage(1);
+  };
+
+  const handleSortDate = () => {
+    setSortBy(() => {
+      return 0;
+    });
     setCurrentPage(1);
   };
 
@@ -60,11 +72,9 @@ const AuctionBrowse = () => {
       <FilterSidebar
         inputValue={inputValue}
         selectedRarity={selectedRarity}
-        sortBy={sortBy}
         onInputChange={handleChange}
         onSearch={handleSearch}
         onRarityChange={handleRarity}
-        onSortChange={handleSort}
       />
 
       <div className='flex-1'>
@@ -72,20 +82,32 @@ const AuctionBrowse = () => {
           <Table>
             <TableHeader>
               <TableRow className='rounded-lg border-gray-700 hover:bg-transparent'>
-                <TableHead className='text-center text-gray-200'></TableHead>
-                <TableHead className='text-center text-gray-200'>
+                <TableHead className='w-32 text-center text-gray-200'></TableHead>
+                <TableHead className='w-12 text-center text-gray-200'>
                   등급
                 </TableHead>
-                <TableHead className='text-center text-gray-200'>
+                <TableHead className='w-40 text-center text-gray-200'>
                   이름
                 </TableHead>
-                <TableHead className='text-center text-gray-200'>
-                  가격
+                <TableHead
+                  className='w-44 cursor-pointer text-center text-gray-200'
+                  onClick={handleSortPrice}
+                >
+                  <div className='flex items-center justify-center gap-2'>
+                    가격
+                    <ArrowUpDown className='h-4 w-4' />
+                  </div>
                 </TableHead>
-                <TableHead className='text-center text-gray-200'>
-                  등록일
+                <TableHead
+                  className='w-40 cursor-pointer text-center text-gray-200'
+                  onClick={handleSortDate}
+                >
+                  <div className='flex items-center justify-center gap-2'>
+                    등록일
+                    <ArrowUpDown className='h-4 w-4' />
+                  </div>
                 </TableHead>
-                <TableHead className='text-center text-gray-200'></TableHead>
+                <TableHead className='w-36 text-center text-gray-200'></TableHead>
               </TableRow>
             </TableHeader>
             <TableBody className='rounded-lg bg-gray-700'>

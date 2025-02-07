@@ -14,21 +14,17 @@ import { FullRarity, RarityFilterType } from '@/lib/type';
 interface FilterSidebarProps {
   inputValue: string;
   selectedRarity: RarityFilterType;
-  sortBy: string;
   onInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onSearch: (e: React.FormEvent<HTMLFormElement>) => void;
   onRarityChange: (value: FullRarity) => void;
-  onSortChange: (value: string) => void;
 }
 
 const FilterSidebar = ({
   inputValue,
   selectedRarity,
-  sortBy,
   onInputChange,
   onSearch,
   onRarityChange,
-  onSortChange,
 }: FilterSidebarProps) => {
   return (
     <div className='w-72 space-y-6'>
@@ -68,20 +64,6 @@ const FilterSidebar = ({
               <SelectItem value='B'>B등급</SelectItem>
               <SelectItem value='C'>C등급</SelectItem>
               <SelectItem value='D'>D등급</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-
-        <div className='space-y-2'>
-          <p className='text-sm text-gray-400'>정렬</p>
-          <Select value={sortBy} onValueChange={onSortChange}>
-            <SelectTrigger className='h-12 w-full border-transparent bg-gray-700 text-gray-200'>
-              <SelectValue placeholder='정렬 기준' />
-            </SelectTrigger>
-            <SelectContent className='border-transparent bg-gray-800 text-gray-200'>
-              <SelectItem value='0'>최신순</SelectItem>
-              <SelectItem value='1'>가격 높은순</SelectItem>
-              <SelectItem value='2'>가격 낮은순</SelectItem>
             </SelectContent>
           </Select>
         </div>
