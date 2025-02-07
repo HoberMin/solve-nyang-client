@@ -10,7 +10,7 @@ import { FullRarity } from '@/lib/type';
 import { api } from './core';
 
 export type SortType = 0 | 1 | 2;
-export type FilterType = 0 | 1 | 2 | 3;
+export type FilterType = '0' | '1' | '2' | '3';
 
 interface AuctionParams {
   keyword?: string;
@@ -43,11 +43,6 @@ interface SaleRequest {
   price: number;
 }
 
-interface HistoryParams {
-  filter?: FilterType;
-  page?: number;
-}
-
 export interface AuctionHistoryItem {
   id: number;
   price: number;
@@ -67,7 +62,7 @@ interface AuctionHistoryResponse {
   history: AuctionHistoryItem[];
 }
 
-interface AuctionMessageResponse {
+export interface AuctionMessageResponse {
   message?: string;
 }
 
@@ -101,16 +96,7 @@ const auctionAvatar = async (data: SaleRequest) => {
   return result.data;
 };
 
-const getUserAuctionList = async (params: HistoryParams = {}) => {
-  const searchParams = new URLSearchParams();
-
-  if (params.filter !== undefined && params.filter !== 0) {
-    searchParams.append('filter', params.filter?.toString());
-  }
-  if (params.page) {
-    searchParams.append('page', params.page.toString());
-  }
-
+const getUserAuctionList = async (searchParams: URLSearchParams) => {
   const result = await api.get<AuctionHistoryResponse>(
     searchParams.toString()
       ? `/auction/me?${searchParams.toString()}`
@@ -175,10 +161,10 @@ export const useAuctionAvatar = () => {
   return mutate;
 };
 
-export const useGetUserAuctionList = (params: HistoryParams) =>
+export const useGetUserAuctionList = (searchParams: URLSearchParams) =>
   useSuspenseQuery<AuctionHistoryResponse>({
-    queryKey: ['userAuctionHistory', params],
-    queryFn: () => getUserAuctionList(params),
+    queryKey: ['userAuctionHistory', searchParams.toString()],
+    queryFn: () => getUserAuctionList(searchParams),
   });
 
 export const useCancelAuctionItem = () => {

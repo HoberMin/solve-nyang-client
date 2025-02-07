@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 
 import {
   AuctionHistoryItem,
@@ -19,13 +19,6 @@ import {
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import {
   Table,
   TableBody,
   TableCell,
@@ -37,6 +30,7 @@ import { RARITY_CONFIG } from '@/constant/rarityconfig';
 import { cn, formatDate, getCatKorName } from '@/lib/utils';
 
 import CustomPagination from './components/CustomPagination';
+import HistorySidebar from './components/HistoryFilter';
 
 const statusConfig = {
   completed: { color: 'text-green-500', text: '거래 완료' },
@@ -45,13 +39,11 @@ const statusConfig = {
 };
 
 const AuctionHistory = () => {
-  const [filter, setFilter] = useState<FilterType>(0);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const { data } = useGetUserAuctionList({
-    filter: filter === 0 ? undefined : filter,
-    page: currentPage,
-  });
+  const { data } = useGetUserAuctionList(searchParams);
+
+  const { currentPageNumber, totalPage, history } = data || {};
 
   const cancelAuctionItem = useCancelAuctionItem();
 
@@ -61,28 +53,35 @@ const AuctionHistory = () => {
     return 'inProgress';
   };
 
+  const handleFilter = (value: FilterType) => {
+    setSearchParams(prev => {
+      if (value === '0') {
+        prev.delete('filter');
+      } else {
+        prev.set('filter', value);
+      }
+      prev.set('page', '1');
+      return prev;
+    });
+  };
+
+  const handlePageChange = (page: number) => {
+    setSearchParams(prev => {
+      prev.set('page', page.toString());
+      return prev;
+    });
+  };
+
   const handleCancel = (id: number) => {
     cancelAuctionItem(id);
   };
 
   return (
     <div className='space-y-4'>
-      <div className='flex justify-end'>
-        <Select
-          value={filter.toString()}
-          onValueChange={value => setFilter(Number(value) as FilterType)}
-        >
-          <SelectTrigger className='h-12 w-56 border-transparent bg-gray-700 text-gray-200'>
-            <SelectValue placeholder='상태 필터' />
-          </SelectTrigger>
-          <SelectContent className='border-transparent bg-gray-800 text-gray-200'>
-            <SelectItem value='0'>전체</SelectItem>
-            <SelectItem value='1'>거래 완료</SelectItem>
-            <SelectItem value='2'>판매 중</SelectItem>
-            <SelectItem value='3'>취소됨</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
+      <HistorySidebar
+        filter={(searchParams.get('filter') as FilterType) || '0'}
+        onFilterChange={handleFilter}
+      />
 
       <div className='rounded-lg bg-gray-800'>
         <Table>
@@ -100,7 +99,7 @@ const AuctionHistory = () => {
             </TableRow>
           </TableHeader>
           <TableBody className='rounded-lg bg-gray-700'>
-            {data?.history.map(item => (
+            {history.map(item => (
               <TableRow
                 key={item.id}
                 className='border-gray-600 text-base hover:bg-transparent'
@@ -185,9 +184,9 @@ const AuctionHistory = () => {
           </TableBody>
         </Table>
         <CustomPagination
-          currentPage={currentPage}
-          totalPage={data?.totalPage || 1}
-          onPageChange={setCurrentPage}
+          currentPage={currentPageNumber}
+          totalPage={totalPage}
+          onPageChange={handlePageChange}
         />
       </div>
     </div>

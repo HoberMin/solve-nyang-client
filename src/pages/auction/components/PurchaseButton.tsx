@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import { toast } from 'sonner';
 
-import { Merchandise } from '@/apis/auction';
+import { AuctionMessageResponse, Merchandise } from '@/apis/auction';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -20,7 +20,7 @@ import { RARITY_CONFIG } from '../../../constant/rarityconfig';
 
 interface PurchaseButtonProps {
   item: Merchandise;
-  onPurchase: (id: number) => Promise<void>;
+  onPurchase: (id: number) => Promise<AuctionMessageResponse | null>;
 }
 
 const PurchaseButton = ({ item, onPurchase }: PurchaseButtonProps) => {

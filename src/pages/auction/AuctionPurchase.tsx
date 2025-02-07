@@ -26,7 +26,7 @@ const AuctionPurchase = () => {
   const [inputValue, setInputValue] = useState(''); // 검색어 입력
 
   const { data } = useGetAuctionList(searchParams);
-  const { totalPage, merchandises } = data || {};
+  const { currentPageNumber, totalPage, merchandises } = data || {};
   const buyAuctionItem = useBuyAuctionItem();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -132,7 +132,7 @@ const AuctionPurchase = () => {
               </TableRow>
             </TableHeader>
             <TableBody className='rounded-lg bg-gray-700'>
-              {merchandises?.map(item => (
+              {merchandises.map(item => (
                 <TableRow
                   key={item.id}
                   className='border-gray-600 text-base hover:bg-transparent'
@@ -176,7 +176,7 @@ const AuctionPurchase = () => {
           </Table>
 
           <CustomPagination
-            currentPage={Number(searchParams.get('page')) || 1}
+            currentPage={currentPageNumber}
             totalPage={totalPage}
             onPageChange={handlePageChange}
           />
