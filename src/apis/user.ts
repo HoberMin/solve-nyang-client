@@ -3,11 +3,12 @@ import {
   useQueryClient,
   useSuspenseQuery,
 } from '@tanstack/react-query';
+import { AxiosError } from 'axios';
 import { toast } from 'sonner';
 
 import { BaseRarity } from '@/lib/type';
 
-import { domain } from './avatar';
+import { axiosInstance } from './auth';
 
 export interface UserAvatar {
   ownedAvatarId: string;
@@ -30,73 +31,40 @@ export interface UserInfo {
 }
 
 const userInfo = async (): Promise<UserInfo | null> => {
-  const response = await fetch(`${domain}/user/me`, {
-    headers: {
-      'Content-Type': 'application/json',
-      authorization: `Bearer ${localStorage.getItem('token')}`,
-    },
-    credentials: 'include',
-  });
+  try {
+    const response = await axiosInstance.get('/user/me');
 
-  // 401 내려오면 username은 null -> username이 null인 점을 이용해서 처리
-  if (response.status === 401) {
-    return null;
+    return response.data as UserInfo;
+  } catch (error) {
+    if (error instanceof AxiosError && error.response?.status === 401) {
+      return null;
+    }
+    throw error;
   }
-
-  if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`);
-  }
-
-  const data = await response.json();
-
-  return data as UserInfo;
 };
 
-const userCharacterSelecte = async (ownedAvatarId: string) =>
-  await fetch(
-    `${domain}/user/me/avatar/${ownedAvatarId}`,
-
-    {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-        authorization: `Bearer ${localStorage.getItem('token')}`,
-      },
-    },
+const userCharacterSelecte = async (ownedAvatarId: string) => {
+  const response = await axiosInstance.patch(
+    `/user/me/avatar/${ownedAvatarId}`,
   );
 
+  return response.data;
+};
+
 const userAvatar = async () => {
-  const response = await fetch(`${domain}/user/me/avatar`, {
-    headers: {
-      'Content-Type': 'application/json',
-      authorization: `Bearer ${localStorage.getItem('token')}`,
-    },
-  });
+  const response = await axiosInstance('/user/me/avatar');
 
-  if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`);
-  }
-
-  const data = await response.json();
-
-  return data as UserAvatarList;
+  return response.data as UserAvatarList;
 };
 
 const saleAvatar = async (avatarList: UserAvatarList) => {
-  await fetch(`${domain}/user/me/sale`, {
-    method: 'PATCH',
-    headers: {
-      'Content-Type': 'application/json',
-      authorization: `Bearer ${localStorage.getItem('token')}`,
-    },
-    body: JSON.stringify({
-      soldAvatars: avatarList.avatars.map(e => {
-        return {
-          ownedAvatarId: e.ownedAvatarId,
-        };
-      }),
-    }),
+  const response = await axiosInstance.patch('/user/me/sale', {
+    soldAvatars: avatarList.avatars.map(e => ({
+      ownedAvatarId: e.ownedAvatarId,
+    })),
   });
+
+  return response.data;
 };
 
 export const useGetUserInfo = () =>

@@ -7,6 +7,8 @@ import { toast } from 'sonner';
 
 import { BaseRarity } from '@/lib/type';
 
+import { axiosInstance } from './auth';
+
 export const domain = 'https://dev.api.solve-nyang.com';
 
 export interface Avatar {
@@ -21,43 +23,22 @@ export interface AvatarList {
   avatars: Avatar[];
 }
 
-export const gachaAvatar = async (count: number) =>
-  await fetch(`${domain}/gacha/draw`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      authorization: `Bearer ${localStorage.getItem('token')}`,
-    },
-    body: JSON.stringify({
-      count,
-    }),
-  })
-    .then(res => res.json())
-    .then(data => data as AvatarList);
+export const gachaAvatar = async (count: number) => {
+  const response = await axiosInstance.post('/gacha/draw', { count });
 
-export const getAvatarList = async () =>
-  await fetch(`${domain}/avatar`, {
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  })
-    .then(res => res.json())
-    .then(data => data as AvatarList);
+  return response.data as AvatarList;
+};
+
+export const getAvatarList = async () => {
+  const response = await axiosInstance.get('/avatar');
+
+  return response.data as AvatarList;
+};
 
 const resetAvatar = async () => {
-  const response = await fetch(`${domain}/user/me/avatar/reset`, {
-    method: 'PATCH',
-    headers: {
-      'Content-Type': 'application/json',
-      authorization: `Bearer ${localStorage.getItem('token')}`,
-    },
-  });
+  const response = await axiosInstance.patch('/user/me/avatar/reset');
 
-  if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`);
-  }
-
-  return response;
+  return response.data;
 };
 
 export const useResetAvatar = () => {

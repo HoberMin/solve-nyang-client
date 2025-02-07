@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 
-import { domain } from './avatar';
+import { axiosInstance } from './auth';
 
 interface ChangePassword {
   currentPassword: string;
@@ -25,35 +25,21 @@ export const changePassword = async ({
   currentPassword,
   newPassword,
 }: ChangePassword) => {
-  const response = await fetch(`${domain}/account/password/change`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${localStorage.getItem('token')}`,
-    },
-    body: JSON.stringify({ currentPassword, newPassword }),
+  const response = await axiosInstance.post('/account/password/change', {
+    currentPassword,
+    newPassword,
   });
 
-  const data = await response.json();
-  if (!response.ok) {
-    throw new Error(data.message || '비밀번호 변경 중 오류 발생');
-  }
-  return data;
+  return response.data;
 };
 
 export const findPassword = async ({ username, password }: FindPassword) => {
-  const response = await fetch(`${domain}/account/password/find`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ username, password }),
+  const response = await axiosInstance.post('/account/password/find', {
+    username,
+    password,
   });
 
-  const data = await response.json();
-  if (!response.ok) {
-    throw new Error(data.message || '비밀번호 재설정 중 오류 발생');
-  }
-
-  return data;
+  return response.data;
 };
 
 export const useChangePassword = () =>
