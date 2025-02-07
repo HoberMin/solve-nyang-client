@@ -44,6 +44,7 @@ interface ErrorMessages {
   PASSWORD_CHECK: string;
   FAILED_TO_CHECK_USER: string;
   SIGNUP_FAILED: string;
+  PASSWORD_SPACE: string;
 }
 
 interface ApiError extends Error {
@@ -58,7 +59,7 @@ interface ApiError extends Error {
 const VALIDATION: ValidationRules = {
   PASSWORD_MIN_LENGTH: 8,
   PASSWORD_PATTERN:
-    /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&^])[A-Za-z\d@$!%*#?&^]{8,}$/,
+    /^(?=.*[A-Za-z])(?=.*\d)(?=.*[~!@#$%^&*_\-+=`|(){}[\]:;"'<>,.?/])[A-Za-z\d~!@#$%^&*_\-+=`|(){}[\]:;"'<>,.?/]{8,}$/,
 };
 
 const INITIAL_FORM_STATE: FormData = {
@@ -76,6 +77,7 @@ const ERROR_MESSAGES: ErrorMessages = {
   PASSWORD_CHECK: '비밀번호를 확인해주세요.',
   FAILED_TO_CHECK_USER: '사용자 확인에 실패했습니다.',
   SIGNUP_FAILED: '회원가입에 실패했습니다.',
+  PASSWORD_SPACE: '비밀번호에 공백을 포함할 수 없습니다.',
 };
 
 const FEEDBACK_MESSAGES = {
@@ -98,6 +100,17 @@ const Signup = () => {
     value: string,
     fieldName: keyof FormData,
   ): void => {
+    if (
+      (fieldName === 'password' || fieldName === 'passwordConfirm') &&
+      value.includes(' ')
+    ) {
+      setErrors(prev => ({
+        ...prev,
+        [fieldName]: ERROR_MESSAGES.PASSWORD_SPACE,
+      }));
+      return;
+    }
+
     setFormData(prev => ({ ...prev, [fieldName]: value }));
 
     if (fieldName === 'password') {
@@ -145,7 +158,7 @@ const Signup = () => {
   };
 
   const handleKeyIssuance = (): void => {
-    if (!formData.username.trim()) {
+    if (!formData.username) {
       setErrors(prev => ({
         ...prev,
         username: ERROR_MESSAGES.EMPTY_NICKNAME,
@@ -180,6 +193,11 @@ const Signup = () => {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
+
+    if (!formData.password.trim() || !formData.passwordConfirm.trim()) {
+      toast.error(ERROR_MESSAGES.PASSWORD_SPACE);
+      return;
+    }
     signUpMutation(
       {
         username: formData.username,
@@ -355,6 +373,7 @@ const Signup = () => {
                       onChange={e =>
                         handleInputChange(e.target.value, 'password')
                       }
+                      onKeyDown={e => e.key === ' ' && e.preventDefault()}
                       className='h-10 bg-zinc-900 pr-10 text-zinc-100'
                       placeholder='비밀번호를 입력하세요.'
                     />
@@ -387,6 +406,7 @@ const Signup = () => {
                     onChange={e =>
                       handleInputChange(e.target.value, 'passwordConfirm')
                     }
+                    onKeyDown={e => e.key === ' ' && e.preventDefault()}
                     className='h-10 bg-zinc-900 text-zinc-100'
                     placeholder='비밀번호를 다시 입력하세요.'
                   />
