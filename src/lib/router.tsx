@@ -26,12 +26,12 @@ export const router = sentryCreateBrowserRouter([
           <ProtectedRoute element={<Pages.ContestPage />} requireAuth={true} />
         ),
       },
-      // {
-      //   path: 'auction',
-      //   element: (
-      //     <ProtectedRoute element={<Pages.AuctionPage />} requireAuth={true} />
-      //   ),
-      // },
+      {
+        path: 'auction',
+        element: (
+          <ProtectedRoute element={<Pages.AuctionPage />} requireAuth={true} />
+        ),
+      },
       {
         path: 'profile',
         element: (

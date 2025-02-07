@@ -59,6 +59,11 @@ export interface AuctionHistoryItem {
 }
 
 interface AuctionHistoryResponse {
+  currentPageNumber: number;
+  size: number;
+  totalPage: number;
+  hasNext: boolean;
+  hasPrevious: boolean;
   history: AuctionHistoryItem[];
 }
 
