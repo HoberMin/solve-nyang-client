@@ -15,7 +15,7 @@ export const AvatarSalePage = () => {
   const [selectedRarity, setSelectedRarity] = useState<RarityFilterType>('ALL');
 
   const { data } = useGetUserAvatar();
-  const { mutate: saleAvatars } = useSaleAvatar();
+  const saleAvatars = useSaleAvatar();
 
   const totalPoints = selectedAvatars.length * POINT_PER_AVATAR;
 

@@ -3,12 +3,11 @@ import {
   useQueryClient,
   useSuspenseQuery,
 } from '@tanstack/react-query';
-import { AxiosError } from 'axios';
 import { toast } from 'sonner';
 
 import { BaseRarity } from '@/lib/type';
 
-import { axiosInstance } from './auth';
+import { api } from './core';
 
 export interface UserAvatar {
   ownedAvatarId: string;
@@ -30,41 +29,49 @@ export interface UserInfo {
   streak: number;
 }
 
-const userInfo = async (): Promise<UserInfo | null> => {
-  try {
-    const response = await axiosInstance.get('/user/me');
+const userInfo = async () => {
+  const result = await api.get<UserInfo>('/user/me');
 
-    return response.data as UserInfo;
-  } catch (error) {
-    if (error instanceof AxiosError && error.response?.status === 401) {
-      return null;
-    }
-    throw error;
+  if (!result.isSuccess) {
+    if (result.status === 401) return null;
+    throw new Error(result.message);
   }
+
+  return result.data;
 };
 
 const userCharacterSelecte = async (ownedAvatarId: string) => {
-  const response = await axiosInstance.patch(
-    `/user/me/avatar/${ownedAvatarId}`,
-  );
+  const result = await api.patch(`/user/me/avatar/${ownedAvatarId}`);
 
-  return response.data;
+  if (!result.isSuccess) {
+    throw new Error(result.message);
+  }
+
+  return result.data;
 };
 
 const userAvatar = async () => {
-  const response = await axiosInstance('/user/me/avatar');
+  const result = await api.get<UserAvatarList>('/user/me/avatar');
 
-  return response.data as UserAvatarList;
+  if (!result || !result.data) {
+    throw new Error('Failed to fetch avatar data');
+  }
+
+  return result.data;
 };
 
 const saleAvatar = async (avatarList: UserAvatarList) => {
-  const response = await axiosInstance.patch('/user/me/sale', {
+  const result = await api.patch('/user/me/sale', {
     soldAvatars: avatarList.avatars.map(e => ({
       ownedAvatarId: e.ownedAvatarId,
     })),
   });
 
-  return response.data;
+  if (!result.isSuccess) {
+    throw new Error(result.message);
+  }
+
+  return result.data;
 };
 
 export const useGetUserInfo = () =>
@@ -74,7 +81,7 @@ export const useGetUserInfo = () =>
   });
 
 export const useGetUserAvatar = () =>
-  useSuspenseQuery({
+  useSuspenseQuery<UserAvatarList>({
     queryKey: ['userAvatar'],
     queryFn: userAvatar,
   });
@@ -82,9 +89,13 @@ export const useGetUserAvatar = () =>
 export const useToggleAvatar = () => {
   const queryClient = useQueryClient();
   const { mutate } = useMutation({
-    mutationFn: (ownedAvatarId: string) => userCharacterSelecte(ownedAvatarId),
+    mutationFn: userCharacterSelecte,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['userAvatar'] });
+      toast.success('캐릭터가 변경되었습니다.');
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || '캐릭터 변경 중 오류가 발생했습니다.');
     },
   });
 
@@ -94,16 +105,17 @@ export const useToggleAvatar = () => {
 export const useSaleAvatar = () => {
   const queryClient = useQueryClient();
 
-  return useMutation({
-    mutationFn: (avatarList: UserAvatarList) => saleAvatar(avatarList),
+  const { mutate } = useMutation({
+    mutationFn: saleAvatar,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['userInfo'] });
       queryClient.invalidateQueries({ queryKey: ['userAvatar'] });
       toast.success('고양이 캐릭터가 성공적으로 판매되었습니다.');
     },
-    onError: error => {
-      toast.error('판매 중 오류가 발생했습니다.');
-      console.error('Avatar sale error:', error);
+    onError: (error: Error) => {
+      toast.error(error.message || '판매 중 오류가 발생했습니다.');
     },
   });
+
+  return mutate;
 };

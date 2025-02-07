@@ -7,7 +7,7 @@ import { toast } from 'sonner';
 
 import { BackgroundKey } from '@/lib/type';
 
-import { axiosInstance } from './auth';
+import { api } from './core';
 
 export interface Background {
   id: string;
@@ -15,6 +15,7 @@ export interface Background {
   price: number;
   owned: boolean;
 }
+
 interface BackgroundList {
   backgrounds: Background[];
 }
@@ -29,10 +30,54 @@ interface OwnedBackgroundList {
   backgrounds: OwnedBackground[];
 }
 
-const getBackground = async () => {
-  const response = await axiosInstance.get('/background');
+interface BackgroundResponse {
+  message?: string;
+}
 
-  return response.data as BackgroundList;
+const getBackground = async () => {
+  const result = await api.get<BackgroundList>('/background');
+
+  if (!result.isSuccess || !result.data) {
+    throw new Error(result.message || '배경 목록을 불러오는데 실패했습니다.');
+  }
+
+  return result.data;
+};
+
+const getUserBackground = async () => {
+  const result = await api.get<OwnedBackgroundList>('/background/owned');
+
+  if (!result.isSuccess || !result.data) {
+    throw new Error(
+      result.message || '보유한 배경 목록을 불러오는데 실패했습니다.',
+    );
+  }
+
+  return result.data;
+};
+
+const changeUserBackground = async (ownedBackgroundId: string) => {
+  const result = await api.patch<BackgroundResponse>(
+    `/background/owned/${ownedBackgroundId}`,
+  );
+
+  if (!result.isSuccess) {
+    throw new Error(result.message || '배경 변경에 실패했습니다.');
+  }
+
+  return result.data;
+};
+
+const buyBackground = async (backgroundId: string) => {
+  const result = await api.post<BackgroundResponse>(
+    `/background/${backgroundId}`,
+  );
+
+  if (!result.isSuccess) {
+    throw new Error(result.message || '배경 구매에 실패했습니다.');
+  }
+
+  return result.data;
 };
 
 export const useGetBackgroundImage = () =>
@@ -41,52 +86,41 @@ export const useGetBackgroundImage = () =>
     queryFn: getBackground,
   });
 
-const getUserBackground = async () => {
-  const response = await axiosInstance.get('/background/owned');
-
-  return response.data as OwnedBackgroundList;
-};
-
 export const useGetUserBackgroundImage = () =>
   useSuspenseQuery<OwnedBackgroundList>({
     queryKey: ['user-background-image'],
     queryFn: getUserBackground,
   });
 
-const changeUserBackground = async (ownedBackgroundId: string) => {
-  const response = await axiosInstance.patch(
-    `/background/owned/${ownedBackgroundId}`,
-  );
-
-  return response.data;
-};
-
 export const useChangeBackgroundAPI = () => {
-  const { mutateAsync } = useMutation({
-    mutationFn: (ownedBackgroundId: string) =>
-      changeUserBackground(ownedBackgroundId),
+  const queryClient = useQueryClient();
+
+  const { mutate } = useMutation({
+    mutationFn: changeUserBackground,
+    onSuccess: data => {
+      queryClient.invalidateQueries({ queryKey: ['user-background-image'] });
+      toast.success(data?.message || '배경이 변경되었습니다.');
+    },
+    onError: (error: Error) => {
+      toast.error(error.message);
+    },
   });
 
-  return mutateAsync;
-};
-
-const buyBackground = async (backgroundId: string) => {
-  const response = await axiosInstance.post(`/background/${backgroundId}`);
-
-  return response.data;
+  return mutate;
 };
 
 export const useBuyBackgroundImage = () => {
   const queryClient = useQueryClient();
+
   const { mutate } = useMutation({
-    mutationFn: (backgroundId: string) => buyBackground(backgroundId),
-    onSuccess: () => {
+    mutationFn: buyBackground,
+    onSuccess: data => {
       queryClient.invalidateQueries({ queryKey: ['user-background-image'] });
       queryClient.invalidateQueries({ queryKey: ['background-image'] });
       queryClient.invalidateQueries({ queryKey: ['userInfo'] });
-      toast.success('배경을 구매했습니다.');
+      toast.success(data?.message || '배경을 구매했습니다.');
     },
-    onError: error => {
+    onError: (error: Error) => {
       toast.error(error.message);
     },
   });

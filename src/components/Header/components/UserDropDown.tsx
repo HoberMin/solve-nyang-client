@@ -14,7 +14,7 @@ interface UserDropdownProps {
 }
 
 const UserDropdown = ({ username }: UserDropdownProps) => {
-  const { mutate: signOut } = useSignOut();
+  const signOut = useSignOut();
 
   const handleLogout = () => {
     signOut();

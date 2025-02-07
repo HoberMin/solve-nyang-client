@@ -23,7 +23,7 @@ export const AvatarCollection = ({ onToggle }: AvatarCollectionProps) => {
   const [hiddenFilter, setHiddenFilter] = useState<RarityFilterType>('ALL');
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  const { mutate: resetAvatar } = useResetAvatar();
+  const resetAvatar = useResetAvatar();
   const { data: avatarData } = useGetUserAvatar();
   const avatars = avatarData.avatars;
 

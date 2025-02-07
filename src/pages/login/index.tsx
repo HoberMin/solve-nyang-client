@@ -22,7 +22,7 @@ const Login = () => {
     password: '',
   });
 
-  const { mutate: signIn, isPending } = useSignIn();
+  const signIn = useSignIn();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -65,7 +65,6 @@ const Login = () => {
                     onChange={handleInputChange}
                     className='h-12 border-zinc-800 bg-zinc-900 pl-12 text-base text-zinc-100 placeholder:text-zinc-500 focus-visible:ring-blue-500'
                     placeholder='닉네임을 입력하세요'
-                    disabled={isPending}
                   />
                   <User className='absolute left-4 top-4 h-4 w-4 text-zinc-500' />
                 </div>
@@ -84,7 +83,6 @@ const Login = () => {
                     onChange={handleInputChange}
                     className='h-12 border-zinc-800 bg-zinc-900 pl-12 text-base text-zinc-100 placeholder:text-zinc-500 focus-visible:ring-blue-500'
                     placeholder='비밀번호를 입력하세요'
-                    disabled={isPending}
                   />
                   <KeyRound className='absolute left-4 top-4 h-4 w-4 text-zinc-500' />
                 </div>
@@ -93,9 +91,8 @@ const Login = () => {
               <Button
                 type='submit'
                 className='h-12 w-full bg-blue-600 text-base text-zinc-100 hover:bg-blue-700'
-                disabled={isPending}
               >
-                {isPending ? '로그인 중...' : '로그인하기'}
+                로그인하기
               </Button>
             </form>
 

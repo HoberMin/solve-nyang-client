@@ -1,4 +1,4 @@
-import AuctionPage from './auction';
+// import AuctionPage from './auction';
 import BackgroundSalePage from './background';
 import ChangePasswordPage from './changePassword';
 import ContestPage from './contest';
@@ -14,7 +14,7 @@ import ServicePage from './service';
 import SignupPage from './signup';
 
 export const Pages = {
-  AuctionPage,
+  // AuctionPage,
   BackgroundSalePage,
   ChangePasswordPage,
   ContestPage,

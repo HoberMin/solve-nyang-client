@@ -1,6 +1,5 @@
 import { FormEvent, useEffect, useState } from 'react';
 
-import { UseMutationResult } from '@tanstack/react-query';
 import { Copy, Eye, EyeOff } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -80,22 +79,9 @@ const FEEDBACK_MESSAGES = {
   INCOMPLETE_FORM: '가입정보를 입력하세요.',
 };
 
-interface FindPasswordRequest {
-  username: string;
-  password: string;
-}
-
-interface FindPasswordResponse {
-  message: string;
-}
-
 const FindPassword = () => {
   const navigate = useNavigate();
-  const findPasswordMutation: UseMutationResult<
-    FindPasswordResponse,
-    ApiError,
-    FindPasswordRequest
-  > = useFindPassword();
+  const findPasswordMutation = useFindPassword();
 
   const getEncryptionMutation = useGetEncryption();
 
@@ -106,7 +92,6 @@ const FindPassword = () => {
   const [isKeyIssued, setIsKeyIssued] = useState<boolean>(false);
   const [isValid, setIsValid] = useState<boolean>(false);
 
-  // 입력 폼 수정 감지(본인 인증 후 비밀번호 재설정)
   const handleInputChange = (
     value: string,
     fieldName: keyof FormData,
@@ -205,7 +190,7 @@ const FindPassword = () => {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
-    findPasswordMutation.mutate(
+    findPasswordMutation(
       {
         username: formData.username,
         password: formData.password,

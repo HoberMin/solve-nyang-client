@@ -2,7 +2,7 @@ import { useSuspenseQuery } from '@tanstack/react-query';
 
 import { BaseRarity } from '@/lib/type';
 
-import { axiosInstance } from './auth';
+import { api } from './core';
 
 export interface AvatarGallery {
   name: string;
@@ -14,14 +14,18 @@ interface AvatarGalleryList {
   collections: AvatarGallery[];
 }
 
-export const getAvatarGallery = async () => {
-  const response = await axiosInstance('/user/me/collection');
+export const getAvatarGallery = async (): Promise<AvatarGalleryList> => {
+  const result = await api.get<AvatarGalleryList>('/user/me/collection');
 
-  return response.data as AvatarGalleryList;
+  if (!result.isSuccess || !result.data) {
+    throw new Error(result.message || '갤러리 정보를 불러오는데 실패했습니다.');
+  }
+
+  return result.data;
 };
 
 export const useGetAvatarGallery = () =>
-  useSuspenseQuery({
+  useSuspenseQuery<AvatarGalleryList>({
     queryKey: ['galleryList'],
     queryFn: getAvatarGallery,
   });

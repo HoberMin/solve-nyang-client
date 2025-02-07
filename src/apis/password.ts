@@ -1,15 +1,11 @@
 import { useMutation } from '@tanstack/react-query';
+import { toast } from 'sonner';
 
-import { axiosInstance } from './auth';
+import { api } from './core';
 
-interface ChangePassword {
+interface ChangePasswordRequest {
   currentPassword: string;
   newPassword: string;
-}
-
-interface FindPassword {
-  username: string;
-  password: string;
 }
 
 interface FindPasswordRequest {
@@ -17,37 +13,62 @@ interface FindPasswordRequest {
   password: string;
 }
 
-interface FindPasswordResponse {
+interface PasswordResponse {
   message: string;
 }
 
-export const changePassword = async ({
-  currentPassword,
-  newPassword,
-}: ChangePassword) => {
-  const response = await axiosInstance.post('/account/password/change', {
-    currentPassword,
-    newPassword,
-  });
+export const changePassword = async (
+  changePasswordForm: ChangePasswordRequest,
+) => {
+  const result = await api.post<PasswordResponse>(
+    '/account/password/change',
+    changePasswordForm,
+  );
 
-  return response.data;
+  if (!result.isSuccess) {
+    throw new Error(result.message || '비밀번호 변경에 실패했습니다.');
+  }
+
+  return result.data;
 };
 
-export const findPassword = async ({ username, password }: FindPassword) => {
-  const response = await axiosInstance.post('/account/password/find', {
-    username,
-    password,
-  });
+export const findPassword = async (findPasswordForm: FindPasswordRequest) => {
+  const result = await api.post<PasswordResponse>(
+    '/account/password/find',
+    findPasswordForm,
+  );
 
-  return response.data;
+  if (!result.isSuccess) {
+    throw new Error(result.message || '비밀번호 찾기에 실패했습니다.');
+  }
+
+  return result.data;
 };
 
-export const useChangePassword = () =>
-  useMutation({
+export const useChangePassword = () => {
+  const { mutate } = useMutation({
     mutationFn: changePassword,
+    onSuccess: data => {
+      toast.success(data?.message || '비밀번호가 성공적으로 변경되었습니다.');
+    },
+    onError: (error: Error) => {
+      toast.error(error.message);
+    },
   });
 
-export const useFindPassword = () =>
-  useMutation<FindPasswordResponse, Error, FindPasswordRequest>({
+  return mutate;
+};
+
+export const useFindPassword = () => {
+  const { mutate } = useMutation({
     mutationFn: findPassword,
+    onSuccess: data => {
+      toast.success(data?.message || '비밀번호가 성공적으로 변경되었습니다.');
+    },
+    onError: (error: Error) => {
+      toast.error(error.message);
+    },
   });
+
+  return mutate;
+};

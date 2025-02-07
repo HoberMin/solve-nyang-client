@@ -1,17 +1,17 @@
 import { useState } from 'react';
 
 import { Checkbox } from '@radix-ui/react-checkbox';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogTitle,
-} from '@radix-ui/react-dialog';
 
 import { Background, useBuyBackgroundImage } from '@/apis/background';
 import { useGetUserInfo } from '@/apis/user';
 import { Button } from '@/components/ui/button';
-import { DialogHeader } from '@/components/ui/dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { getKoreanName } from '@/lib/utils';
 
 interface BackgroundCardProps {

@@ -7,7 +7,7 @@ import { toast } from 'sonner';
 
 import { BaseRarity } from '@/lib/type';
 
-import { axiosInstance } from './auth';
+import { api } from './core';
 
 export const domain = 'https://dev.api.solve-nyang.com';
 
@@ -23,48 +23,75 @@ export interface AvatarList {
   avatars: Avatar[];
 }
 
-export const gachaAvatar = async (count: number) => {
-  const response = await axiosInstance.post('/gacha/draw', { count });
+interface ResetAvatarResponse {
+  message?: string;
+}
 
-  return response.data as AvatarList;
+export const gachaAvatar = async (count: number) => {
+  const result = await api.post<AvatarList>('/gacha/draw', { count });
+
+  if (!result.isSuccess || !result.data) {
+    throw new Error(result.message || '가챠 뽑기에 실패했습니다.');
+  }
+
+  return result.data;
 };
 
 export const getAvatarList = async () => {
-  const response = await axiosInstance.get('/avatar');
+  const result = await api.get<AvatarList>('/avatar');
 
-  return response.data as AvatarList;
+  if (!result.isSuccess || !result.data) {
+    throw new Error(result.message || '아바타 목록을 불러오는데 실패했습니다.');
+  }
+
+  return result.data;
 };
 
 const resetAvatar = async () => {
-  const response = await axiosInstance.patch('/user/me/avatar/reset');
+  const result = await api.patch<ResetAvatarResponse>('/user/me/avatar/reset');
 
-  return response.data;
+  if (!result.isSuccess) {
+    throw new Error(result.message || '아바타 초기화에 실패했습니다.');
+  }
+
+  return result.data;
 };
 
 export const useResetAvatar = () => {
   const queryClient = useQueryClient();
 
-  return useMutation({
-    mutationFn: () => resetAvatar(),
-    onSuccess: () => {
+  const { mutate } = useMutation({
+    mutationFn: resetAvatar,
+    onSuccess: data => {
       queryClient.invalidateQueries({ queryKey: ['userAvatar'] });
-      toast.success('모든 캐릭터가 초기화되었습니다.');
+      toast.success(data?.message || '모든 캐릭터가 초기화되었습니다.');
     },
-    onError: () => {
-      toast.error('초기화 중 오류가 발생했습니다.');
+    onError: (error: Error) => {
+      toast.error(error.message);
     },
   });
+
+  return mutate;
 };
 
 export const useGetAvatarList = () =>
-  useSuspenseQuery({
+  useSuspenseQuery<AvatarList>({
     queryKey: ['avatarList'],
     queryFn: getAvatarList,
   });
 
 export const useGachaAvatarApi = () => {
-  const { mutateAsync } = useMutation<AvatarList, Error, number>({
-    mutationFn: (count: number) => gachaAvatar(count),
+  const queryClient = useQueryClient();
+
+  const { mutateAsync } = useMutation({
+    mutationFn: gachaAvatar,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['userAvatar'] });
+      queryClient.invalidateQueries({ queryKey: ['userInfo'] });
+    },
+    onError: (error: Error) => {
+      toast.error(error.message);
+    },
   });
 
   return mutateAsync;

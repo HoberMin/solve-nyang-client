@@ -79,10 +79,7 @@ const ChangePassword = () => {
     formData.passwordConfirm &&
     formData.newPassword === formData.passwordConfirm;
 
-  const handleInputChange = (
-    value: string,
-    fieldName: keyof FormData, // FormData의 키 중 하나로 제한
-  ) => {
+  const handleInputChange = (value: string, fieldName: keyof FormData) => {
     setFormData(prev => ({ ...prev, [fieldName]: value }));
 
     if (fieldName === 'newPassword') {
@@ -138,7 +135,7 @@ const ChangePassword = () => {
       return;
     }
 
-    changeMutation.mutate(
+    changeMutation(
       {
         currentPassword: formData.currentPassword,
         newPassword: formData.newPassword,
