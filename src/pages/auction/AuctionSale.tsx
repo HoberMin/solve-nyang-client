@@ -1,168 +1,13 @@
-import React, { useState } from 'react';
-
-import { toast } from 'sonner';
+import { useState } from 'react';
 
 import { useAuctionAvatar } from '@/apis/auction';
 import { UserAvatar, useGetUserAvatar } from '@/apis/user';
 import { Button } from '@/components/ui/button';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogTitle,
-} from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { RARITY_CONFIG, RARITY_ORDER } from '@/constant/rarityconfig';
 import { FullRarity, RarityFilterType } from '@/lib/type';
 import { cn, getCatKorName } from '@/lib/utils';
 
-interface SaleDialogProps {
-  avatar: UserAvatar;
-  isOpen: boolean;
-  onClose: () => void;
-  onConfirm: (avatar: UserAvatar, price: number) => void;
-}
-
-const SaleDialog: React.FC<SaleDialogProps> = ({
-  avatar,
-  isOpen,
-  onClose,
-  onConfirm,
-}) => {
-  const [price, setPrice] = useState(0);
-  const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
-  const [error, setError] = useState('');
-
-  const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-
-    if (value === '') {
-      setPrice(0);
-      setError('1냥 이상의 가격을 입력해주세요.');
-      return;
-    }
-
-    const numValue = parseInt(value);
-    if (!isNaN(numValue)) {
-      if (numValue <= 0) {
-        setError('1냥 이상의 가격을 입력해주세요.');
-      } else if (numValue > 1000000) {
-        setError('100만냥 이하의 가격을 입력해주세요.');
-      } else {
-        setError('');
-      }
-      setPrice(numValue);
-    }
-  };
-
-  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (isConfirmDialogOpen) {
-      handleConfirm();
-    } else if (e.key === 'Enter') {
-      handleProceed();
-    }
-  };
-
-  const handleProceed = () => {
-    if (price > 0 && price <= 1000000) {
-      setIsConfirmDialogOpen(true);
-    }
-  };
-
-  const handleConfirm = () => {
-    onConfirm(avatar, price);
-    setIsConfirmDialogOpen(false);
-    onClose();
-  };
-
-  const handleClose = () => {
-    setIsConfirmDialogOpen(false);
-    setPrice(0);
-    onClose();
-  };
-
-  return (
-    <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent
-        className='border-transparent bg-gray-800 text-gray-200 sm:max-w-md'
-        onKeyDown={handleKeyPress}
-      >
-        {!isConfirmDialogOpen ? (
-          <div className='space-y-4'>
-            <DialogTitle>
-              <p className='text-center text-2xl'>판매</p>
-            </DialogTitle>
-            <DialogDescription className='h-12 text-center text-base text-gray-200'>
-              <div className='flex gap-2'>
-                <Label htmlFor='price' className='flex items-center'>
-                  판매 가격
-                </Label>
-                <Input
-                  id='price'
-                  type='text'
-                  value={price === 0 ? '' : price}
-                  onChange={e => {
-                    const value = e.target.value;
-                    if (value === '' || /^\d+$/.test(value)) {
-                      handlePriceChange(e);
-                    }
-                  }}
-                  onKeyDown={handleKeyPress}
-                  className='flex-1 border-gray-600 bg-gray-700 text-gray-200'
-                />
-              </div>
-              {error && <p className='text-sm text-red-500'>{error}</p>}
-            </DialogDescription>
-            <DialogFooter>
-              <Button
-                onClick={handleProceed}
-                disabled={price <= 0 || price > 1000000}
-                className='bg-blue-500 text-white hover:bg-blue-600'
-              >
-                다음
-              </Button>
-            </DialogFooter>
-          </div>
-        ) : (
-          <div className='space-y-4'>
-            <DialogTitle>
-              <p className='text-center text-2xl'>판매 확인</p>
-            </DialogTitle>
-            <DialogDescription className='text-center text-base text-gray-200'>
-              <span
-                className={cn('font-bold', RARITY_CONFIG[avatar.rarity].text)}
-              >
-                {getCatKorName(avatar.name)}
-              </span>
-              을(를)
-              <span className='font-bold text-blue-400'>
-                {price.toLocaleString()}
-              </span>
-              냥에 판매하시겠습니까?
-            </DialogDescription>
-            <div className='flex justify-end space-x-2'>
-              <Button
-                onClick={handleConfirm}
-                className='bg-blue-500 text-white hover:bg-blue-600'
-              >
-                판매
-              </Button>
-              <Button
-                variant='outline'
-                onClick={() => setIsConfirmDialogOpen(false)}
-                className='border-gray-600 bg-transparent text-gray-200 hover:bg-gray-700'
-              >
-                이전
-              </Button>
-            </div>
-          </div>
-        )}
-      </DialogContent>
-    </Dialog>
-  );
-};
+import SaleDialog from './components/SaleDialog';
 
 const AuctionSale = () => {
   const { data } = useGetUserAvatar();
@@ -171,16 +16,7 @@ const AuctionSale = () => {
   const [selectedRarity, setSelectedRarity] = useState<RarityFilterType>('ALL');
 
   const handleSell = (avatar: UserAvatar, price: number) => {
-    auctionAvatar(
-      { id: avatar.ownedAvatarId, price },
-      {
-        onSuccess: () => {
-          toast.success(
-            `${getCatKorName(avatar.name)}을(를) ${price.toLocaleString()}냥에 판매 등록하였습니다.`,
-          );
-        },
-      },
-    );
+    auctionAvatar({ id: avatar.ownedAvatarId, price });
   };
 
   const avatars = data?.avatars || [];

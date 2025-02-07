@@ -149,9 +149,9 @@ export const useAuctionAvatar = () => {
 
   const { mutate } = useMutation({
     mutationFn: auctionAvatar,
-    onSuccess: data => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['userAvatar'] });
-      toast.success(data?.message || '아바타가 성공적으로 등록되었습니다.');
+      toast.success('아바타가 성공적으로 등록되었습니다.');
     },
     onError: (error: Error) => {
       toast.error(error.message);
