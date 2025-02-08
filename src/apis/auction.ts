@@ -12,13 +12,6 @@ import { api } from './core';
 export type SortType = '0' | '1' | '2' | '3';
 export type FilterType = '0' | '1' | '2' | '3';
 
-interface AuctionParams {
-  keyword?: string;
-  sort?: SortType;
-  rarity?: FullRarity;
-  page?: number;
-}
-
 export interface Merchandise {
   id: number;
   price: number;
@@ -66,15 +59,7 @@ export interface AuctionMessageResponse {
   message?: string;
 }
 
-const getAuctionList = async (params: AuctionParams = {}) => {
-  const searchParams = new URLSearchParams();
-
-  if (params.keyword) searchParams.append('keyword', params.keyword);
-  if (params.sort !== undefined && params.sort !== 0)
-    searchParams.append('sort', params.sort.toString());
-  if (params.rarity) searchParams.append('rarity', params.rarity);
-  if (params.page) searchParams.append('page', params.page.toString());
-
+const getAuctionList = async (searchParams: URLSearchParams) => {
   const result = await api.get<AuctionResponse>(
     searchParams.toString() ? `auction?${searchParams.toString()}` : '/auction',
   );
@@ -152,10 +137,10 @@ const buyAuctionItem = async (auctionId: number) => {
   return result.data;
 };
 
-export const useGetAuctionList = (params: AuctionParams = {}) =>
+export const useGetAuctionList = (searchParams: URLSearchParams) =>
   useSuspenseQuery<AuctionResponse>({
-    queryKey: ['auctionList', params],
-    queryFn: () => getAuctionList(params),
+    queryKey: ['auctionList', searchParams.toString()],
+    queryFn: () => getAuctionList(searchParams),
   });
 
 export const useGetSoldAuctionList = (searchParams: URLSearchParams) =>
