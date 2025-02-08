@@ -60,11 +60,11 @@ const AuctionPurchase = () => {
 
   const handleSortPrice = () => {
     setSearchParams(prev => {
-      const currentSort = Number(prev.get('sort')) || 0;
-      if (currentSort === 0 || currentSort === 2) {
-        prev.set('sort', '1');
+      const currentSort = prev.get('sort') || '0';
+      if (currentSort === '2') {
+        prev.set('sort', '3'); // 낮은 가격 순
       } else {
-        prev.set('sort', '2');
+        prev.set('sort', '2'); // 높은 가격 순
       }
       prev.set('page', '1');
       return prev;
@@ -73,12 +73,16 @@ const AuctionPurchase = () => {
 
   const handleSortDate = () => {
     setSearchParams(prev => {
-      prev.delete('sort');
+      const currentSort = prev.get('sort') || '0';
+      if (currentSort === '0') {
+        prev.set('sort', '1'); // 오래된 순
+      } else {
+        prev.set('sort', '0'); // 최신 순
+      }
       prev.set('page', '1');
       return prev;
     });
   };
-
   const handlePageChange = (page: number) => {
     setSearchParams(prev => {
       prev.set('page', page.toString());
