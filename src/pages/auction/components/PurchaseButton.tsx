@@ -44,14 +44,9 @@ const PurchaseButton = ({ item, onPurchase }: PurchaseButtonProps) => {
       <Button
         disabled={item.sold}
         onClick={handleClick}
-        className={cn(
-          'w-22',
-          item.sold
-            ? 'bg-gray-500 hover:bg-gray-500'
-            : 'bg-blue-500 hover:bg-blue-600',
-        )}
+        className={'w-22 bg-blue-500/80 hover:bg-blue-600/80'}
       >
-        {item.sold ? '판매완료' : '구매하기'}
+        구매하기
       </Button>
 
       <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>

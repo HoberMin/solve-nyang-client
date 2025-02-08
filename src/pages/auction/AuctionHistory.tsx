@@ -66,32 +66,40 @@ const AuctionHistory = () => {
   };
 
   return (
-    <div className='space-y-4'>
-      <HistorySidebar
-        filter={(searchParams.get('filter') as FilterType) || '0'}
-        onFilterChange={handleFilter}
-      />
-
-      <div className='rounded-lg bg-gray-800'>
+    <div className='space-y-6 rounded-lg'>
+      <div className='rounded-lg bg-gray-900'>
         <Table>
           <TableHeader>
-            <TableRow className='rounded-lg border-gray-700 hover:bg-transparent'>
-              <TableHead className='text-center text-gray-200'></TableHead>
-              <TableHead className='text-center text-gray-200'>등급</TableHead>
-              <TableHead className='text-center text-gray-200'>이름</TableHead>
-              <TableHead className='text-center text-gray-200'>가격</TableHead>
-              <TableHead className='text-center text-gray-200'>
+            <TableRow className='rounded-lg border-gray-800 hover:bg-transparent'>
+              <TableHead className='w-32 text-center text-gray-200'></TableHead>
+              <TableHead className='w-12 text-center text-gray-200'>
+                등급
+              </TableHead>
+              <TableHead className='w-40 text-center text-gray-200'>
+                이름
+              </TableHead>
+              <TableHead className='w-44 text-center text-gray-200'>
+                가격
+              </TableHead>
+              <TableHead className='w-40 text-center text-gray-200'>
                 등록일
               </TableHead>
-              <TableHead className='text-center text-gray-200'>상태</TableHead>
-              <TableHead className='text-center text-gray-200'></TableHead>
+              <TableHead className='w-36 text-center text-gray-200'>
+                <div className='flex items-center justify-center space-x-2'>
+                  <HistorySidebar
+                    filter={(searchParams.get('filter') as FilterType) || '0'}
+                    onFilterChange={handleFilter}
+                  />
+                </div>
+              </TableHead>
+              <TableHead className='w-36 text-center text-gray-200'></TableHead>
             </TableRow>
           </TableHeader>
-          <TableBody className='rounded-lg bg-gray-700'>
-            {history.map(item => (
+          <TableBody className='rounded-lg bg-gray-800/70'>
+            {history?.map(item => (
               <TableRow
                 key={item.id}
-                className='border-gray-600 text-base hover:bg-transparent'
+                className='border-gray-700/70 text-base hover:bg-transparent'
               >
                 <TableCell className='w-32'>
                   <div className='flex justify-center'>
@@ -102,25 +110,25 @@ const AuctionHistory = () => {
                     />
                   </div>
                 </TableCell>
-                <TableCell className='text-center'>
+                <TableCell className='w-12 text-center'>
                   <span
                     className={cn('font-bold', RARITY_CONFIG[item.rarity].text)}
                   >
                     {item.rarity}
                   </span>
                 </TableCell>
-                <TableCell className='text-center text-gray-200'>
+                <TableCell className='w-40 text-center text-gray-200'>
                   {getCatKorName(item.name)}
                 </TableCell>
-                <TableCell className='text-center font-bold text-blue-400'>
+                <TableCell className='w-32 text-center font-bold text-blue-400'>
                   {item.price.toLocaleString()}냥
                 </TableCell>
-                <TableCell className='text-center text-sm text-gray-300'>
+                <TableCell className='w-32 text-center text-sm text-gray-300'>
                   {formatDate(item.createdAt)}
                 </TableCell>
                 <TableCell
                   className={cn(
-                    'text-center',
+                    'w-32 text-center',
                     statusConfig[getStatus(item)].color,
                   )}
                 >

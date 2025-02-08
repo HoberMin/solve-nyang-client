@@ -18,7 +18,6 @@ interface FilterSidebarProps {
   onSearch: (e: React.FormEvent<HTMLFormElement>) => void;
   onRarityChange: (value: FullRarity) => void;
 }
-
 const FilterSidebar = ({
   inputValue,
   selectedRarity,
@@ -27,36 +26,14 @@ const FilterSidebar = ({
   onRarityChange,
 }: FilterSidebarProps) => {
   return (
-    <div className='w-72 space-y-6'>
-      <form
-        onSubmit={onSearch}
-        className='space-y-4 rounded-lg bg-gray-800 p-4'
-      >
-        <div className='space-y-2'>
-          <div className='relative'>
-            <Input
-              placeholder='고양이 이름을 입력하세요.'
-              value={inputValue}
-              onChange={onInputChange}
-              className='h-12 border-transparent bg-gray-700 pl-12 text-gray-200'
-            />
-            <Search className='absolute left-3 top-3 h-6 w-6 text-gray-400' />
-          </div>
-          <Button
-            type='submit'
-            className='w-full bg-blue-500 hover:bg-blue-600'
-          >
-            검색
-          </Button>
-        </div>
-
-        <div className='space-y-2'>
-          <p className='text-sm text-gray-400'>등급</p>
+    <div className='w-full space-y-4'>
+      <form onSubmit={onSearch} className='flex gap-4'>
+        <div className='w-32'>
           <Select value={selectedRarity} onValueChange={onRarityChange}>
-            <SelectTrigger className='h-12 w-full border-transparent bg-gray-700 text-gray-200'>
+            <SelectTrigger className='h-12 w-full border-transparent bg-gray-900 text-gray-200'>
               <SelectValue placeholder='등급' />
             </SelectTrigger>
-            <SelectContent className='border-transparent bg-gray-800 text-gray-200'>
+            <SelectContent className='border-transparent bg-gray-900 text-gray-200'>
               <SelectItem value='ALL'>전체</SelectItem>
               <SelectItem value='H'>H등급</SelectItem>
               <SelectItem value='S'>S등급</SelectItem>
@@ -67,6 +44,24 @@ const FilterSidebar = ({
             </SelectContent>
           </Select>
         </div>
+        <div className='flex-1 space-y-4'>
+          <div className='relative'>
+            <Input
+              placeholder='고양이 이름을 입력하세요.'
+              value={inputValue}
+              onChange={onInputChange}
+              className='h-12 border-transparent bg-gray-900 pl-12 text-gray-200'
+            />
+            <Search className='absolute left-3 top-3 h-6 w-6 text-gray-400' />
+          </div>
+        </div>
+
+        <Button
+          type='submit'
+          className='h-12 w-20 bg-gray-900 hover:bg-gray-800'
+        >
+          검색
+        </Button>
       </form>
     </div>
   );

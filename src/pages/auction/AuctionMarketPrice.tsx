@@ -89,7 +89,7 @@ const AuctionMarketPrice = () => {
   };
 
   return (
-    <div className='flex gap-6'>
+    <div className='space-y-3 rounded-lg'>
       <FilterSidebar
         inputValue={inputValue}
         selectedRarity={
@@ -100,83 +100,81 @@ const AuctionMarketPrice = () => {
         onRarityChange={handleRarity}
       />
 
-      <div className='flex-1'>
-        <div className='rounded-lg bg-gray-800'>
-          <Table>
-            <TableHeader>
-              <TableRow className='rounded-lg border-gray-700 hover:bg-transparent'>
-                <TableHead className='w-32 text-center text-gray-200'></TableHead>
-                <TableHead className='w-12 text-center text-gray-200'>
-                  등급
-                </TableHead>
-                <TableHead className='w-40 text-center text-gray-200'>
-                  이름
-                </TableHead>
-                <TableHead
-                  className='w-44 cursor-pointer text-center text-gray-200'
-                  onClick={handleSortPrice}
-                >
-                  <div className='flex items-center justify-center gap-2'>
-                    가격
-                    <ArrowUpDown className='h-4 w-4' />
+      <div className='rounded-lg bg-gray-900'>
+        <Table>
+          <TableHeader>
+            <TableRow className='rounded-lg border-gray-800 hover:bg-transparent'>
+              <TableHead className='w-32 text-center text-gray-200'></TableHead>
+              <TableHead className='w-12 text-center text-gray-200'>
+                등급
+              </TableHead>
+              <TableHead className='w-40 text-center text-gray-200'>
+                이름
+              </TableHead>
+              <TableHead
+                className='w-44 cursor-pointer text-center text-gray-200'
+                onClick={handleSortPrice}
+              >
+                <div className='flex items-center justify-center gap-2'>
+                  가격
+                  <ArrowUpDown className='h-4 w-4' />
+                </div>
+              </TableHead>
+              <TableHead
+                className='w-40 cursor-pointer text-center text-gray-200'
+                onClick={handleSortDate}
+              >
+                <div className='flex items-center justify-center gap-2'>
+                  등록일
+                  <ArrowUpDown className='h-4 w-4' />
+                </div>
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody className='rounded-lg bg-gray-800/70'>
+            {merchandises?.map(item => (
+              <TableRow
+                key={item.id}
+                className='border-gray-700/70 text-base hover:bg-transparent'
+              >
+                <TableCell className='w-32'>
+                  <div className='flex justify-center'>
+                    <img
+                      src={`/cats/${item.name}.svg`}
+                      alt={item.name}
+                      className='h-16 w-16 object-cover'
+                    />
                   </div>
-                </TableHead>
-                <TableHead
-                  className='w-40 cursor-pointer text-center text-gray-200'
-                  onClick={handleSortDate}
-                >
-                  <div className='flex items-center justify-center gap-2'>
-                    등록일
-                    <ArrowUpDown className='h-4 w-4' />
-                  </div>
-                </TableHead>
+                </TableCell>
+                <TableCell className='text-center'>
+                  <span
+                    className={cn(
+                      'font-bold',
+                      RARITY_CONFIG[item.rarity]?.text,
+                    )}
+                  >
+                    {item.rarity}
+                  </span>
+                </TableCell>
+                <TableCell className='text-center text-gray-200'>
+                  {getCatKorName(item.name)}
+                </TableCell>
+                <TableCell className='text-center font-bold text-blue-400'>
+                  {item.price.toLocaleString()}냥
+                </TableCell>
+                <TableCell className='text-center text-sm text-gray-300'>
+                  {formatDate(item.createdAt)}
+                </TableCell>
               </TableRow>
-            </TableHeader>
-            <TableBody className='rounded-lg bg-gray-700'>
-              {merchandises?.map(item => (
-                <TableRow
-                  key={item.id}
-                  className='border-gray-600 text-base hover:bg-transparent'
-                >
-                  <TableCell className='w-32'>
-                    <div className='flex justify-center'>
-                      <img
-                        src={`/cats/${item.name}.svg`}
-                        alt={item.name}
-                        className='h-16 w-16 object-cover'
-                      />
-                    </div>
-                  </TableCell>
-                  <TableCell className='text-center'>
-                    <span
-                      className={cn(
-                        'font-bold',
-                        RARITY_CONFIG[item.rarity]?.text,
-                      )}
-                    >
-                      {item.rarity}
-                    </span>
-                  </TableCell>
-                  <TableCell className='text-center text-gray-200'>
-                    {getCatKorName(item.name)}
-                  </TableCell>
-                  <TableCell className='text-center font-bold text-blue-400'>
-                    {item.price.toLocaleString()}냥
-                  </TableCell>
-                  <TableCell className='text-center text-sm text-gray-300'>
-                    {formatDate(item.createdAt)}
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+            ))}
+          </TableBody>
+        </Table>
 
-          <CustomPagination
-            currentPage={Number(searchParams.get('page')) || 1}
-            totalPage={totalPage}
-            onPageChange={handlePageChange}
-          />
-        </div>
+        <CustomPagination
+          currentPage={Number(searchParams.get('page')) || 1}
+          totalPage={totalPage}
+          onPageChange={handlePageChange}
+        />
       </div>
     </div>
   );

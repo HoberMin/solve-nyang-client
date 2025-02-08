@@ -18,7 +18,7 @@ const AuctionPage = () => {
 
   return (
     <Layout>
-      <div className='relative mx-auto mb-8 flex h-full w-full max-w-7xl flex-col'>
+      <div className='relative mx-auto mb-8 flex h-full w-full max-w-5xl flex-col'>
         <AuctionHeader />
 
         <Tabs defaultValue='purchase' onValueChange={handleTabChange}>
