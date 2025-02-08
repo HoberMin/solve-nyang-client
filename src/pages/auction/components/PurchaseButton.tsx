@@ -44,7 +44,7 @@ const PurchaseButton = ({ item, onPurchase }: PurchaseButtonProps) => {
       <Button
         disabled={item.sold}
         onClick={handleClick}
-        className={'w-22 bg-blue-500/80 hover:bg-blue-600/80'}
+        className={'w-22 bg-blue-500 hover:bg-blue-600'}
       >
         구매하기
       </Button>
