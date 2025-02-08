@@ -9,7 +9,7 @@ import { FullRarity } from '@/lib/type';
 
 import { api } from './core';
 
-export type SortType = 0 | 1 | 2;
+export type SortType = '0' | '1' | '2' | '3';
 export type FilterType = '0' | '1' | '2' | '3';
 
 interface AuctionParams {
@@ -86,6 +86,20 @@ const getAuctionList = async (params: AuctionParams = {}) => {
   return result.data;
 };
 
+const getSoldAuctionList = async (searchParams: URLSearchParams) => {
+  const result = await api.get<AuctionResponse>(
+    searchParams.toString()
+      ? `auction/sold?${searchParams.toString()}`
+      : `/auction/sold`,
+  );
+
+  if (!result.isSuccess || !result.data) {
+    throw new Error(result.message || '시세 목록을 불러오는데 실패했습니다.');
+  }
+
+  return result.data;
+};
+
 const auctionAvatar = async (data: SaleRequest) => {
   const result = await api.post<AuctionMessageResponse>('/auction/sale', data);
 
@@ -142,6 +156,12 @@ export const useGetAuctionList = (params: AuctionParams = {}) =>
   useSuspenseQuery<AuctionResponse>({
     queryKey: ['auctionList', params],
     queryFn: () => getAuctionList(params),
+  });
+
+export const useGetSoldAuctionList = (searchParams: URLSearchParams) =>
+  useSuspenseQuery<AuctionResponse>({
+    queryKey: ['soldAuctionList', searchParams.toString()],
+    queryFn: () => getSoldAuctionList(searchParams),
   });
 
 export const useAuctionAvatar = () => {
