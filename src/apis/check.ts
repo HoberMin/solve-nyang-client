@@ -14,20 +14,20 @@ interface Problem {
 interface Points {
   points: number; // string인가..
 }
-export const getProblem = async () => {
-  const result = await api.get<Problem>('/check/problem');
+export const getProblem = async (): Promise<Problem> => {
+  const result = await api.get<Problem>('/problems/recommendation');
 
-  return result.data;
+  return result.data as Problem;
 };
 
-export const getdPoints = async () => {
-  const result = await api.post<Points>('/check/point');
+export const getPoints = async (): Promise<Points> => {
+  const result = await api.post<Points>('/attendance/check');
 
-  return result.data;
+  return result.data as Points;
 };
 
 export const useGetProblem = () => {
-  useSuspenseQuery<Problem>({
+  return useSuspenseQuery<Problem>({
     queryKey: ['getProblem'],
     queryFn: getProblem,
   });
@@ -37,7 +37,7 @@ export const useGetPoints = () => {
   const queryClient = useQueryClient();
 
   const { mutate } = useMutation({
-    mutationFn: getdPoints,
+    mutationFn: getPoints,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['getPoints'] });
     },
