@@ -10,6 +10,7 @@ interface Attendance {
 
 // 더미 데이터
 const DUMMY_ATTENDANCE: Attendance[] = [
+  { date: '2025-01-21', points: 30 },
   { date: '2025-02-01', points: 30 },
   { date: '2025-02-03', points: 30 },
   { date: '2025-02-06', points: 30 },

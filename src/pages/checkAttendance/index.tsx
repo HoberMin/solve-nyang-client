@@ -2,7 +2,6 @@ import Layout from '@/components/Layout';
 
 import PointDisplay from '../gacha/components/PointDisplay';
 import AttendanceCalendar from './componenets/AttendanceCalendar';
-import AttendanceStamp from './componenets/AttendanceStamp';
 import TodaysProblem from './componenets/TodaysProblem';
 
 const CheckAttendance = () => {
@@ -19,7 +18,6 @@ const CheckAttendance = () => {
         <div className='flex justify-center'>
           <div className='flex justify-center gap-8'>
             <div>
-              <AttendanceStamp />
               <AttendanceCalendar />
             </div>
             <div className='flex h-full items-center'>
