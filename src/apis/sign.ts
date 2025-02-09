@@ -67,11 +67,13 @@ export const useSignOut = () => {
 
 export const useSignIn = () => {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const { mutate } = useMutation({
     mutationFn: signIn,
     onSuccess: data => {
       localStorage.setItem('token', data.accessToken);
+      queryClient.invalidateQueries({ queryKey: ['userInfo'] });
       toast.success('로그인에 성공했습니다.');
       navigate('/');
     },

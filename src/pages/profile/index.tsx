@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import { useGetAvatarGallery } from '@/apis/gallery';
-import { useGetUserInfo } from '@/apis/user';
+import { useGetUserSolvedacInfo } from '@/apis/user';
 import Layout from '@/components/Layout';
 import { RarityFilterType } from '@/lib/type';
 
@@ -10,7 +10,8 @@ import { ProfileHeader } from './components/ProfileHeader';
 import { UserStats } from './components/UserStatus';
 
 const ProfilePage = () => {
-  const { data: userInfo } = useGetUserInfo();
+  const { data: userInfo } = useGetUserSolvedacInfo();
+
   const { data: avatarGallery } = useGetAvatarGallery();
   const [selectedRarity, setSelectedRarity] = useState<RarityFilterType>('ALL');
 

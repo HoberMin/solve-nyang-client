@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Checkbox } from '@radix-ui/react-checkbox';
 
 import { Background, useBuyBackgroundImage } from '@/apis/background';
-import { useGetUserInfo } from '@/apis/user';
+import { useGetUserPoint } from '@/apis/user';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -21,8 +21,8 @@ interface BackgroundCardProps {
 export const BackgroundCard = ({ background }: BackgroundCardProps) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isConfirmed, setIsConfirmed] = useState(false);
-  const { data: userData } = useGetUserInfo();
-  const userPoint = userData?.point ?? 0;
+  const { data: userData } = useGetUserPoint();
+  const userPoint = userData.point;
 
   const isPurchase = userPoint >= background.price;
   const buyBackground = useBuyBackgroundImage();
@@ -93,7 +93,6 @@ export const BackgroundCard = ({ background }: BackgroundCardProps) => {
                   onCheckedChange={checked =>
                     setIsConfirmed(checked as boolean)
                   }
-                  className='m-0 rounded p-0'
                 ></Checkbox>
                 <label htmlFor='confirm' className='text-sm text-gray-300'>
                   위 내용을 확인하였으며, 구매에 동의합니다.

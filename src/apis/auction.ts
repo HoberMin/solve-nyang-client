@@ -196,7 +196,7 @@ export const useBuyAuctionItem = () => {
     mutationFn: buyAuctionItem,
     onSuccess: data => {
       queryClient.invalidateQueries({ queryKey: ['auctionList'] });
-      queryClient.invalidateQueries({ queryKey: ['userInfo'] });
+      queryClient.invalidateQueries({ queryKey: ['user-point'] });
       toast.success(data?.message || '성공적으로 구매하였습니다.');
     },
     onError: (error: { status: number; message: string }) => {
