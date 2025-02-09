@@ -34,6 +34,7 @@ export const PasswordInput = ({
           onChange={e => onChange(e.target.value)}
           onKeyDown={e => e.key === ' ' && e.preventDefault()}
           className='h-10 bg-zinc-900 pr-10 text-zinc-100'
+          autoComplete='off'
           placeholder={placeholder}
         />
         {onToggleShow &&

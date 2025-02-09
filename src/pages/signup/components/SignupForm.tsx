@@ -151,8 +151,17 @@ export const SignupForm = () => {
           const errorMessage = error.response?.data?.message;
 
           switch (errorMessage) {
-            case 'failed':
-              toast.error(ERROR_MESSAGES.SIGNUP_FAILED);
+            case '비밀번호는 8자 이상이어야 합니다.':
+              toast.error(ERROR_MESSAGES.PASSWORD_LENGTH);
+              break;
+            case '비밀번호에 공백을 포함할 수 없습니다.':
+              toast.error(ERROR_MESSAGES.PASSWORD_SPACE);
+              break;
+            case '비밀번호에 한글을 포함할 수 없습니다.':
+              toast.error('비밀번호에 한글을 포함할 수 없습니다.');
+              break;
+            case '비밀번호는 영문자, 숫자, 특수문자를 모두 포함해야 합니다.':
+              toast.error(ERROR_MESSAGES.PASSWORD_PATTERN);
               break;
             case '이미 가입된 회원입니다.':
               toast.error('이미 가입된 회원입니다.');
@@ -212,6 +221,7 @@ export const SignupForm = () => {
                     disabled={isKeyIssued}
                     className='h-10 bg-zinc-900 text-zinc-100'
                     placeholder='닉네임을 입력하세요'
+                    autoComplete='off'
                   />
                 </div>
                 <Button
@@ -236,6 +246,7 @@ export const SignupForm = () => {
                   value={encryptionKey}
                   readOnly
                   className='h-10 bg-zinc-900 pr-10 text-zinc-100'
+                  autoComplete='off'
                 />
                 <Copy
                   className='absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 cursor-pointer text-zinc-400 transition-colors hover:text-zinc-100'
