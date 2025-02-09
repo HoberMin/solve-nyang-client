@@ -1,13 +1,9 @@
-import { useGetUserInfo } from '@/apis/user';
+import { useGetUserPoint } from '@/apis/user';
 
 import coinImg from '/assets/coin.svg';
 
 const PointDisplay = () => {
-  const { data } = useGetUserInfo();
-
-  if (!data) {
-    throw new Error();
-  }
+  const { data } = useGetUserPoint();
 
   const { point } = data;
 

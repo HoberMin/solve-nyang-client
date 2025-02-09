@@ -95,7 +95,7 @@ export const useGetUserBackgroundImage = () =>
 export const useChangeBackgroundAPI = () => {
   const queryClient = useQueryClient();
 
-  const { mutate } = useMutation({
+  const { mutateAsync } = useMutation({
     mutationFn: changeUserBackground,
     onSuccess: data => {
       queryClient.invalidateQueries({ queryKey: ['user-background-image'] });
@@ -106,7 +106,7 @@ export const useChangeBackgroundAPI = () => {
     },
   });
 
-  return mutate;
+  return mutateAsync;
 };
 
 export const useBuyBackgroundImage = () => {
@@ -117,7 +117,7 @@ export const useBuyBackgroundImage = () => {
     onSuccess: data => {
       queryClient.invalidateQueries({ queryKey: ['user-background-image'] });
       queryClient.invalidateQueries({ queryKey: ['background-image'] });
-      queryClient.invalidateQueries({ queryKey: ['userInfo'] });
+      queryClient.invalidateQueries({ queryKey: ['user-point'] });
       toast.success(data?.message || '배경을 구매했습니다.');
     },
     onError: (error: Error) => {

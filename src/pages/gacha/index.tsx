@@ -3,7 +3,7 @@ import { useRef, useState } from 'react';
 import { toast } from 'sonner';
 
 import { Avatar, useGachaAvatarApi } from '@/apis/avatar';
-import { useGetUserInfo } from '@/apis/user';
+import { useGetUserPoint } from '@/apis/user';
 import Layout from '@/components/Layout';
 import LoadingScreen from '@/components/LoadingScreen';
 import {
@@ -12,7 +12,6 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { queryClient } from '@/lib/queryClient';
 import { GachaConfirmDialog } from '@/pages/gacha/components/GachaConfirmDialog';
 import { GachaDropRateInfo } from '@/pages/gacha/components/GachaDropRateInfo';
 import { GachaResultModal } from '@/pages/gacha/components/GachaResultModal';
@@ -117,7 +116,7 @@ const DrawButton = ({
 };
 const Gacha = () => {
   const getGacha = useGachaAvatarApi();
-  const { data: userData } = useGetUserInfo();
+  const { data } = useGetUserPoint();
   const rotationRef = useRef<number>(0);
 
   const isImageLoaded = useImagePreloader(ALL_IMAGES);
@@ -136,11 +135,7 @@ const Gacha = () => {
     return <LoadingScreen />;
   }
 
-  if (!userData?.username) {
-    return null;
-  }
-
-  const { point } = userData;
+  const { point } = data;
 
   const handleConfirmDraw = (count: number) => {
     if (isAnimating) return;
@@ -190,10 +185,8 @@ const Gacha = () => {
         const { avatars } = await getGacha(pendingDraw.count);
         setGachaResults(avatars);
         setIsModalOpen(true);
-        await queryClient.invalidateQueries({ queryKey: ['userInfo'] });
       }
     } catch (error) {
-      console.error('Gacha draw error:', error);
       setDrawMode(null);
       setPendingDraw(null);
       setIsConfirmOpen(false);

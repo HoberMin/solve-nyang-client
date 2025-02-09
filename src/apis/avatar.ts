@@ -87,7 +87,7 @@ export const useGachaAvatarApi = () => {
     mutationFn: gachaAvatar,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['userAvatar'] });
-      queryClient.invalidateQueries({ queryKey: ['userInfo'] });
+      queryClient.invalidateQueries({ queryKey: ['user-point'] });
     },
     onError: (error: Error) => {
       toast.error(error.message);
