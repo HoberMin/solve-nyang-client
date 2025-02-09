@@ -29,11 +29,35 @@ export interface UserInfo {
   streak: number;
 }
 
+export interface UserPoint {
+  point: number;
+}
+
 const userInfo = async () => {
   const result = await api.get<UserInfo>('/user/me');
 
   if (!result.isSuccess) {
     if (result.status === 401) return null;
+    throw new Error(result.message);
+  }
+
+  return result.data;
+};
+
+const userPoint = async () => {
+  const result = await api.get<UserPoint>('/user/me/point');
+
+  if (!result.isSuccess || !result.data) {
+    throw new Error(result.message);
+  }
+
+  return result.data;
+};
+
+const userSolvedacInfo = async () => {
+  const result = await api.get<UserInfo>('/user/me/profile');
+
+  if (!result.isSuccess || !result.data) {
     throw new Error(result.message);
   }
 
@@ -74,10 +98,22 @@ const saleAvatar = async (avatarList: UserAvatarList) => {
   return result.data;
 };
 
+export const useGetUserPoint = () =>
+  useSuspenseQuery<UserPoint>({
+    queryKey: ['user-point'],
+    queryFn: userPoint,
+  });
+
 export const useGetUserInfo = () =>
   useSuspenseQuery<UserInfo | null>({
     queryKey: ['userInfo'],
     queryFn: userInfo,
+  });
+
+export const useGetUserSolvedacInfo = () =>
+  useSuspenseQuery<UserInfo>({
+    queryKey: ['user-solvedac-profile'],
+    queryFn: userSolvedacInfo,
   });
 
 export const useGetUserAvatar = () =>
@@ -108,7 +144,7 @@ export const useSaleAvatar = () => {
   const { mutate } = useMutation({
     mutationFn: saleAvatar,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['userInfo'] });
+      queryClient.invalidateQueries({ queryKey: ['user-point'] });
       queryClient.invalidateQueries({ queryKey: ['userAvatar'] });
       toast.success('고양이 캐릭터가 성공적으로 판매되었습니다.');
     },
