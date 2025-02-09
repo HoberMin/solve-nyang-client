@@ -9,15 +9,8 @@ import { FullRarity } from '@/lib/type';
 
 import { api } from './core';
 
-export type SortType = 0 | 1 | 2;
-export type FilterType = 0 | 1 | 2 | 3;
-
-interface AuctionParams {
-  keyword?: string;
-  sort?: SortType;
-  rarity?: FullRarity;
-  page?: number;
-}
+export type SortType = '0' | '1' | '2' | '3';
+export type FilterType = '0' | '1' | '2' | '3';
 
 export interface Merchandise {
   id: number;
@@ -43,11 +36,6 @@ interface SaleRequest {
   price: number;
 }
 
-interface HistoryParams {
-  filter?: FilterType;
-  page?: number;
-}
-
 export interface AuctionHistoryItem {
   id: number;
   price: number;
@@ -59,28 +47,39 @@ export interface AuctionHistoryItem {
 }
 
 interface AuctionHistoryResponse {
+  currentPageNumber: number;
+  size: number;
+  totalPage: number;
+  hasNext: boolean;
+  hasPrevious: boolean;
   history: AuctionHistoryItem[];
 }
 
-interface AuctionMessageResponse {
+export interface AuctionMessageResponse {
   message?: string;
 }
 
-const getAuctionList = async (params: AuctionParams = {}) => {
-  const searchParams = new URLSearchParams();
-
-  if (params.keyword) searchParams.append('keyword', params.keyword);
-  if (params.sort !== undefined && params.sort !== 0)
-    searchParams.append('sort', params.sort.toString());
-  if (params.rarity) searchParams.append('rarity', params.rarity);
-  if (params.page) searchParams.append('page', params.page.toString());
-
+const getAuctionList = async (searchParams: URLSearchParams) => {
   const result = await api.get<AuctionResponse>(
     searchParams.toString() ? `auction?${searchParams.toString()}` : '/auction',
   );
 
   if (!result.isSuccess || !result.data) {
     throw new Error(result.message || '경매 목록을 불러오는데 실패했습니다.');
+  }
+
+  return result.data;
+};
+
+const getSoldAuctionList = async (searchParams: URLSearchParams) => {
+  const result = await api.get<AuctionResponse>(
+    searchParams.toString()
+      ? `auction/sold?${searchParams.toString()}`
+      : `/auction/sold`,
+  );
+
+  if (!result.isSuccess || !result.data) {
+    throw new Error(result.message || '시세 목록을 불러오는데 실패했습니다.');
   }
 
   return result.data;
@@ -96,16 +95,7 @@ const auctionAvatar = async (data: SaleRequest) => {
   return result.data;
 };
 
-const getUserAuctionList = async (params: HistoryParams = {}) => {
-  const searchParams = new URLSearchParams();
-
-  if (params.filter !== undefined && params.filter !== 0) {
-    searchParams.append('filter', params.filter?.toString());
-  }
-  if (params.page) {
-    searchParams.append('page', params.page.toString());
-  }
-
+const getUserAuctionList = async (searchParams: URLSearchParams) => {
   const result = await api.get<AuctionHistoryResponse>(
     searchParams.toString()
       ? `/auction/me?${searchParams.toString()}`
@@ -147,10 +137,16 @@ const buyAuctionItem = async (auctionId: number) => {
   return result.data;
 };
 
-export const useGetAuctionList = (params: AuctionParams = {}) =>
+export const useGetAuctionList = (searchParams: URLSearchParams) =>
   useSuspenseQuery<AuctionResponse>({
-    queryKey: ['auctionList', params],
-    queryFn: () => getAuctionList(params),
+    queryKey: ['auctionList', searchParams.toString()],
+    queryFn: () => getAuctionList(searchParams),
+  });
+
+export const useGetSoldAuctionList = (searchParams: URLSearchParams) =>
+  useSuspenseQuery<AuctionResponse>({
+    queryKey: ['soldAuctionList', searchParams.toString()],
+    queryFn: () => getSoldAuctionList(searchParams),
   });
 
 export const useAuctionAvatar = () => {
@@ -158,9 +154,9 @@ export const useAuctionAvatar = () => {
 
   const { mutate } = useMutation({
     mutationFn: auctionAvatar,
-    onSuccess: data => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['userAvatar'] });
-      toast.success(data?.message || '아바타가 성공적으로 등록되었습니다.');
+      toast.success('아바타가 성공적으로 등록되었습니다.');
     },
     onError: (error: Error) => {
       toast.error(error.message);
@@ -170,10 +166,10 @@ export const useAuctionAvatar = () => {
   return mutate;
 };
 
-export const useGetUserAuctionList = (params: HistoryParams) =>
+export const useGetUserAuctionList = (searchParams: URLSearchParams) =>
   useSuspenseQuery<AuctionHistoryResponse>({
-    queryKey: ['userAuctionHistory', params],
-    queryFn: () => getUserAuctionList(params),
+    queryKey: ['userAuctionHistory', searchParams.toString()],
+    queryFn: () => getUserAuctionList(searchParams),
   });
 
 export const useCancelAuctionItem = () => {
@@ -196,7 +192,7 @@ export const useCancelAuctionItem = () => {
 export const useBuyAuctionItem = () => {
   const queryClient = useQueryClient();
 
-  const { mutate } = useMutation({
+  const { mutateAsync } = useMutation({
     mutationFn: buyAuctionItem,
     onSuccess: data => {
       queryClient.invalidateQueries({ queryKey: ['auctionList'] });
@@ -214,5 +210,5 @@ export const useBuyAuctionItem = () => {
     },
   });
 
-  return mutate;
+  return mutateAsync;
 };
