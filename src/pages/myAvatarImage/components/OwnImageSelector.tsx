@@ -6,8 +6,6 @@ import {
 } from '@/apis/background';
 import { getKoreanName } from '@/lib/utils';
 
-import { styles } from '../style';
-
 interface OwnImageSelectorProps {
   selectedBackground: string;
   onBackgroundChange: (background: string) => void;
@@ -38,10 +36,9 @@ const OwnImageSelector = ({
     data.backgrounds.find(bg => bg.id === selectedBackground)?.name || '';
 
   return (
-    <div className={styles.backgroundSelect.wrapper}>
-      <label className={styles.backgroundSelect.label}>배경:</label>
+    <div className='space-y-2'>
       <select
-        className={`${styles.backgroundSelect.select} bg-gray-800 text-white dark:bg-gray-900 [&>option]:bg-gray-800 [&>option]:text-white dark:[&>option]:bg-gray-900`}
+        className={`w-full rounded-md bg-gray-800 px-4 py-3 text-base text-white outline-none hover:bg-gray-700 dark:bg-gray-900 [&>option]:bg-gray-800 [&>option]:text-white dark:[&>option]:bg-gray-900`}
         value={currentBackgroundName}
         onChange={handleBackgroundChange}
       >

@@ -74,13 +74,12 @@ axiosInstance.interceptors.response.use(
     if (currentRetryCount >= MAX_RETRY_COUNT) {
       currentRetryCount = 0;
       localStorage.removeItem('token');
-      // window.location.href = '/login';
       return Promise.reject(
         new Error('토큰 재발급 최대 재시도 횟수를 초과했습니다.'),
       );
     }
 
-    return error;
+    return Promise.reject(error);
   },
 );
 
