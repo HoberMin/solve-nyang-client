@@ -27,6 +27,19 @@ type CustomTooltipProps = TooltipProps<number, string> & {
   }>;
 };
 
+interface CustomBarProps {
+  fill?: string;
+  x?: number;
+  y?: number;
+  width?: number;
+  height?: number;
+  background?: boolean;
+  index?: number;
+  payload?: ChartData;
+  className?: string;
+  maxBarSize?: number;
+}
+
 const CustomTooltip: React.FC<CustomTooltipProps> = ({ active, payload }) => {
   if (active && payload && payload.length > 0) {
     const totalVotes = payload[0].payload.totalVotes;
@@ -42,6 +55,47 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({ active, payload }) => {
     );
   }
   return null;
+};
+
+const CustomBar: React.FC<CustomBarProps> = props => {
+  const { fill, x, y, width, height } = props;
+
+  if (
+    typeof x === 'undefined' ||
+    typeof y === 'undefined' ||
+    typeof width === 'undefined' ||
+    typeof height === 'undefined'
+  ) {
+    return null;
+  }
+
+  const pixelSize = 4;
+
+  const topLeftCorner = `
+    M ${x} ${y + pixelSize}
+    L ${x} ${y + pixelSize}
+    L ${x + pixelSize} ${y}
+    L ${x + width - pixelSize} ${y}
+  `;
+
+  const topRightCorner = `
+    L ${x + width - pixelSize} ${y}
+    L ${x + width} ${y + pixelSize}
+    L ${x + width} ${y + height}
+  `;
+
+  const bottom = `
+    L ${x} ${y + height}
+    Z
+  `;
+
+  const path = topLeftCorner + topRightCorner + bottom;
+
+  return (
+    <g>
+      <path d={path} fill={fill} stroke='#BAE6FD' strokeWidth={0} />
+    </g>
+  );
 };
 
 const SimpleBarChart: React.FC<SimpleBarChartProps> = ({ data }) => {
@@ -67,13 +121,13 @@ const SimpleBarChart: React.FC<SimpleBarChartProps> = ({ data }) => {
           barCategoryGap={45}
         >
           <defs>
-            <linearGradient id='barGradient' x1='0' y1='0' x2='0' y2='1'>
-              <stop offset='0%' stopColor='#8B5CF6' stopOpacity={1} />
-              <stop offset='100%' stopColor='#3B82F6' stopOpacity={1} />
+            <linearGradient id='barFill' x1='0' y1='0' x2='0' y2='1'>
+              <stop offset='0%' stopColor='#BAE6FD' />
+              <stop offset='100%' stopColor='#7DD3FC' />
             </linearGradient>
           </defs>
           <Tooltip content={<CustomTooltip />} cursor={false} />
-          <Bar dataKey='value' fill='url(#barGradient)' />
+          <Bar dataKey='value' shape={<CustomBar />} fill='url(#barFill)' />
         </BarChart>
       </ResponsiveContainer>
     </div>

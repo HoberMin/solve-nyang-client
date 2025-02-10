@@ -25,7 +25,7 @@ const ContestVotingResult: React.FC<ContestVotingResultProps> = ({ data }) => {
               >
                 {isWinner && (
                   <div className='absolute -top-4 z-20 -translate-x-1/2 animate-bounce text-4xl'>
-                    <div className='text-nowrap text-sm font-bold text-amber-400'>
+                    <div className='text-nowrap text-sm font-bold text-gray-800'>
                       현재 1위!
                     </div>
                     👑
