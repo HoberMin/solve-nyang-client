@@ -1,4 +1,4 @@
-import * as Sentry from '@sentry/react';
+import { wrapCreateBrowserRouterV7 } from '@sentry/react';
 import { createBrowserRouter } from 'react-router-dom';
 
 import RetroError from '@/components/ErrorBoundary';
@@ -6,9 +6,8 @@ import ProtectedRoute from '@/components/ProtectdRoute';
 import Root from '@/components/Root';
 import { Pages } from '@/pages';
 
-// Sentry로 래핑된 라우터 생성 함수
 const sentryCreateBrowserRouter =
-  Sentry.wrapCreateBrowserRouterV7(createBrowserRouter);
+  wrapCreateBrowserRouterV7(createBrowserRouter);
 
 export const router = sentryCreateBrowserRouter([
   {

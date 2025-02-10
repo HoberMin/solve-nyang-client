@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import groupBy from 'lodash/groupBy';
 
 import { useGetAvatarList } from '@/apis/avatar';
 import { BASE_RARITY_ORDER } from '@/constant/rarityconfig';
@@ -15,7 +15,7 @@ export interface Character {
 const AllAvatarList = () => {
   const { data } = useGetAvatarList();
   const { avatars = [] } = data || {};
-  const groupedCharacters = _.groupBy(avatars, 'rarity');
+  const groupedCharacters = groupBy(avatars, 'rarity');
 
   return (
     <div className='mb-[100px] hidden h-full items-center justify-center py-8 lg:flex'>

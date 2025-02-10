@@ -1,31 +1,18 @@
-import AuctionPage from './auction';
-import BackgroundSalePage from './background';
-import ChangePasswordPage from './changePassword';
-import ContestPage from './contest';
-import ExtensionPage from './extension';
-import FindPasswordPage from './findPassword';
-import GachaPage from './gacha';
-import LoginPage from './login';
-import AvatarImagePage from './myAvatarImage';
-import NotFoundPage from './notFound';
-import ProfilePage from './profile';
-import SalePage from './sale';
-import ServicePage from './service';
-import SignupPage from './signup';
+import { lazy } from 'react';
 
 export const Pages = {
-  AuctionPage,
-  BackgroundSalePage,
-  ChangePasswordPage,
-  ContestPage,
-  ExtensionPage,
-  FindPasswordPage,
-  GachaPage,
-  LoginPage,
-  AvatarImagePage,
-  NotFoundPage,
-  ProfilePage,
-  SalePage,
-  ServicePage,
-  SignupPage,
+  AuctionPage: lazy(() => import('./auction')),
+  BackgroundSalePage: lazy(() => import('./background')),
+  ChangePasswordPage: lazy(() => import('./changePassword')),
+  ContestPage: lazy(() => import('./contest')),
+  ExtensionPage: lazy(() => import('./extension')),
+  FindPasswordPage: lazy(() => import('./findPassword')),
+  GachaPage: lazy(() => import('./gacha')),
+  LoginPage: lazy(() => import('./login')),
+  AvatarImagePage: lazy(() => import('./myAvatarImage')),
+  NotFoundPage: lazy(() => import('./notFound')),
+  ProfilePage: lazy(() => import('./profile')),
+  SalePage: lazy(() => import('./sale')),
+  ServicePage: lazy(() => import('./service')),
+  SignupPage: lazy(() => import('./signup')),
 } as const;
