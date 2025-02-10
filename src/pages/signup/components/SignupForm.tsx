@@ -20,7 +20,6 @@ import {
   ERROR_MESSAGES,
   FEEDBACK_MESSAGES,
   INITIAL_FORM_STATE,
-  SIGNUP_ERROR_MESSAGES,
   VALIDATION,
 } from '../constants';
 import type { ApiError, FormData } from '../types';
@@ -144,30 +143,10 @@ export const SignupForm = () => {
       },
       {
         onError: (error: ApiError) => {
-          console.log('Full Error Response:', error.response?.data); // 전체 응답 구조 확인
-          const errorMessage = error.response?.data?.message || '';
-
-          // 디버깅을 위한 로그
-          console.log('Backend Error Message:', errorMessage);
-          console.log(
-            'Mapped Error Message:',
-            SIGNUP_ERROR_MESSAGES[errorMessage || ''],
-          );
-
-          // 에러 메시지가 없는 경우 기본 에러 메시지 표시
-          if (!errorMessage) {
-            toast.error(ERROR_MESSAGES.SIGNUP_FAILED);
-            return;
-          }
-          // 2. SIGNUP_ERROR_MESSAGES에서 매핑된 메시지 찾기
-          const mappedMessage = SIGNUP_ERROR_MESSAGES[errorMessage];
-          console.log('Mapped Error Message:', mappedMessage);
-
-          // 3. 매핑된 메시지가 있으면 사용, 없으면 백엔드 메시지 그대로 사용
-          toast.error(mappedMessage || errorMessage);
-          // const displayMessage =
-          //   SIGNUP_ERROR_MESSAGES[errorMessage] ?? ERROR_MESSAGES.SIGNUP_FAILED;
-          // toast.error(displayMessage);
+          console.log(error);
+          const errorMessage =
+            error.message || '알 수 없는 오류가 발생했습니다.';
+          toast.error(errorMessage);
         },
       },
     );
