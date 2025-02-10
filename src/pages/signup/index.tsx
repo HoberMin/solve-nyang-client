@@ -203,9 +203,6 @@ const Signup = () => {
               toast.error('solved.ac 인증을 확인하세요.');
               break;
             default:
-              toast.error(
-                '회원가입 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
-              );
           }
         },
       },
