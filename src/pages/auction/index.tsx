@@ -10,10 +10,11 @@ import AuctionSale from './AuctionSale';
 import AuctionHeader from './components/AuctionHeader';
 
 const AuctionPage = () => {
-  const [, setSearchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const currentTab = searchParams.get('tab') || 'purchase';
 
-  const handleTabChange = () => {
-    setSearchParams(new URLSearchParams());
+  const handleTabChange = (value: string) => {
+    setSearchParams({ tab: value });
   };
 
   return (
@@ -21,7 +22,7 @@ const AuctionPage = () => {
       <div className='relative mx-auto mb-8 flex h-full w-full max-w-5xl flex-col'>
         <AuctionHeader />
 
-        <Tabs defaultValue='purchase' onValueChange={handleTabChange}>
+        <Tabs value={currentTab} onValueChange={handleTabChange}>
           <TabsList className='mt-3 grid w-full grid-cols-4 rounded-md bg-gray-900/95 backdrop-blur-sm'>
             <TabsTrigger
               value='purchase'
