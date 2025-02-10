@@ -30,7 +30,7 @@ const BackgroundShop = () => {
         </div>
         <div className='mx-auto max-w-7xl px-4 py-12'>
           <div className='grid grid-cols-1 gap-12 md:grid-cols-2'>
-            {backgrounds?.map(background => (
+            {backgrounds.map(background => (
               <BackgroundCard key={background.name} background={background} />
             ))}
           </div>

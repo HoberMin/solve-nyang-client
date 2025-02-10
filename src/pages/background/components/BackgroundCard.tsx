@@ -4,6 +4,16 @@ import { Checkbox } from '@radix-ui/react-checkbox';
 
 import { Background, useBuyBackgroundImage } from '@/apis/background';
 import { useGetUserPoint } from '@/apis/user';
+import BeachBg from '@/assets/bg/Beach.svg';
+import FieldBg from '@/assets/bg/Field.svg';
+import OceanBg from '@/assets/bg/Ocean.svg';
+import SandBg from '@/assets/bg/Sand.svg';
+import Snow1Bg from '@/assets/bg/Snow1.svg';
+import Snow2Bg from '@/assets/bg/Snow2.svg';
+import SpaceBg from '@/assets/bg/Space.svg';
+import Window1Bg from '@/assets/bg/Window1.svg';
+import Window2Bg from '@/assets/bg/Window2.svg';
+import Coin from '@/assets/machine/coin.svg';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -12,7 +22,20 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { BackgroundKey } from '@/lib/type';
 import { getKoreanName } from '@/lib/utils';
+
+const BACKGROUND_IMAGES: Record<BackgroundKey, string> = {
+  Beach: BeachBg,
+  Field: FieldBg,
+  Ocean: OceanBg,
+  Sand: SandBg,
+  Snow1: Snow1Bg,
+  Snow2: Snow2Bg,
+  Window1: Window1Bg,
+  Window2: Window2Bg,
+  Space: SpaceBg,
+};
 
 interface BackgroundCardProps {
   background: Background;
@@ -37,7 +60,7 @@ export const BackgroundCard = ({ background }: BackgroundCardProps) => {
     <div className='relative w-full rounded-lg bg-white/5 p-4 backdrop-blur-sm'>
       <div className='aspect-[2/1] w-full overflow-hidden rounded-lg'>
         <img
-          src={`/bg/${background.name}.svg`}
+          src={BACKGROUND_IMAGES[background.name as BackgroundKey]}
           alt={background.name}
           className='h-full w-full object-cover'
         />
@@ -47,7 +70,7 @@ export const BackgroundCard = ({ background }: BackgroundCardProps) => {
           {getKoreanName(background.name)}
         </h3>
         <div className='flex items-center gap-2'>
-          <img src='/assets/coin.svg' alt='coin' className='w-6' />
+          <img src={Coin} alt='coin' className='w-6' />
           <span className='text-white'>
             {background.price.toLocaleString()}냥 코인
           </span>
