@@ -296,6 +296,7 @@ const FindPassword = () => {
                           handleInputChange(e.target.value, 'username')
                         }
                         disabled={isKeyIssued}
+                        autoComplete='off'
                         className='h-10 bg-zinc-900 text-zinc-100'
                         placeholder='닉네임을 입력하세요'
                       />
@@ -322,6 +323,7 @@ const FindPassword = () => {
                       type='text'
                       value={encryptionKey}
                       readOnly
+                      autoComplete='off'
                       className='h-10 bg-zinc-900 pr-10 text-zinc-100'
                     />
                     <Copy
@@ -374,6 +376,7 @@ const FindPassword = () => {
                       handleInputChange(e.target.value, 'passwordConfirm')
                     }
                     onKeyDown={e => e.key === ' ' && e.preventDefault()}
+                    autoComplete='off'
                     className='h-10 bg-zinc-900 text-zinc-100'
                     placeholder='비밀번호를 다시 입력하세요.'
                   />

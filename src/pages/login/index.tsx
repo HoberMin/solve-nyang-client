@@ -81,6 +81,7 @@ const Login = () => {
                     name='password'
                     value={authForm.password}
                     onChange={handleInputChange}
+                    onKeyDown={e => e.key === ' ' && e.preventDefault()}
                     className='h-12 border-zinc-800 bg-zinc-900 pl-12 text-base text-zinc-100 placeholder:text-zinc-500 focus-visible:ring-blue-500'
                     placeholder='비밀번호를 입력하세요'
                   />
