@@ -9,6 +9,9 @@ export const CAT_MAPPINGS: Record<string, CatInfo> = {
   NewYearLuckCat: { korName: '새해복냥', engName: 'NewYearLuckCat' },
   MVPCat: { korName: 'MVP냥', engName: 'MVPCat' },
   IdeaCat: { korName: '아이디어냥', engName: 'IdeaCat' },
+  CupidCat: { korName: '큐피드냥', engName: 'CupidCat' },
+  ChocoFondueCat: { korName: '초코퐁듀냥', engName: 'ChocoFondueCat' },
+  LikeCat: { korName: '좋아하냥', engName: 'LikeCat' },
 
   // S 등급
   CodingCat: { korName: '코딩냥', engName: 'CodingCat' },
@@ -54,6 +57,13 @@ export const CAT_MAPPINGS: Record<string, CatInfo> = {
   CSSCat: { korName: 'CSS냥', engName: 'CSSCat' },
   JSCat: { korName: 'JS냥', engName: 'JSCat' },
   HTMLCat: { korName: 'HTML냥', engName: 'HTMLCat' },
+  ReactCat: { korName: '리액트냥', engName: 'ReactCat' },
+  NodeCat: { korName: '노드냥', engName: 'NodeCat' },
+  DjangoCat: { korName: '장고냥', engName: 'DjangoCat' },
+  KotlinCat: { korName: '코틀린냥', engName: 'KotlinCat' },
+  SwiftCat: { korName: '스위프트냥', engName: 'SwiftCat' },
+  VueCat: { korName: '뷰냥', engName: 'VueCat' },
+  RustCat: { korName: '러스트냥', engName: 'RustCat' },
 
   // C 등급
   Pumpkin: { korName: '호박', engName: 'Pumpkin' },
