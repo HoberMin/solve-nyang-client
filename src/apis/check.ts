@@ -1,45 +1,42 @@
 import {
   useMutation,
   useQueryClient,
-  useSuspenseQuery,
+  // useSuspenseQuery,
 } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
 import { api } from './core';
 
-interface Problem {
-  problemId: string;
+interface Records {
+  date: string;
+  attended: boolean;
 }
 
-interface Points {
-  points: number; // string인가..
-}
-export const getProblem = async (): Promise<Problem> => {
-  const result = await api.get<Problem>('/problems/recommendation');
+export const getReward = async () => {
+  const result = await api.post('/attendance/reward');
 
-  return result.data as Problem;
+  return result.data;
 };
 
-export const getPoints = async (): Promise<Points> => {
-  const result = await api.post<Points>('/attendance/check');
+export const getRecords = async () => {
+  const result = await api.get('/attendance/records');
 
-  return result.data as Points;
+  return result.data as Records;
 };
 
-export const useGetProblem = () => {
-  return useSuspenseQuery<Problem>({
-    queryKey: ['getProblem'],
-    queryFn: getProblem,
-  });
-};
+// export const getMessage = async () => {
+//   const result = await api.get('');
 
-export const useGetPoints = () => {
+//   return result.data;
+// };
+
+export const useGetReward = () => {
   const queryClient = useQueryClient();
 
   const { mutate } = useMutation({
-    mutationFn: getPoints,
+    mutationFn: getReward,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['getPoints'] });
+      queryClient.invalidateQueries({ queryKey: ['getReward'] });
     },
     onError: (error: Error) => {
       toast.error(error.message);
