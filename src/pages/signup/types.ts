@@ -16,9 +16,12 @@ export interface ErrorMessages {
   PASSWORD_PATTERN: string;
   PASSWORD_MISMATCH: string;
   PASSWORD_CHECK: string;
+  PASSWORD_SPACE: string;
+  PASSWORD_KOR_CHECK: string;
   FAILED_TO_CHECK_USER: string;
   SIGNUP_FAILED: string;
-  PASSWORD_SPACE: string;
+  REGISTERED_USER: string;
+  SOLVEDAC_AUTH: string;
 }
 
 export interface ApiError extends Error {

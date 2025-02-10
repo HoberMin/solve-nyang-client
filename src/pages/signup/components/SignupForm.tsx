@@ -20,6 +20,7 @@ import {
   ERROR_MESSAGES,
   FEEDBACK_MESSAGES,
   INITIAL_FORM_STATE,
+  SIGNUP_ERROR_MESSAGES,
   VALIDATION,
 } from '../constants';
 import type { ApiError, FormData } from '../types';
@@ -113,9 +114,7 @@ export const SignupForm = () => {
         setErrors(prev => ({ ...prev, encryption: '', username: '' }));
         toast.success(FEEDBACK_MESSAGES.ENCRYPTION_GUIDE);
       },
-      onError: (error: ApiError) => {
-        console.log('Error response:', error.response?.data);
-        console.log('Error status:', error.response?.status);
+      onError: () => {
         toast.error('존재하지 않는 사용자입니다.');
       },
     });
@@ -144,36 +143,31 @@ export const SignupForm = () => {
         password: formData.password,
       },
       {
-        onSuccess: () => {
-          // useSignup에서 처리
-        },
         onError: (error: ApiError) => {
-          const errorMessage = error.response?.data?.message;
+          console.log('Full Error Response:', error.response?.data); // 전체 응답 구조 확인
+          const errorMessage = error.response?.data?.message || '';
 
-          switch (errorMessage) {
-            case '비밀번호는 8자 이상이어야 합니다.':
-              toast.error(ERROR_MESSAGES.PASSWORD_LENGTH);
-              break;
-            case '비밀번호에 공백을 포함할 수 없습니다.':
-              toast.error(ERROR_MESSAGES.PASSWORD_SPACE);
-              break;
-            case '비밀번호에 한글을 포함할 수 없습니다.':
-              toast.error('비밀번호에 한글을 포함할 수 없습니다.');
-              break;
-            case '비밀번호는 영문자, 숫자, 특수문자를 모두 포함해야 합니다.':
-              toast.error(ERROR_MESSAGES.PASSWORD_PATTERN);
-              break;
-            case '이미 가입된 회원입니다.':
-              toast.error('이미 가입된 회원입니다.');
-              break;
-            case 'solved.ac 인증을 확인하세요':
-              toast.error('solved.ac 인증을 확인하세요.');
-              break;
-            default:
-              toast.error(
-                '회원가입 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
-              );
+          // 디버깅을 위한 로그
+          console.log('Backend Error Message:', errorMessage);
+          console.log(
+            'Mapped Error Message:',
+            SIGNUP_ERROR_MESSAGES[errorMessage || ''],
+          );
+
+          // 에러 메시지가 없는 경우 기본 에러 메시지 표시
+          if (!errorMessage) {
+            toast.error(ERROR_MESSAGES.SIGNUP_FAILED);
+            return;
           }
+          // 2. SIGNUP_ERROR_MESSAGES에서 매핑된 메시지 찾기
+          const mappedMessage = SIGNUP_ERROR_MESSAGES[errorMessage];
+          console.log('Mapped Error Message:', mappedMessage);
+
+          // 3. 매핑된 메시지가 있으면 사용, 없으면 백엔드 메시지 그대로 사용
+          toast.error(mappedMessage || errorMessage);
+          // const displayMessage =
+          //   SIGNUP_ERROR_MESSAGES[errorMessage] ?? ERROR_MESSAGES.SIGNUP_FAILED;
+          // toast.error(displayMessage);
         },
       },
     );
@@ -185,7 +179,7 @@ export const SignupForm = () => {
       return;
     }
 
-    const isPasswordValid: boolean = Boolean(
+    const isPasswordValid = Boolean(
       formData.password &&
         formData.passwordConfirm &&
         formData.password.length >= VALIDATION.PASSWORD_MIN_LENGTH &&
