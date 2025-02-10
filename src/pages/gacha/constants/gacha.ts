@@ -1,3 +1,14 @@
+import A_CAPSULE from '@/assets/ball/A1-3.svg';
+import A_OPENED from '@/assets/ball/A1-4.svg';
+import B_CAPSULE from '@/assets/ball/B1-3.svg';
+import B_OPENED from '@/assets/ball/B1-4.svg';
+import C_CAPSULE from '@/assets/ball/C1-3.svg';
+import C_OPENED from '@/assets/ball/C1-4.svg';
+import D_CAPSULE from '@/assets/ball/D1-3.svg';
+import D_OPENED from '@/assets/ball/D1-4.svg';
+import S_CAPSULE from '@/assets/ball/S1-3.svg';
+import S_OPENED from '@/assets/ball/S1-4.svg';
+
 export interface BallPosition {
   left: string;
   top: string;
@@ -21,24 +32,24 @@ export type AnimationStep =
 
 export const RARITY_TO_IMAGE = {
   S: {
-    capsule: '/ball/S1-3.svg',
-    opened: '/ball/S1-4.svg',
+    capsule: S_CAPSULE,
+    opened: S_OPENED,
   },
   A: {
-    capsule: '/ball/A1-3.svg',
-    opened: '/ball/A1-4.svg',
+    capsule: A_CAPSULE,
+    opened: A_OPENED,
   },
   B: {
-    capsule: '/ball/B1-3.svg',
-    opened: '/ball/B1-4.svg',
+    capsule: B_CAPSULE,
+    opened: B_OPENED,
   },
   C: {
-    capsule: '/ball/C1-3.svg',
-    opened: '/ball/C1-4.svg',
+    capsule: C_CAPSULE,
+    opened: C_OPENED,
   },
   D: {
-    capsule: '/ball/D1-3.svg',
-    opened: '/ball/D1-4.svg',
+    capsule: D_CAPSULE,
+    opened: D_OPENED,
   },
 } as const;
 

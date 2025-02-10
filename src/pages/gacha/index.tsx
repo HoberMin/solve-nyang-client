@@ -4,6 +4,16 @@ import { toast } from 'sonner';
 
 import { Avatar, useGachaAvatarApi } from '@/apis/avatar';
 import { useGetUserPoint } from '@/apis/user';
+import coinImg from '@/assets/machine/coin.svg';
+import greenBallImageUrl from '@/assets/machine/gacha-ball-1.svg';
+import orangeBallImageUrl from '@/assets/machine/gacha-ball-2.svg';
+import skyblueBallImageUrl from '@/assets/machine/gacha-ball-3.svg';
+import purpleBallImageUrl from '@/assets/machine/gacha-ball-4.svg';
+import pinkBallImageUrl from '@/assets/machine/gacha-ball-5.svg';
+import blueBallImageUrl from '@/assets/machine/gacha-ball-6.svg';
+import yellowBallImageUrl from '@/assets/machine/gacha-ball-7.svg';
+import machineImageUrl from '@/assets/machine/gacha-machine.svg';
+import handleImageUrl from '@/assets/machine/handle.svg';
 import Layout from '@/components/Layout';
 import LoadingScreen from '@/components/LoadingScreen';
 import {
@@ -17,17 +27,8 @@ import { GachaDropRateInfo } from '@/pages/gacha/components/GachaDropRateInfo';
 import { GachaResultModal } from '@/pages/gacha/components/GachaResultModal';
 import PointDisplay from '@/pages/gacha/components/PointDisplay';
 
+import ImagePreloader from './components/ImagePreLoader';
 import useImagePreloader from './hooks/usePreloader';
-import coinImg from '/assets/coin.svg';
-import greenBallImageUrl from '/assets/gacha-ball-1.svg';
-import orangeBallImageUrl from '/assets/gacha-ball-2.svg';
-import skyblueBallImageUrl from '/assets/gacha-ball-3.svg';
-import purpleBallImageUrl from '/assets/gacha-ball-4.svg';
-import pinkBallImageUrl from '/assets/gacha-ball-5.svg';
-import blueBallImageUrl from '/assets/gacha-ball-6.svg';
-import yellowBallImageUrl from '/assets/gacha-ball-7.svg';
-import machineImageUrl from '/assets/gacha-machine.svg';
-import handleImageUrl from '/assets/handle.svg';
 
 interface BallPosition {
   left: string;
@@ -198,6 +199,7 @@ const Gacha = () => {
 
   return (
     <Layout>
+      <ImagePreloader />
       <div className='fixed right-20 top-24 flex items-start gap-2'>
         <PointDisplay />
         <GachaDropRateInfo />
