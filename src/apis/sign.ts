@@ -95,7 +95,6 @@ export const useSignUp = () => {
       navigate('/login');
     },
     onError: (error: Error) => {
-      console.log(error);
       toast.error(error.message || '회원가입에 실패했습니다.');
     },
   });

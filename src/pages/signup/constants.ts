@@ -27,16 +27,6 @@ export const ERROR_MESSAGES: ErrorMessages = {
   SOLVEDAC_AUTH: 'solved.ac 인증을 확인하세요.',
 };
 
-export const SIGNUP_ERROR_MESSAGES: Record<string, string> = {
-  '이미 가입된 회원입니다.': ERROR_MESSAGES.REGISTERED_USER,
-  'solved.ac 인증을 확인하세요': ERROR_MESSAGES.SOLVEDAC_AUTH,
-  '비밀번호는 8자 이상이어야 합니다.': ERROR_MESSAGES.PASSWORD_LENGTH,
-  '비밀번호에 공백을 포함할 수 없습니다.': ERROR_MESSAGES.PASSWORD_SPACE,
-  '비밀번호에 한글을 포함할 수 없습니다.': ERROR_MESSAGES.PASSWORD_KOR_CHECK,
-  '비밀번호는 영문자, 숫자, 특수문자를 모두 포함해야 합니다.':
-    ERROR_MESSAGES.PASSWORD_PATTERN,
-};
-
 export const FEEDBACK_MESSAGES = {
   ENCRYPTION_GUIDE: '암호화키를 solved.ac 내정보-이름에 입력하세요.',
   INCOMPLETE_FORM: '가입정보를 입력하세요.',
