@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import * as Sentry from '@sentry/react';
+import { captureException, showReportDialog } from '@sentry/react';
 import { Cat, Home, RefreshCcw } from 'lucide-react';
 import { useNavigate, useRouteError } from 'react-router-dom';
 
@@ -18,7 +18,7 @@ const RetroError = () => {
 
   useEffect(() => {
     if (error) {
-      const id = Sentry.captureException(error);
+      const id = captureException(error);
       setEventId(id);
     }
   }, [error]);
@@ -32,7 +32,7 @@ const RetroError = () => {
 
   const handleReportFeedback = () => {
     if (eventId) {
-      Sentry.showReportDialog({ eventId });
+      showReportDialog({ eventId });
     }
   };
 

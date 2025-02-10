@@ -84,6 +84,14 @@ const ContestPage = () => {
     const selectedFile = e.target.files?.[0];
     if (!selectedFile) return;
 
+    const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+
+    if (selectedFile.size > MAX_FILE_SIZE) {
+      toast.error('파일 크기는 5MB 이하여야 합니다.');
+      e.target.value = '';
+      return;
+    }
+
     try {
       const reader = new FileReader();
       reader.onloadend = () => {
