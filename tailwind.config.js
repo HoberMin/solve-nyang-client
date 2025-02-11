@@ -11,7 +11,8 @@ export default {
         'low-bounce': 'lowBounce 1s infinite',
         shake: 'shake 0.5s ease-in-out infinite',
         open: 'open 0.5s ease-in-out forwards',
-        'shoot-arrow': 'shootArrow 0.8s ease-in-out', // 추가된 애니메이션
+        'shoot-arrow': 'shootArrow 0.8s ease-in-out',
+        'box-explosion': 'boxExplosion 0.3s ease-in-out forwards', // 추가된 애니메이션
       },
       keyframes: {
         lowBounce: {
@@ -38,7 +39,6 @@ export default {
           '100%': { transform: 'translateX(-50%) translateY(-50%) scale(1.5)' },
         },
         shootArrow: {
-          // 추가된 키프레임
           '0%': {
             transform: 'translateX(-100%) translateY(-50%)',
             opacity: '0',
@@ -52,6 +52,20 @@ export default {
           },
           '100%': {
             transform: 'translateX(180%) translateY(-50%)',
+            opacity: '0',
+          },
+        },
+        boxExplosion: {
+          '0%': {
+            transform: 'scale(1)',
+            opacity: '1',
+          },
+          '50%': {
+            transform: 'scale(2)',
+            opacity: '1',
+          },
+          '100%': {
+            transform: 'scale(7.2)',
             opacity: '0',
           },
         },
