@@ -13,4 +13,5 @@ export type BackgroundKey =
   | 'Snow2'
   | 'Window1'
   | 'Window2'
-  | 'Space';
+  | 'Space'
+  | 'Heart';

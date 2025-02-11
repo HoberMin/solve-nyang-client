@@ -6,6 +6,7 @@ import { Background, useBuyBackgroundImage } from '@/apis/background';
 import { useGetUserPoint } from '@/apis/user';
 import BeachBg from '@/assets/bg/Beach.svg';
 import FieldBg from '@/assets/bg/Field.svg';
+import HeartBg from '@/assets/bg/Heart.svg';
 import OceanBg from '@/assets/bg/Ocean.svg';
 import SandBg from '@/assets/bg/Sand.svg';
 import Snow1Bg from '@/assets/bg/Snow1.svg';
@@ -35,6 +36,7 @@ const BACKGROUND_IMAGES: Record<BackgroundKey, string> = {
   Window1: Window1Bg,
   Window2: Window2Bg,
   Space: SpaceBg,
+  Heart: HeartBg,
 };
 
 interface BackgroundCardProps {

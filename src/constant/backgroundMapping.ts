@@ -10,5 +10,5 @@ export const BACKGROUND_MAPPING: Record<BackgroundKey, string> = {
   Window1: '창가배경',
   Window2: '창밖배경',
   Space: '우주배경',
-  // Heart: '하트배경',
+  Heart: '하트배경',
 };
