@@ -38,6 +38,7 @@ interface ErrorMessages {
   PASSWORD_CHECK: string;
   FAILED_TO_CHECK_USER: string;
   FAILED_MODIFY_PASSWORD: string;
+  PASSWORD_SPACE: string;
 }
 
 interface ApiError extends Error {
@@ -49,11 +50,10 @@ interface ApiError extends Error {
   };
 }
 
-// 상수 정의
 const VALIDATION: ValidationRules = {
   PASSWORD_MIN_LENGTH: 8,
   PASSWORD_PATTERN:
-    /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&^])[A-Za-z\d@$!%*#?&^]{8,}$/,
+    /^(?=.*[A-Za-z])(?=.*\d)(?=.*[~!@#$%^&*_\-+=`|(){}[\]:;"'<>,.?/])[A-Za-z\d~!@#$%^&*_\-+=`|(){}[\]:;"'<>,.?/]{8,}$/,
 };
 
 const INITIAL_FORM_STATE: FormData = {
@@ -72,6 +72,7 @@ const ERROR_MESSAGES: ErrorMessages = {
 
   FAILED_TO_CHECK_USER: '사용자 확인에 실패했습니다.', // verify의 Failed to check user
   FAILED_MODIFY_PASSWORD: '비밀번호 수정 실패',
+  PASSWORD_SPACE: '비밀번호에 공백을 포함할 수 없습니다.',
 };
 
 const FEEDBACK_MESSAGES = {
@@ -82,7 +83,6 @@ const FEEDBACK_MESSAGES = {
 const FindPassword = () => {
   const navigate = useNavigate();
   const findPasswordMutation = useFindPassword();
-
   const getEncryptionMutation = useGetEncryption();
 
   const [formData, setFormData] = useState<FormData>(INITIAL_FORM_STATE);
@@ -96,6 +96,17 @@ const FindPassword = () => {
     value: string,
     fieldName: keyof FormData,
   ): void => {
+    if (
+      (fieldName === 'password' || fieldName === 'passwordConfirm') &&
+      value.includes(' ')
+    ) {
+      setErrors(prev => ({
+        ...prev,
+        [fieldName]: ERROR_MESSAGES.PASSWORD_SPACE,
+      }));
+      return;
+    }
+
     setFormData(prev => ({ ...prev, [fieldName]: value }));
 
     if (fieldName === 'password') {
@@ -190,6 +201,11 @@ const FindPassword = () => {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
+    if (!formData.password.trim() || !formData.passwordConfirm.trim()) {
+      toast.error(ERROR_MESSAGES.PASSWORD_SPACE);
+      return;
+    }
+
     findPasswordMutation(
       {
         username: formData.username,
@@ -280,6 +296,7 @@ const FindPassword = () => {
                           handleInputChange(e.target.value, 'username')
                         }
                         disabled={isKeyIssued}
+                        autoComplete='off'
                         className='h-10 bg-zinc-900 text-zinc-100'
                         placeholder='닉네임을 입력하세요'
                       />
@@ -306,6 +323,7 @@ const FindPassword = () => {
                       type='text'
                       value={encryptionKey}
                       readOnly
+                      autoComplete='off'
                       className='h-10 bg-zinc-900 pr-10 text-zinc-100'
                     />
                     <Copy
@@ -324,6 +342,7 @@ const FindPassword = () => {
                       onChange={e =>
                         handleInputChange(e.target.value, 'password')
                       }
+                      onKeyDown={e => e.key === ' ' && e.preventDefault()}
                       className='h-10 bg-zinc-900 pr-10 text-zinc-100'
                       placeholder='새로운 비밀번호를 입력하세요.'
                     />
@@ -356,6 +375,8 @@ const FindPassword = () => {
                     onChange={e =>
                       handleInputChange(e.target.value, 'passwordConfirm')
                     }
+                    onKeyDown={e => e.key === ' ' && e.preventDefault()}
+                    autoComplete='off'
                     className='h-10 bg-zinc-900 text-zinc-100'
                     placeholder='비밀번호를 다시 입력하세요.'
                   />

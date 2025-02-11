@@ -37,13 +37,13 @@ interface ErrorMessages {
   PASSWORD_MISMATCH: string;
   PASSWORD_CHECK: string;
   FAILED_TO_CHECK_USER: string;
+  PASSWORD_SPACE: string;
 }
 
-// 상수 정의
 const VALIDATION: ValidationRules = {
   PASSWORD_MIN_LENGTH: 8,
   PASSWORD_PATTERN:
-    /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&^])[A-Za-z\d@$!%*#?&^]{8,}$/,
+    /^(?=.*[A-Za-z])(?=.*\d)(?=.*[~!@#$%^&*_\-+=`|(){}[\]:;"'<>,.?/])[A-Za-z\d~!@#$%^&*_\-+=`|(){}[\]:;"'<>,.?/]{8,}$/,
 };
 
 const INITIAL_FORM_STATE: FormData = {
@@ -61,7 +61,8 @@ const ERROR_MESSAGES: ErrorMessages = {
   PASSWORD_MISMATCH: '비밀번호가 일치하지 않습니다.',
   PASSWORD_CHECK: '비밀번호를 확인해주세요.',
 
-  FAILED_TO_CHECK_USER: '사용자 확인에 실패했습니다.', // verify의 Failed to check user
+  FAILED_TO_CHECK_USER: '사용자 확인에 실패했습니다.',
+  PASSWORD_SPACE: '비밀번호에 공백을 포함할 수 없습니다.',
 };
 
 const ChangePassword = () => {
@@ -79,7 +80,21 @@ const ChangePassword = () => {
     formData.passwordConfirm &&
     formData.newPassword === formData.passwordConfirm;
 
-  const handleInputChange = (value: string, fieldName: keyof FormData) => {
+  const handleInputChange = (
+    value: string,
+    fieldName: keyof FormData, // FormData의 키 중 하나로 제한
+  ) => {
+    if (
+      (fieldName === 'newPassword' || fieldName === 'passwordConfirm') &&
+      value.includes(' ')
+    ) {
+      setErrors(prev => ({
+        ...prev,
+        [fieldName]: ERROR_MESSAGES.PASSWORD_SPACE,
+      }));
+      return;
+    }
+
     setFormData(prev => ({ ...prev, [fieldName]: value }));
 
     if (fieldName === 'newPassword') {
@@ -129,6 +144,11 @@ const ChangePassword = () => {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
+
+    if (!formData.newPassword.trim() || !formData.passwordConfirm.trim()) {
+      toast.error(ERROR_MESSAGES.PASSWORD_SPACE);
+      return;
+    }
 
     if (formData.currentPassword === formData.newPassword) {
       toast.error('새 비밀번호는 현재 비밀번호와 달라야 합니다.');
@@ -181,6 +201,7 @@ const ChangePassword = () => {
                       onChange={e =>
                         handleInputChange(e.target.value, 'currentPassword')
                       }
+                      onKeyDown={e => e.key === ' ' && e.preventDefault()}
                       className='h-10 bg-zinc-900 pr-10 text-zinc-100'
                       placeholder='현재 비밀번호를 입력하세요.'
                     />
@@ -208,6 +229,7 @@ const ChangePassword = () => {
                       onChange={e =>
                         handleInputChange(e.target.value, 'newPassword')
                       }
+                      onKeyDown={e => e.key === ' ' && e.preventDefault()}
                       className='h-10 bg-zinc-900 pr-10 text-zinc-100'
                       placeholder='새 비밀번호를 입력하세요.'
                     />
@@ -242,6 +264,7 @@ const ChangePassword = () => {
                     onChange={e =>
                       handleInputChange(e.target.value, 'passwordConfirm')
                     }
+                    onKeyDown={e => e.key === ' ' && e.preventDefault()}
                     className='h-10 bg-zinc-900 text-zinc-100'
                     placeholder='비밀번호를 다시 입력하세요.'
                   />

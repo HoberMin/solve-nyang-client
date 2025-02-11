@@ -1,9 +1,10 @@
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
+import { FEEDBACK_MESSAGES } from '@/pages/signup/constants';
+
 import { api } from './core';
 
-// 타입 정의
 interface Encryption {
   verificationCode: string;
 }
@@ -22,7 +23,7 @@ export const useGetEncryption = () => {
   const { mutateAsync } = useMutation({
     mutationFn: getEncryption,
     onSuccess: () => {
-      toast.success('인증 코드가 발급되었습니다.');
+      toast.success(FEEDBACK_MESSAGES.ENCRYPTION_GUIDE);
     },
     onError: (error: Error) => {
       toast.error(error.message);
