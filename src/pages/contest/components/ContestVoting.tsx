@@ -6,15 +6,13 @@ import { VotingAvatar } from './VotingAvatar';
 
 interface ContestVotingProps {
   images: Image[];
-  handleVote: () => void;
 }
 
-const ContestVoting = ({ images, handleVote }: ContestVotingProps) => {
+const ContestVoting = ({ images }: ContestVotingProps) => {
   const voteImage = useVoteImage();
 
   const handleVoteClick = (imageId: number) => {
-    voteImage(imageId); // 투표 실행
-    handleVote(); // 상태 업데이트
+    voteImage(imageId);
   };
 
   return (

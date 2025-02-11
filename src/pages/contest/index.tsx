@@ -1,21 +1,14 @@
-import { useState } from 'react';
-
-import { useGetImgUrl } from '@/apis/contest';
+import { useGetImgUrl, useGetVoteStatus } from '@/apis/contest';
 import Layout from '@/components/Layout';
 
 import ContestVoting from './components/ContestVoting';
 import ContestVotingResult from './components/ContestVotingResult';
 
 const ContestPage = () => {
-  const [hasVoted, setHasVoted] = useState(false);
-  const { data } = useGetImgUrl();
-  const { images } = data;
-
-  const handleVote = () => {
-    setHasVoted(true);
-  };
-
-  console.log(data);
+  const { data: imgData } = useGetImgUrl();
+  const { data: voteData } = useGetVoteStatus();
+  const { images } = imgData;
+  const { voted: isVoted } = voteData;
 
   return (
     <Layout>
@@ -31,11 +24,11 @@ const ContestPage = () => {
             * 투표는 하루에 한 번만 가능합니다.
           </p>
 
-          <div>
-            {hasVoted ? (
+          <div className='bg-white-100 mt-10 rounded-lg px-20 backdrop-blur-sm'>
+            {isVoted ? (
               <ContestVotingResult images={images} />
             ) : (
-              <ContestVoting images={images} handleVote={handleVote} />
+              <ContestVoting images={images} />
             )}
           </div>
         </div>

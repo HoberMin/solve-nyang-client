@@ -32,6 +32,10 @@ export interface VoteResultResponse {
   voteCounts: VoteCount[];
 }
 
+interface VoteStatusResponse {
+  voted: boolean;
+}
+
 const getImgUrl = async () => {
   const result = await api.get<ImageList>('/images/contest');
 
@@ -60,6 +64,16 @@ const getVoteResult = async () => {
   return result.data;
 };
 
+const getVoteStatus = async () => {
+  const result = await api.get<VoteStatusResponse>('/images/voted');
+
+  if (!result.isSuccess || !result.data) {
+    throw new Error(result.message || '투표 상태를 확인하는 데 실패했습니다.');
+  }
+
+  return result.data;
+};
+
 export const useGetImgUrl = () =>
   useSuspenseQuery<ImageList>({
     queryKey: ['imageList'],
@@ -73,6 +87,7 @@ export const useVoteImage = () => {
     mutationFn: voteImage,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['voteResult'] });
+      queryClient.invalidateQueries({ queryKey: ['voteStatus'] });
       toast.success('오늘의 투표가 완료되었습니다.');
     },
     onError: (error: Error) => {
@@ -87,4 +102,10 @@ export const useGetVoteResult = () =>
   useSuspenseQuery<VoteResultResponse>({
     queryKey: ['voteResult'],
     queryFn: getVoteResult,
+  });
+
+export const useGetVoteStatus = () =>
+  useSuspenseQuery<VoteStatusResponse>({
+    queryKey: ['voteStatus'],
+    queryFn: getVoteStatus,
   });
