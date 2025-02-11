@@ -10,7 +10,7 @@ const BackgroundShop = () => {
 
   return (
     <Layout>
-      <div className='relative mx-auto mb-8 flex h-full w-full max-w-7xl flex-col'>
+      <div className='relative mx-auto mb-8 flex h-full w-full max-w-5xl flex-col'>
         <div className='sticky top-0 z-10 flex bg-gray-900/95 px-6 py-4 backdrop-blur-sm'>
           <div className='flex-1'>
             <div className='mb-2 mt-8 text-2xl font-bold text-blue-400 shadow-blue-400/50 drop-shadow-lg'>
