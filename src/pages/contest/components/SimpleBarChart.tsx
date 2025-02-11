@@ -8,18 +8,24 @@ import {
   TooltipProps,
 } from 'recharts';
 
-import { Avatar } from '..';
-
-interface SimpleBarChartProps {
-  data: Avatar[];
-}
-
+// 차트 데이터 인터페이스
 interface ChartData {
   name: string;
   value: number;
   totalVotes: number;
 }
 
+// SimpleBarChart Props 인터페이스
+interface SimpleBarChartProps {
+  data: {
+    id: number;
+    imageUrl: string;
+    username: string;
+    votes: number;
+  }[];
+}
+
+// CustomTooltip Props 타입
 type CustomTooltipProps = TooltipProps<number, string> & {
   payload?: Array<{
     value: number;
@@ -27,6 +33,7 @@ type CustomTooltipProps = TooltipProps<number, string> & {
   }>;
 };
 
+// CustomBar Props 인터페이스
 interface CustomBarProps {
   fill?: string;
   x?: number;
@@ -102,7 +109,7 @@ const SimpleBarChart: React.FC<SimpleBarChartProps> = ({ data }) => {
   const totalVotes = data.reduce((sum, avatar) => sum + avatar.votes, 0);
 
   const chartData: ChartData[] = data.map(avatar => ({
-    name: avatar.title,
+    name: avatar.username,
     value: avatar.votes,
     totalVotes: totalVotes,
   }));

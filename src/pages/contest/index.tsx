@@ -6,37 +6,10 @@ import Layout from '@/components/Layout';
 import ContestVoting from './components/ContestVoting';
 import ContestVotingResult from './components/ContestVotingResult';
 
-export interface Avatar {
-  id: number;
-  title: string;
-  imageUrl: string;
-  votes: number;
-}
-
-const DUMMY_VOTES = {
-  2: 150,
-};
-
-export interface ContestVotingResultProps {
-  data: Avatar[];
-}
-
-export interface ContestVotingProps {
-  data: Avatar[];
-  onVote: (avatarId: number) => void;
-}
-
 const ContestPage = () => {
   const [hasVoted, setHasVoted] = useState(false);
   const { data } = useGetImgUrl();
   const { images } = data;
-
-  const avatarData: Avatar[] = images.map(image => ({
-    id: image.imageId,
-    title: image.username,
-    imageUrl: image.presignedUrl,
-    votes: DUMMY_VOTES[image.imageId as keyof typeof DUMMY_VOTES] || 0,
-  }));
 
   const handleVote = () => {
     setHasVoted(true);
@@ -60,9 +33,9 @@ const ContestPage = () => {
 
           <div>
             {hasVoted ? (
-              <ContestVotingResult data={avatarData} />
+              <ContestVotingResult images={images} />
             ) : (
-              <ContestVoting data={avatarData} onVote={handleVote} />
+              <ContestVoting images={images} handleVote={handleVote} />
             )}
           </div>
         </div>
