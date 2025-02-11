@@ -25,13 +25,13 @@ const ContestVotingResult = ({ images }: ContestVotingResultProps) => {
       id: image.imageId,
       imageUrl: image.presignedUrl,
       username: image.username,
-      votes: voteCount?.count || 0,
+      votes: voteCount?.count ?? 0,
     };
   });
 
-  const winner = chartData.reduce((prev, current) =>
-    prev.votes > current.votes ? prev : current,
-  );
+  const maxVotes = Math.max(...chartData.map(data => data.votes));
+
+  const winners = chartData.filter(data => data.votes === maxVotes);
 
   return (
     <div className='container mx-auto flex flex-col p-4'>
@@ -39,9 +39,9 @@ const ContestVotingResult = ({ images }: ContestVotingResultProps) => {
         <div className='mb-8'>
           <SimpleBarChart data={chartData} />
         </div>
-        <div className='-mt-24 flex justify-center gap-4'>
+        <div className='-mt-40 flex justify-center gap-4'>
           {chartData.map(image => {
-            const isWinner = image.id === winner.id;
+            const isWinner = winners.some(winner => winner.id === image.id);
 
             return (
               <div
@@ -49,11 +49,11 @@ const ContestVotingResult = ({ images }: ContestVotingResultProps) => {
                 className='relative flex flex-col items-center'
               >
                 {isWinner && (
-                  <div className='absolute -top-4 z-20 -translate-x-1/2 animate-bounce text-4xl'>
-                    <div className='text-nowrap text-sm font-bold text-gray-800'>
-                      현재 1위!
+                  <div className='absolute -top-8 z-20 -translate-x-1/2 animate-bounce'>
+                    <div className='text-nowrap text-base font-bold text-black'>
+                      현재 1위
                     </div>
-                    👑
+                    <div className='text-5xl'>👑</div>
                   </div>
                 )}
                 <img
@@ -63,12 +63,26 @@ const ContestVotingResult = ({ images }: ContestVotingResultProps) => {
                   }`}
                   alt={image.username}
                 />
-                <span className={'mt-2 text-lg font-bold text-white'}>
+                <span className='mt-2 text-lg font-bold text-white'>
                   {image.username}
                 </span>
               </div>
             );
           })}
+        </div>
+        <div className='mt-4 flex flex-col items-center justify-center p-4'>
+          <div className='rounded-lg bg-white/5 px-40 py-4 backdrop-blur-sm'>
+            <div className='flex items-center justify-center'>
+              <span className='text-lg font-bold text-white'>
+                투표해 주셔서 감사합니다
+              </span>
+            </div>
+            <div className='mb-1 flex items-center justify-center'>
+              <span className='text-base font-medium text-white/90'>
+                내일 또 참여해주세요!
+              </span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
