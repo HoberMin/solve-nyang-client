@@ -15,4 +15,5 @@ export const Pages = {
   SalePage: lazy(() => import('./sale')),
   ServicePage: lazy(() => import('./service')),
   SignupPage: lazy(() => import('./signup')),
+  ValentinePage: lazy(() => import('./valentine')),
 } as const;
