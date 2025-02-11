@@ -5,16 +5,15 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface Attendance {
   date: string;
-  points: number;
 }
 
 // 더미 데이터
 const DUMMY_ATTENDANCE: Attendance[] = [
-  { date: '2025-01-21', points: 30 },
-  { date: '2025-02-01', points: 30 },
-  { date: '2025-02-03', points: 30 },
-  { date: '2025-02-06', points: 30 },
-  { date: '2025-02-09', points: 30 },
+  { date: '2025-01-21' },
+  { date: '2025-02-01' },
+  { date: '2025-02-03' },
+  { date: '2025-02-06' },
+  { date: '2025-02-09' },
 ];
 
 // API 호출을 시뮬레이션하는 가상의 함수들
