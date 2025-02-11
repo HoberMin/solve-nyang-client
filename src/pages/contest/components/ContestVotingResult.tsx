@@ -1,10 +1,35 @@
-import React from 'react';
+import { useGetVoteResult } from '@/apis/contest';
+import { Image } from '@/apis/contest';
 
-import { ContestVotingResultProps } from '..';
 import SimpleBarChart from './SimpleBarChart';
 
-const ContestVotingResult: React.FC<ContestVotingResultProps> = ({ data }) => {
-  const winner = data.reduce((prev, current) =>
+interface ContestVotingResultProps {
+  images: Image[];
+}
+
+interface ChartData {
+  id: number;
+  imageUrl: string;
+  username: string;
+  votes: number;
+}
+
+const ContestVotingResult = ({ images }: ContestVotingResultProps) => {
+  const { data } = useGetVoteResult();
+  const { voteCounts } = data;
+
+  const chartData: ChartData[] = images.map(image => {
+    const voteCount = voteCounts.find(vc => vc.imageId === image.imageId);
+
+    return {
+      id: image.imageId,
+      imageUrl: image.presignedUrl,
+      username: image.username,
+      votes: voteCount?.count || 0,
+    };
+  });
+
+  const winner = chartData.reduce((prev, current) =>
     prev.votes > current.votes ? prev : current,
   );
 
@@ -12,15 +37,15 @@ const ContestVotingResult: React.FC<ContestVotingResultProps> = ({ data }) => {
     <div className='container mx-auto flex flex-col p-4'>
       <div className='relative flex-1'>
         <div className='mb-8'>
-          <SimpleBarChart data={data} />
+          <SimpleBarChart data={chartData} />
         </div>
         <div className='-mt-24 flex justify-center gap-4'>
-          {data.map(avatar => {
-            const isWinner = avatar.id === winner.id;
+          {chartData.map(image => {
+            const isWinner = image.id === winner.id;
 
             return (
               <div
-                key={avatar.id}
+                key={image.id}
                 className='relative flex flex-col items-center'
               >
                 {isWinner && (
@@ -32,14 +57,14 @@ const ContestVotingResult: React.FC<ContestVotingResultProps> = ({ data }) => {
                   </div>
                 )}
                 <img
-                  src={avatar.imageUrl}
+                  src={image.imageUrl}
                   className={`z-10 h-36 w-36 transition-transform ${
                     isWinner ? 'scale-110' : ''
                   }`}
-                  alt={avatar.title}
+                  alt={image.username}
                 />
                 <span className={'mt-2 text-lg font-bold text-white'}>
-                  {avatar.title}
+                  {image.username}
                 </span>
               </div>
             );

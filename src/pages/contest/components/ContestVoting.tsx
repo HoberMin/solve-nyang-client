@@ -1,11 +1,22 @@
-import React from 'react';
-
 import { Clock } from 'lucide-react';
 
-import { ContestVotingProps } from '..';
+import { Image, useVoteImage } from '@/apis/contest';
+
 import { VotingAvatar } from './VotingAvatar';
 
-const ContestVoting: React.FC<ContestVotingProps> = ({ data, onVote }) => {
+interface ContestVotingProps {
+  images: Image[];
+  handleVote: () => void;
+}
+
+const ContestVoting = ({ images, handleVote }: ContestVotingProps) => {
+  const voteImage = useVoteImage();
+
+  const handleVoteClick = (imageId: number) => {
+    voteImage(imageId); // 투표 실행
+    handleVote(); // 상태 업데이트
+  };
+
   return (
     <div className='container mx-auto flex flex-col p-4'>
       <div className='relative flex-1'>
@@ -24,13 +35,13 @@ const ContestVoting: React.FC<ContestVotingProps> = ({ data, onVote }) => {
           </div>
         </div>
         <div className='-mt-24 flex justify-center gap-4'>
-          {data.map(avatar => (
+          {images.map(image => (
             <VotingAvatar
-              key={avatar.id}
-              id={avatar.id}
-              imageUrl={avatar.imageUrl}
-              title={avatar.title}
-              onVote={onVote}
+              key={image.imageId}
+              id={image.imageId}
+              imageUrl={image.presignedUrl}
+              title={image.username}
+              onVote={handleVoteClick}
             />
           ))}
         </div>
