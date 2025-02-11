@@ -1,30 +1,28 @@
 import { useState } from 'react';
 
-import { useQuery } from '@tanstack/react-query';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
-interface Attendance {
-  date: string;
+import { useGetRecords } from '@/apis/attendance';
+
+interface AttendanceResponse {
+  attendances: {
+    date: string;
+  }[];
 }
 
 // 더미 데이터
-const DUMMY_ATTENDANCE: Attendance[] = [
-  { date: '2025-01-21' },
-  { date: '2025-01-26' },
-  { date: '2025-02-01' },
-  { date: '2025-02-03' },
-  { date: '2025-02-06' },
-  { date: '2025-02-09' },
-];
+// const DUMMY_ATTENDANCE: Attendance[] = [
+//   { date: '2025-01-21' },
+//   { date: '2025-01-26' },
+//   { date: '2025-02-01' },
+//   { date: '2025-02-03' },
+//   { date: '2025-02-06' },
+//   { date: '2025-02-09' },
+// ];
 
 // API 호출을 시뮬레이션하는 가상의 함수들
-const fetchAttendance = async (): Promise<Attendance[]> => {
-  return DUMMY_ATTENDANCE;
-};
-
-// const markAttendance = async (date: string): Promise<Attendance> => {
-//   console.log('출석체크:', date);
-//   return { date, points: 100 };
+// const fetchAttendance = async (): Promise<Attendance[]> => {
+//   return DUMMY_ATTENDANCE;
 // };
 
 export const AttendanceCalendar: React.FC = () => {
@@ -33,12 +31,13 @@ export const AttendanceCalendar: React.FC = () => {
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth() + 1;
 
-  // const queryClient = useQueryClient();
+  // const { data: attendanceData = [] } = useQuery({
+  //   queryKey: ['attendance', year, month],
+  //   queryFn: fetchAttendance,
+  // });
 
-  const { data: attendanceData = [] } = useQuery({
-    queryKey: ['attendance', year, month],
-    queryFn: fetchAttendance,
-  });
+  const { data } = useGetRecords();
+  const attendanceData = data?.attendances || [];
 
   // const { mutate } = useMutation({
   //   mutationFn: markAttendance,
@@ -64,14 +63,6 @@ export const AttendanceCalendar: React.FC = () => {
   const handleNextMonth = () => {
     setCurrentDate(new Date(year, month, 1));
   };
-
-  // const isSameDay = (date1: Date, date2: Date): boolean => {
-  //   return (
-  //     date1.getFullYear() === date2.getFullYear() &&
-  //     date1.getMonth() === date2.getMonth() &&
-  //     date1.getDate() === date2.getDate()
-  //   );
-  // };
 
   const isSameDay = (date1: Date, date2: Date): boolean => {
     return (
@@ -155,7 +146,7 @@ export const AttendanceCalendar: React.FC = () => {
           // const isFuture = isAfterDay(day, today);
           const isCurrentMonth = day.getMonth() === month - 1;
           const hasAttendance = attendanceData.some(
-            a => a.date === formatDate(day),
+            record => record.date === formatDate(day),
           );
 
           const bgColorClass = isToday ? 'bg-gray-200/70' : 'bg-white';

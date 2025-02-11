@@ -1,4 +1,4 @@
-const TodaysReward = () => {
+const CheckSolvedProblem = () => {
   return (
     <>
       <div className='flex h-full items-center justify-center'>
@@ -24,4 +24,4 @@ const TodaysReward = () => {
     </>
   );
 };
-export default TodaysReward;
+export default CheckSolvedProblem;

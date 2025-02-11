@@ -4,7 +4,7 @@ import PointDisplay from '../gacha/components/PointDisplay';
 import AttendanceCalendar from './componenets/AttendanceCalendar';
 import TodaysReward from './componenets/TodaysReward';
 
-const CheckAttendance = () => {
+const AttendancePage = () => {
   return (
     <Layout>
       <div className='relative mx-auto mb-8 flex h-full max-w-5xl flex-col'>
@@ -35,4 +35,4 @@ const CheckAttendance = () => {
     </Layout>
   );
 };
-export default CheckAttendance;
+export default AttendancePage;

@@ -19,4 +19,5 @@ export const Pages = {
   GalleryPage: lazy(() => import('./gallery')),
   MemoryGamePage: lazy(() => import('./memoryGame')),
   NameGamePage: lazy(() => import('./nameGame')),
+  AttendancePage: lazy(() => import('./attendance')),
 } as const;
