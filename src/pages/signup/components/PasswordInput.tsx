@@ -7,7 +7,7 @@ interface PasswordInputProps {
   label: string;
   value: string;
   onChange: (value: string) => void;
-  error?: string;
+  error: string;
   success?: string;
   showPassword?: boolean;
   onToggleShow?: () => void;

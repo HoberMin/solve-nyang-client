@@ -22,7 +22,7 @@ import {
   INITIAL_FORM_STATE,
   VALIDATION,
 } from '../constants';
-import type { ApiError, FormData } from '../types';
+import type { FormData } from '../types';
 import { PasswordInput } from './PasswordInput';
 
 export const SignupForm = () => {
@@ -36,10 +36,7 @@ export const SignupForm = () => {
   const [isKeyIssued, setIsKeyIssued] = useState<boolean>(false);
   const [isValid, setIsValid] = useState<boolean>(false);
 
-  const handleInputChange = (
-    value: string,
-    fieldName: keyof FormData,
-  ): void => {
+  const handleInputChange = (value: string, fieldName: keyof FormData) => {
     if (
       (fieldName === 'password' || fieldName === 'passwordConfirm') &&
       value.includes(' ')
@@ -97,7 +94,7 @@ export const SignupForm = () => {
     }
   };
 
-  const handleKeyIssuance = (): void => {
+  const handleKeyIssuance = async () => {
     if (!formData.username) {
       setErrors(prev => ({
         ...prev,
@@ -105,18 +102,10 @@ export const SignupForm = () => {
       }));
       return;
     }
-
-    getEncryptionMutation(formData.username, {
-      onSuccess: (data: { verificationCode: string }) => {
-        setEncryptionKey(data.verificationCode);
-        setIsKeyIssued(true);
-        setErrors(prev => ({ ...prev, encryption: '', username: '' }));
-        toast.success(FEEDBACK_MESSAGES.ENCRYPTION_GUIDE);
-      },
-      onError: () => {
-        toast.error('존재하지 않는 사용자입니다.');
-      },
-    });
+    const { verificationCode } = await getEncryptionMutation(formData.username);
+    setEncryptionKey(verificationCode);
+    setIsKeyIssued(true);
+    setErrors(prev => ({ ...prev, encryption: '', username: '' }));
   };
 
   const handleCopyEncryptionKey = async () => {
@@ -136,19 +125,10 @@ export const SignupForm = () => {
       return;
     }
 
-    signUpMutation(
-      {
-        username: formData.username,
-        password: formData.password,
-      },
-      {
-        onError: (error: ApiError) => {
-          const errorMessage =
-            error.message || '알 수 없는 오류가 발생했습니다.';
-          toast.error(errorMessage);
-        },
-      },
-    );
+    signUpMutation({
+      username: formData.username,
+      password: formData.password,
+    });
   };
 
   useEffect(() => {
@@ -157,13 +137,12 @@ export const SignupForm = () => {
       return;
     }
 
-    const isPasswordValid = Boolean(
-      formData.password &&
-        formData.passwordConfirm &&
-        formData.password.length >= VALIDATION.PASSWORD_MIN_LENGTH &&
-        VALIDATION.PASSWORD_PATTERN.test(formData.password) &&
-        formData.password === formData.passwordConfirm,
-    );
+    const isPasswordValid =
+      formData.password.trim().length > 0 &&
+      formData.passwordConfirm.trim().length > 0 &&
+      formData.password.length >= VALIDATION.PASSWORD_MIN_LENGTH &&
+      VALIDATION.PASSWORD_PATTERN.test(formData.password) &&
+      formData.password === formData.passwordConfirm;
 
     setIsValid(isPasswordValid);
   }, [formData, isKeyIssued]);
