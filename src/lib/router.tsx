@@ -106,6 +106,10 @@ export const router = sentryCreateBrowserRouter([
           />
         ),
       },
+      {
+        path: 'valentine',
+        element: <Pages.ValentinePage />,
+      },
     ],
   },
   {
