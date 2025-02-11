@@ -47,7 +47,7 @@ export const getEventAvatar = async () => {
 };
 
 export const submitContestAvatar = async (payload: ContestAvatarPayload) => {
-  const result = await api.post<ContestAvatarResponse>('/image', payload);
+  const result = await api.post<ContestAvatarResponse>('/images', payload);
 
   if (!result.isSuccess) {
     throw new Error(result.message || '공모전 이미지 제출에 실패했습니다.');
