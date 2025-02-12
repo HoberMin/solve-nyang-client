@@ -14,17 +14,36 @@ const ContestPage = () => {
     <Layout>
       <div className='flex justify-center'>
         <div className='mt-10 text-center'>
-          <h2 className='font-bold text-white'>공모전 아바타 투표</h2>
-          <p className='mt-2 text-blue-200/80'>
-            공모전을 통해 선정된 TOP 3 중 가장 마음에 드는 아바타에
-            투표해주세요! <br />
-            1위를 한 아바타는 솔브냥의 다음 업데이트에서 출시됩니다.
-          </p>
-          <p className='mt-2 text-sm text-blue-200/60'>
-            * 투표는 하루에 한 번만 가능합니다.
-          </p>
+          {isVoted ? (
+            <>
+              <h2 className='text-2xl font-bold text-white'>
+                공모전 아바타 투표 결과
+              </h2>
+              <p className='mt-6 text-blue-200/80'>
+                투표해주셔서 감사합니다 <br />
+                내일 또 참여해주세요!
+              </p>
+              <p className='mt-2 text-sm text-blue-200/60'>
+                * 투표 여부는 매일 0시에 초기화됩니다.
+              </p>
+            </>
+          ) : (
+            <>
+              <h2 className='text-2xl font-bold text-white'>
+                공모전 아바타 투표
+              </h2>
+              <p className='mt-6 text-blue-200/80'>
+                공모전을 통해 선정된 TOP 3 중 가장 마음에 드는 아바타에
+                투표해주세요! <br />
+                1위를 한 아바타는 솔브냥의 다음 업데이트에서 출시됩니다.
+              </p>
+              <p className='mt-2 text-sm text-blue-200/60'>
+                * 투표는 하루에 한 번만 가능합니다.
+              </p>
+            </>
+          )}
 
-          <div className='bg-white-100 mt-10 rounded-lg px-20 backdrop-blur-sm'>
+          <div className='mt-10 rounded-lg px-20 backdrop-blur-sm'>
             {isVoted ? (
               <ContestVotingResult images={images} />
             ) : (
