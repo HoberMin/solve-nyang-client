@@ -23,7 +23,7 @@ export const VotingAvatar: React.FC<VotingAvatarProps> = ({
           <img
             src={imageUrl}
             alt={title}
-            className='mb-4 h-36 w-36 cursor-pointer rounded-lg transition-transform hover:scale-125'
+            className='mb-4 h-32 w-32 cursor-pointer rounded-lg transition-transform hover:scale-125'
           />
           <h3 className='mb-2 text-xl font-bold text-gray-200'>{title}</h3>
         </div>
