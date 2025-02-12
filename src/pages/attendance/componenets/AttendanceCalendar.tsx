@@ -4,26 +4,19 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 import { useGetRecords } from '@/apis/attendance';
 
-interface AttendanceResponse {
-  attendances: {
-    date: string;
-  }[];
-}
+// interface AttendanceResponse {
+//   attendances: {
+//     date: string;
+//   }[];
+// }
 
-// 더미 데이터
-// const DUMMY_ATTENDANCE: Attendance[] = [
-//   { date: '2025-01-21' },
-//   { date: '2025-01-26' },
-//   { date: '2025-02-01' },
-//   { date: '2025-02-03' },
-//   { date: '2025-02-06' },
-//   { date: '2025-02-09' },
-// ];
+// interface Attendance {
+//   date: string;
+// }
 
-// API 호출을 시뮬레이션하는 가상의 함수들
-// const fetchAttendance = async (): Promise<Attendance[]> => {
-//   return DUMMY_ATTENDANCE;
-// };
+// interface Records {
+//   attendances: Attendance[];
+// }
 
 export const AttendanceCalendar: React.FC = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -31,20 +24,18 @@ export const AttendanceCalendar: React.FC = () => {
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth() + 1;
 
-  // const { data: attendanceData = [] } = useQuery({
-  //   queryKey: ['attendance', year, month],
-  //   queryFn: fetchAttendance,
-  // });
-
+  // const { data } = useGetRecords<Records>();
   const { data } = useGetRecords();
   const attendanceData = data?.attendances || [];
 
-  // const { mutate } = useMutation({
-  //   mutationFn: markAttendance,
-  //   onSuccess: () => {
-  //     queryClient.invalidateQueries({ queryKey: ['attendance'] });
-  //   },
-  // });
+  // 6개월 전 날짜 계산
+  const sixMonthsAgo = new Date(today);
+  sixMonthsAgo.setMonth(today.getMonth() - 6);
+
+  // 현재 표시 중인 달이 제한 범위 내에 있는지 확인
+  const isBeforeSixMonths = new Date(year, month - 1) < sixMonthsAgo;
+  const isAfterToday =
+    new Date(year, month - 1) > new Date(today.getFullYear(), today.getMonth());
 
   const getDaysInMonth = (year: number, month: number): Date[] => {
     const date = new Date(year, month - 1, 1);
@@ -57,11 +48,17 @@ export const AttendanceCalendar: React.FC = () => {
   };
 
   const handlePrevMonth = () => {
-    setCurrentDate(new Date(year, month - 2, 1));
+    const newDate = new Date(year, month - 2, 1);
+    if (newDate >= sixMonthsAgo) {
+      setCurrentDate(newDate);
+    }
   };
 
   const handleNextMonth = () => {
-    setCurrentDate(new Date(year, month, 1));
+    const newDate = new Date(year, month, 1);
+    if (newDate <= new Date(today.getFullYear(), today.getMonth(), 1)) {
+      setCurrentDate(newDate);
+    }
   };
 
   const isSameDay = (date1: Date, date2: Date): boolean => {
@@ -79,13 +76,6 @@ export const AttendanceCalendar: React.FC = () => {
     return d1 < d2;
   };
 
-  // const isAfterDay = (date1: Date, date2: Date): boolean => {
-  //   const d1 = new Date(date1.getFullYear(), date1.getMonth(), date1.getDate());
-  //   const d2 = new Date(date2.getFullYear(), date2.getMonth(), date2.getDate());
-
-  //   return d1 > d2;
-  // };
-
   const formatDate = (date: Date): string => {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -93,12 +83,6 @@ export const AttendanceCalendar: React.FC = () => {
 
     return `${year}-${month}-${day}`;
   };
-
-  // const handleAttendance = (clickedDate: Date): void => {
-  //   if (!isSameDay(clickedDate, today)) return;
-  //   const formattedDate = clickedDate.toISOString().split('T')[0];
-  //   mutate(formattedDate);
-  // };
 
   const days = getDaysInMonth(year, month);
   const weekdays = ['일', '월', '화', '수', '목', '금', '토'];
@@ -118,19 +102,27 @@ export const AttendanceCalendar: React.FC = () => {
   return (
     <div className='mx-auto w-full max-w-lg'>
       <div className='mb-4 flex items-center justify-between'>
-        <button
-          onClick={handlePrevMonth}
-          className='rounded p-2 hover:bg-gray-100'
-        >
-          <ChevronLeft className='h-3 w-3' />
-        </button>
+        {!isBeforeSixMonths && (
+          <button
+            onClick={handlePrevMonth}
+            className='rounded p-2 hover:bg-gray-100 disabled:opacity-50'
+          >
+            <ChevronLeft className='h-3 w-3' />
+          </button>
+        )}
+        {isBeforeSixMonths && <div className='w-7' />}
+
         <p className='text-2xl text-white'>{`${year}년 ${month}월`}</p>
-        <button
-          onClick={handleNextMonth}
-          className='rounded p-2 hover:bg-gray-100'
-        >
-          <ChevronRight className='h-3 w-3' />
-        </button>
+
+        {!isAfterToday && (
+          <button
+            onClick={handleNextMonth}
+            className='rounded p-2 hover:bg-gray-100 disabled:opacity-50'
+          >
+            <ChevronRight className='h-3 w-3' />
+          </button>
+        )}
+        {isAfterToday && <div className='w-7' />}
       </div>
 
       <div className='grid grid-cols-7 gap-2'>
@@ -162,7 +154,6 @@ export const AttendanceCalendar: React.FC = () => {
             <div
               key={day.toISOString()}
               className={`relative flex h-16 w-16 items-center justify-center rounded-2xl border text-center ${bgColorClass} ${textColorClass}`}
-              // onClick={() => handleAttendance(day)}
               tabIndex={0}
             >
               {day.getDate()}

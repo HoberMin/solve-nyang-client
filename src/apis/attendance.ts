@@ -12,6 +12,14 @@ interface Records {
   date: string;
 }
 
+export interface AttendanceResponse {
+  attendances: Records[];
+}
+
+export interface WeeklyStatus {
+  message: string;
+}
+
 // 냥코인 버튼 클릭: 오늘, 문제 풀었는지 확인 요청
 export const checkSolvedProblem = async () => {
   const result = await api.post('/attendance/reward');
@@ -25,7 +33,7 @@ export const checkSolvedProblem = async () => {
 
 // 출석 기록 조회(달력에 도장)
 export const getRecords = async () => {
-  const result = await api.get<Records>('/attendance/records');
+  const result = await api.get<AttendanceResponse>('/attendance/records');
 
   if (!result.isSuccess || !result.data) {
     throw new Error(result.message || '출석 기록 조회 중 오류가 발생했습니다.');
@@ -36,7 +44,7 @@ export const getRecords = async () => {
 
 // 사용자 동기부여 메시지 조회
 export const getMessage = async () => {
-  const result = await api.get('/attendance/weekly-status');
+  const result = await api.get<WeeklyStatus>('/attendance/weekly-status');
 
   if (!result.isSuccess || !result.data) {
     throw new Error(result.message || '메시지 조회 중 오류가 발생했습니다.');

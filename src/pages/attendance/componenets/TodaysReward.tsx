@@ -1,10 +1,30 @@
+import { toast } from 'sonner';
+
+import { useCheckSolvedProblem, useGetMessage } from '@/apis/attendance';
+
+// interface WeeklyStatus {
+//   message: string;
+// }
+
 const CheckSolvedProblem = () => {
+  const { data: messageData } = useGetMessage();
+  const { mutateAsync: checkSolved, isPending } = useCheckSolvedProblem();
+
+  const handleRewardClick = async () => {
+    try {
+      await checkSolved();
+    } catch (error) {
+      toast.error('냥코인 받기 실패');
+    }
+  };
+
   return (
     <>
       <div className='flex h-full items-center justify-center'>
         <div className='space-y-5 text-center text-white'>
-          <div className='text-2xl font-medium'>문제를 풀어주세요😢</div>
-          {/* <div className='text-2xl'>{message}</div> */}
+          <div className='text-2xl'>
+            {messageData?.message || '시작이 반이다!'}
+          </div>
           <div className='flex flex-col space-y-6'>
             <a
               href='https://www.acmicpc.net/'
@@ -15,8 +35,12 @@ const CheckSolvedProblem = () => {
                 문제 풀러 가기
               </button>
             </a>
-            <button className='w-full font-medium text-blue-500 transition-colors hover:text-blue-400'>
-              냥코인 받기
+            <button
+              onClick={handleRewardClick}
+              disabled={isPending}
+              className='w-full font-medium text-blue-500 transition-colors hover:text-blue-400'
+            >
+              {isPending ? '처리 중...' : '냥코인 받기'}
             </button>
           </div>
         </div>
