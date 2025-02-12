@@ -13,7 +13,7 @@ const ContestPage = () => {
   return (
     <Layout>
       <div className='flex justify-center'>
-        <div className='m-10 text-center'>
+        <div className='mt-10 text-center'>
           <h2 className='font-bold text-white'>공모전 아바타 투표</h2>
           <p className='mt-2 text-blue-200/80'>
             공모전을 통해 선정된 TOP 3 중 가장 마음에 드는 아바타에

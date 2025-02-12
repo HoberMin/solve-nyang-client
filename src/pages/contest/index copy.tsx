@@ -37,8 +37,9 @@ const ContestPage = () => {
 
   const getPresignedUrl = async (filename: string, contentType: string) => {
     try {
+      const encodedContentType = encodeURIComponent(contentType);
       const response = await fetch(
-        `${domain}/images/presigned-url?filename=${filename}&contentType=${contentType}`,
+        `${domain}/images/presigned-url?filename=${filename}&contentType=${encodedContentType}`,
         {
           method: 'GET',
           headers: {

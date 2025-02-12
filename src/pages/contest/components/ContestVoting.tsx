@@ -32,7 +32,7 @@ const ContestVoting = ({ images }: ContestVotingProps) => {
             </div>
           </div>
         </div>
-        <div className='-mt-24 flex justify-center gap-4'>
+        <div className='-mt-16 flex justify-center gap-4'>
           {images.map(image => (
             <VotingAvatar
               key={image.imageId}

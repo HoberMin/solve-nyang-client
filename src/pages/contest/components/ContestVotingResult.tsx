@@ -34,12 +34,12 @@ const ContestVotingResult = ({ images }: ContestVotingResultProps) => {
   const winners = chartData.filter(data => data.votes === maxVotes);
 
   return (
-    <div className='container mx-auto flex flex-col p-4'>
+    <div className='container mx-auto flex flex-col'>
       <div className='relative flex-1'>
         <div className='mb-8'>
           <SimpleBarChart data={chartData} />
         </div>
-        <div className='-mt-40 flex justify-center gap-4'>
+        <div className='-mt-16 flex justify-center gap-4'>
           {chartData.map(image => {
             const isWinner = winners.some(winner => winner.id === image.id);
 
@@ -49,16 +49,16 @@ const ContestVotingResult = ({ images }: ContestVotingResultProps) => {
                 className='relative flex flex-col items-center'
               >
                 {isWinner && (
-                  <div className='absolute -top-8 z-20 -translate-x-1/2 animate-bounce'>
-                    <div className='text-nowrap text-base font-bold text-black'>
-                      현재 1위
+                  <div className='absolute -top-14 z-20 -translate-x-1/2 animate-bounce'>
+                    <div className='text-nowrap text-base font-bold text-amber-500'>
+                      현재 1위!
                     </div>
                     <div className='text-5xl'>👑</div>
                   </div>
                 )}
                 <img
                   src={image.imageUrl}
-                  className={`z-10 h-36 w-36 transition-transform ${
+                  className={`z-10 h-32 w-32 transition-transform ${
                     isWinner ? 'scale-110' : ''
                   }`}
                   alt={image.username}
@@ -69,20 +69,6 @@ const ContestVotingResult = ({ images }: ContestVotingResultProps) => {
               </div>
             );
           })}
-        </div>
-        <div className='mt-4 flex flex-col items-center justify-center p-4'>
-          <div className='rounded-lg bg-white/5 px-40 py-4 backdrop-blur-sm'>
-            <div className='flex items-center justify-center'>
-              <span className='text-lg font-bold text-white'>
-                투표해 주셔서 감사합니다
-              </span>
-            </div>
-            <div className='mb-1 flex items-center justify-center'>
-              <span className='text-base font-medium text-white/90'>
-                내일 또 참여해주세요!
-              </span>
-            </div>
-          </div>
         </div>
       </div>
     </div>
