@@ -9,11 +9,11 @@ import { api } from './core';
 
 // 출석한 날짜
 interface Records {
-  date: string;
+  data: string;
 }
 
 export interface AttendanceResponse {
-  attendances: Records[];
+  attendance: Records[];
 }
 
 export interface WeeklyStatus {

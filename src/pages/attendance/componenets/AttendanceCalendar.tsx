@@ -26,7 +26,7 @@ export const AttendanceCalendar: React.FC = () => {
 
   // const { data } = useGetRecords<Records>();
   const { data } = useGetRecords();
-  const attendanceData = data?.attendances || [];
+  const attendanceData = data?.attendance || [];
 
   // 6개월 전 날짜 계산
   const sixMonthsAgo = new Date(today);
@@ -138,7 +138,7 @@ export const AttendanceCalendar: React.FC = () => {
           // const isFuture = isAfterDay(day, today);
           const isCurrentMonth = day.getMonth() === month - 1;
           const hasAttendance = attendanceData.some(
-            record => record.date === formatDate(day),
+            record => record.data === formatDate(day),
           );
 
           const bgColorClass = isToday ? 'bg-gray-200/70' : 'bg-white';
