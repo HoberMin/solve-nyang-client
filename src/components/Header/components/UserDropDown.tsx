@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom';
 
-import { useSignOut } from '@/apis/sign';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,12 +13,6 @@ interface UserDropdownProps {
 }
 
 const UserDropdown = ({ username }: UserDropdownProps) => {
-  const signOut = useSignOut();
-
-  const handleLogout = () => {
-    signOut();
-  };
-
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className='cursor-pointer bg-transparent outline-none ring-0 focus:outline-none focus:ring-0 focus:ring-offset-0 active:outline-none active:ring-0'>
@@ -44,9 +37,10 @@ const UserDropdown = ({ username }: UserDropdownProps) => {
               프로필
             </Link>
           </DropdownMenuItem>
+
           <DropdownMenuItem asChild className='focus:bg-gray-800'>
-            <Link to='/image' className='text-xl text-white hover:text-white'>
-              나만의 이미지
+            <Link to='/gallery' className='text-xl text-white hover:text-white'>
+              고양이 도감
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild className='focus:bg-gray-800'>
@@ -56,12 +50,6 @@ const UserDropdown = ({ username }: UserDropdownProps) => {
             >
               솔브냥 익스텐션
             </Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            className='text-xl text-white focus:bg-gray-800'
-            onClick={handleLogout}
-          >
-            로그아웃
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenuPortal>
