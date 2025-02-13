@@ -20,11 +20,10 @@ import { useGetRecords } from '@/apis/attendance';
 
 export const AttendanceCalendar: React.FC = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [today] = useState(new Date()); // 오늘 날짜 상태
+  const [today] = useState(new Date());
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth() + 1;
 
-  // const { data } = useGetRecords<Records>();
   const { data } = useGetRecords();
   const attendanceData = data?.attendance || [];
 
