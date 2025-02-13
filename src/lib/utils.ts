@@ -12,7 +12,8 @@ export function cn(...inputs: ClassValue[]) {
 
 export const formatDate = (dateString: string) => {
   const date = new Date(dateString);
-  date.setHours(date.getHours() + 9); // 한국 시간으로 조정
+  const currentTimeZoneOffset = date.getTimezoneOffset() / 60;
+  date.setHours(date.getHours() - currentTimeZoneOffset);
   const now = new Date();
 
   const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
@@ -24,6 +25,7 @@ export const formatDate = (dateString: string) => {
 
   return `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`;
 };
+
 export const getCatKorName = (engName: string): string => {
   return CAT_MAPPINGS[engName]?.korName || engName;
 };
