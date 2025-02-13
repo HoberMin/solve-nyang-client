@@ -4,20 +4,6 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 import { useGetRecords } from '@/apis/attendance';
 
-// interface AttendanceResponse {
-//   attendances: {
-//     date: string;
-//   }[];
-// }
-
-// interface Attendance {
-//   date: string;
-// }
-
-// interface Records {
-//   attendances: Attendance[];
-// }
-
 export const AttendanceCalendar: React.FC = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [today] = useState(new Date());

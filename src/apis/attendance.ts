@@ -7,7 +7,6 @@ import { toast } from 'sonner';
 
 import { api } from './core';
 
-// 출석한 날짜
 interface Records {
   data: string;
 }
