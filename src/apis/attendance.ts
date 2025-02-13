@@ -8,11 +8,11 @@ import { toast } from 'sonner';
 import { api } from './core';
 
 interface Records {
-  data: string;
+  date: string;
 }
 
 export interface AttendanceResponse {
-  attendance: Records[];
+  attendances: Records[];
 }
 
 export interface WeeklyStatus {
@@ -69,7 +69,7 @@ export const useCheckSolvedProblem = () => {
     },
   });
 
-  return mutation; // `mutation` 객체 전체 반환하여 `mutateAsync` 활용 가능하게 변경
+  return mutation;
 };
 
 export const useGetRecords = () =>

@@ -1,3 +1,4 @@
+//
 import { useState } from 'react';
 
 import { ChevronLeft, ChevronRight } from 'lucide-react';
@@ -5,75 +6,91 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useGetRecords } from '@/apis/attendance';
 
 export const AttendanceCalendar: React.FC = () => {
-  const [currentDate, setCurrentDate] = useState(new Date());
-  const [today] = useState(new Date());
-  const year = currentDate.getFullYear();
-  const month = currentDate.getMonth() + 1;
-
-  const { data } = useGetRecords();
-  const attendanceData = data?.attendance || [];
-
-  // UTC를 현지 시간으로 변환
-  const convertToLocalDate = (dateStr: string): Date => {
-    const utcDate = new Date(dateStr);
+  const [today] = useState(() => {
+    const now = new Date();
 
     return new Date(
-      utcDate.getTime() + utcDate.getTimezoneOffset() * 60 * 1000,
+      Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()),
+    );
+  });
+
+  const [currentDate, setCurrentDate] = useState(() => {
+    const now = new Date();
+
+    return new Date(
+      Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()),
+    );
+  });
+
+  const year = currentDate.getUTCFullYear();
+  const month = currentDate.getUTCMonth() + 1;
+
+  const { data } = useGetRecords();
+  const attendanceData = data?.attendances || [];
+
+  const convertToUTCDate = (dateStr: string): Date => {
+    const date = new Date(dateStr);
+
+    return new Date(
+      Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()),
     );
   };
 
-  // const formatDate = (date: Date): string => {
-  //   const year = date.getFullYear();
-  //   const month = String(date.getMonth() + 1).padStart(2, '0');
-  //   const day = String(date.getDate()).padStart(2, '0');
+  const sixMonthsAgo = new Date(
+    Date.UTC(
+      today.getUTCFullYear(),
+      today.getUTCMonth() - 6,
+      today.getUTCDate(),
+    ),
+  );
 
-  //   return `${year}-${month}-${day}`;
-  // };
-
-  // 6개월 전 날짜 계산
-  const sixMonthsAgo = new Date(today);
-  sixMonthsAgo.setMonth(today.getMonth() - 6);
-
-  // 현재 표시 중인 달이 제한 범위 내에 있는지 확인
-  const isBeforeSixMonths = new Date(year, month - 1) < sixMonthsAgo;
+  const isBeforeSixMonths = new Date(Date.UTC(year, month - 1)) < sixMonthsAgo;
   const isAfterToday =
-    new Date(year, month - 1) > new Date(today.getFullYear(), today.getMonth());
+    new Date(Date.UTC(year, month - 1)) >
+    new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth()));
 
   const getDaysInMonth = (year: number, month: number): Date[] => {
-    const date = new Date(year, month - 1, 1);
+    const date = new Date(Date.UTC(year, month - 1, 1));
     const days: Date[] = [];
-    while (date.getMonth() === month - 1) {
+    while (date.getUTCMonth() === month - 1) {
       days.push(new Date(date));
-      date.setDate(date.getDate() + 1);
+      date.setUTCDate(date.getUTCDate() + 1);
     }
     return days;
   };
 
   const handlePrevMonth = () => {
-    const newDate = new Date(year, month - 2, 1);
+    const newDate = new Date(Date.UTC(year, month - 2, 1));
     if (newDate >= sixMonthsAgo) {
       setCurrentDate(newDate);
     }
   };
 
   const handleNextMonth = () => {
-    const newDate = new Date(year, month, 1);
-    if (newDate <= new Date(today.getFullYear(), today.getMonth(), 1)) {
+    const newDate = new Date(Date.UTC(year, month, 1));
+    if (
+      newDate <=
+      new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), 1))
+    ) {
       setCurrentDate(newDate);
     }
   };
 
   const isSameDay = (date1: Date, date2: Date): boolean => {
     return (
-      date1.getDate() === date2.getDate() &&
-      date1.getMonth() === date2.getMonth() &&
-      date1.getFullYear() === date2.getFullYear()
+      date1.getUTCDate() === date2.getUTCDate() &&
+      date1.getUTCMonth() === date2.getUTCMonth() &&
+      date1.getUTCFullYear() === date2.getUTCFullYear()
     );
   };
 
   const isBeforeDay = (date1: Date, date2: Date): boolean => {
-    const d1 = new Date(date1.getFullYear(), date1.getMonth(), date1.getDate());
-    const d2 = new Date(date2.getFullYear(), date2.getMonth(), date2.getDate());
+    const d1 = new Date(
+      Date.UTC(date1.getUTCFullYear(), date1.getUTCMonth(), date1.getUTCDate()),
+    );
+    const d2 = new Date(
+      Date.UTC(date2.getUTCFullYear(), date2.getUTCMonth(), date2.getUTCDate()),
+    );
 
     return d1 < d2;
   };
@@ -81,14 +98,14 @@ export const AttendanceCalendar: React.FC = () => {
   const days = getDaysInMonth(year, month);
   const weekdays = ['일', '월', '화', '수', '목', '금', '토'];
 
-  const firstDay = days[0].getDay();
+  const firstDay = days[0].getUTCDay();
   const prevMonthDays = Array.from({ length: firstDay }, (_, i) => {
-    return new Date(year, month - 1, 0 - i);
+    return new Date(Date.UTC(year, month - 1, -i));
   }).reverse();
 
-  const lastDay = days[days.length - 1].getDay();
+  const lastDay = days[days.length - 1].getUTCDay();
   const nextMonthDays = Array.from({ length: 6 - lastDay }, (_, i) => {
-    return new Date(year, month, i + 1);
+    return new Date(Date.UTC(year, month, i + 1));
   });
 
   const allDays = [...prevMonthDays, ...days, ...nextMonthDays];
@@ -129,11 +146,12 @@ export const AttendanceCalendar: React.FC = () => {
         {allDays.map(day => {
           const isToday = isSameDay(day, today);
           const isPast = isBeforeDay(day, today);
-          const isCurrentMonth = day.getMonth() === month - 1;
-          const hasAttendance = attendanceData.some(record => {
-            const localAttendanceData = convertToLocalDate(record.data);
+          const isCurrentMonth = day.getUTCMonth() === month - 1;
 
-            return isSameDay(localAttendanceData, day);
+          const hasAttendance = attendanceData.some(record => {
+            const utcAttendanceDate = convertToUTCDate(record.date);
+
+            return isSameDay(utcAttendanceDate, day);
           });
 
           const bgColorClass = isToday ? 'bg-gray-200/70' : 'bg-white';
@@ -151,7 +169,7 @@ export const AttendanceCalendar: React.FC = () => {
               className={`relative flex h-16 w-16 items-center justify-center rounded-2xl border text-center ${bgColorClass} ${textColorClass}`}
               tabIndex={0}
             >
-              {day.getDate()}
+              {day.getUTCDate()}
               {hasAttendance && (
                 <div className='absolute inset-0'>
                   <img
