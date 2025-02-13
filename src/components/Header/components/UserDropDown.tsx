@@ -28,7 +28,7 @@ const UserDropdown = ({ username }: UserDropdownProps) => {
       </DropdownMenuTrigger>
       <DropdownMenuPortal>
         <DropdownMenuContent
-          className='z-50 border-0 bg-gray-900 py-1'
+          className='z-50 -ml-16 border-0 bg-gray-900 py-1'
           side='bottom'
           align='start'
         >
