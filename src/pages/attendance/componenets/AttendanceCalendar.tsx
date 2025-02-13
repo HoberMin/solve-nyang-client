@@ -27,6 +27,23 @@ export const AttendanceCalendar: React.FC = () => {
   const { data } = useGetRecords();
   const attendanceData = data?.attendance || [];
 
+  // UTC를 현지 시간으로 변환
+  const convertToLocalDate = (dateStr: string): Date => {
+    const utcDate = new Date(dateStr);
+
+    return new Date(
+      utcDate.getTime() + utcDate.getTimezoneOffset() * 60 * 1000,
+    );
+  };
+
+  // const formatDate = (date: Date): string => {
+  //   const year = date.getFullYear();
+  //   const month = String(date.getMonth() + 1).padStart(2, '0');
+  //   const day = String(date.getDate()).padStart(2, '0');
+
+  //   return `${year}-${month}-${day}`;
+  // };
+
   // 6개월 전 날짜 계산
   const sixMonthsAgo = new Date(today);
   sixMonthsAgo.setMonth(today.getMonth() - 6);
@@ -73,14 +90,6 @@ export const AttendanceCalendar: React.FC = () => {
     const d2 = new Date(date2.getFullYear(), date2.getMonth(), date2.getDate());
 
     return d1 < d2;
-  };
-
-  const formatDate = (date: Date): string => {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-
-    return `${year}-${month}-${day}`;
   };
 
   const days = getDaysInMonth(year, month);
@@ -134,11 +143,12 @@ export const AttendanceCalendar: React.FC = () => {
         {allDays.map(day => {
           const isToday = isSameDay(day, today);
           const isPast = isBeforeDay(day, today);
-          // const isFuture = isAfterDay(day, today);
           const isCurrentMonth = day.getMonth() === month - 1;
-          const hasAttendance = attendanceData.some(
-            record => record.data === formatDate(day),
-          );
+          const hasAttendance = attendanceData.some(record => {
+            const localAttendanceData = convertToLocalDate(record.data);
+
+            return isSameDay(localAttendanceData, day);
+          });
 
           const bgColorClass = isToday ? 'bg-gray-200/70' : 'bg-white';
           const textColorClass = !isCurrentMonth
