@@ -140,6 +140,15 @@ export const router = sentryCreateBrowserRouter([
           />
         ),
       },
+      {
+        path: 'laboratory',
+        element: (
+          <ProtectedRoute
+            element={<Pages.LaboratoryPage />}
+            requireAuth={true}
+          />
+        ),
+      },
     ],
   },
   {
