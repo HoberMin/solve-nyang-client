@@ -1,14 +1,25 @@
-import { useCheckSolvedProblem, useGetMessage } from '@/apis/attendance';
+import {
+  useCheckSolvedProblem,
+  useGetMessage,
+  useGetTodayAttendance,
+} from '@/apis/attendance';
 
 import { useThrottle } from '../hooks/useThrottle';
 
 const CheckSolvedProblem = () => {
   const { data: messageData } = useGetMessage();
   const { mutateAsync: checkSolved, isPending } = useCheckSolvedProblem();
+  const { data: todayAttendance } = useGetTodayAttendance();
 
   const handleRewardClick = useThrottle(async () => {
     await checkSolved();
   }, 3000);
+
+  const buttonStyle = `mt-10 w-[150px] font-medium text-gray-100 transition-colors ${
+    todayAttendance?.isAttended
+      ? 'bg-gray-500 cursor-not-allowed' // 이미 출석한 경우 회색
+      : 'bg-green-600 hover:bg-green-500' // 출석 가능한 경우 초록색
+  }`;
 
   return (
     <>
@@ -30,10 +41,14 @@ const CheckSolvedProblem = () => {
             </a>
             <button
               onClick={handleRewardClick}
-              disabled={isPending}
-              className='mt-10 w-[150px] bg-green-600 font-medium text-gray-100 transition-colors hover:bg-green-500'
+              disabled={isPending || todayAttendance?.isAttended}
+              className={buttonStyle}
             >
-              {isPending ? '확인 중...' : '냥코인 받기'}
+              {isPending
+                ? '확인 중...'
+                : todayAttendance?.isAttended
+                  ? '지급 완료'
+                  : '냥코인 받기'}
             </button>
           </div>
           <div className='space-y-1 text-white'>
