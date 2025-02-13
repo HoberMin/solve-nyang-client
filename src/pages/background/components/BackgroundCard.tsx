@@ -1,7 +1,5 @@
 import { useState } from 'react';
 
-import { Checkbox } from '@radix-ui/react-checkbox';
-
 import { Background, useBuyBackgroundImage } from '@/apis/background';
 import { useGetUserPoint } from '@/apis/user';
 import BeachBg from '@/assets/bg/Beach.svg';
@@ -111,15 +109,18 @@ export const BackgroundCard = ({ background }: BackgroundCardProps) => {
                 <p>구매한 배경은 영구적으로 소장됩니다.</p>
               </div>
 
-              <div className='flex items-center space-x-3 rounded-lg bg-gray-800/50 p-4'>
-                <Checkbox
+              <div className='flex items-center space-x-3 rounded-lg p-4'>
+                <input
+                  type='checkbox'
                   id='confirm'
                   checked={isConfirmed}
-                  onCheckedChange={checked =>
-                    setIsConfirmed(checked as boolean)
-                  }
-                ></Checkbox>
-                <label htmlFor='confirm' className='text-sm text-gray-300'>
+                  onChange={e => setIsConfirmed(e.target.checked)}
+                  className='h-4 w-4 rounded border-gray-300 text-blue-500 focus:ring-blue-500'
+                />
+                <label
+                  htmlFor='confirm'
+                  className='cursor-pointer select-none text-sm text-gray-300'
+                >
                   위 내용을 확인하였으며, 구매에 동의합니다.
                 </label>
               </div>

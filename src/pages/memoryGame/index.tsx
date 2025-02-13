@@ -1,8 +1,5 @@
 import { useEffect, useState } from 'react';
 
-import { Sparkles } from 'lucide-react';
-import { toast } from 'sonner';
-
 import Layout from '@/components/Layout';
 import { CAT_MAPPINGS } from '@/constant/catMapping';
 import { cn } from '@/lib/utils';
@@ -28,7 +25,6 @@ const MemoryGame = () => {
   const [matchedPairs, setMatchedPairs] = useState<string[]>([]);
   const [isChecking, setIsChecking] = useState(false);
   const [isFading, setIsFading] = useState<string[]>([]);
-  const [isPointAvailable, setIsPointAvailable] = useState(false);
 
   const initializeGame = () => {
     const selectedCats = [...ALL_CATS]
@@ -48,7 +44,6 @@ const MemoryGame = () => {
     setMatchedPairs([]);
     setIsFading([]);
     setIsChecking(false);
-    setIsPointAvailable(false);
   };
 
   const startCountdown = () => {
@@ -108,7 +103,6 @@ const MemoryGame = () => {
 
           if (newMatchedPairs.length === 6) {
             setGameStatus('complete');
-            setIsPointAvailable(Math.random() < 0.9);
           }
         }, 50);
       }, 500);
@@ -118,12 +112,6 @@ const MemoryGame = () => {
         setIsChecking(false);
       }, 800);
     }
-  };
-
-  const handleGetPoint = () => {
-    toast('10 포인트를 획득했습니다.');
-    setGameStatus('ready');
-    setIsPointAvailable(false);
   };
 
   const renderCard = (card: Card, index: number) => {
@@ -222,29 +210,15 @@ const MemoryGame = () => {
             <h2 className='mb-4 text-3xl font-bold text-yellow-400 drop-shadow-lg'>
               게임 클리어!
             </h2>
-            {isPointAvailable ? (
-              <div className='mb-6 space-y-4'>
-                <p className='text-lg text-white'>
-                  운이 좋네요! 포인트를 획득할 수 있어요!
-                </p>
-                <button
-                  onClick={handleGetPoint}
-                  className='inline-flex items-center justify-center gap-2 rounded-xl bg-yellow-400 px-6 py-3 font-bold text-gray-900 shadow-lg transition-all hover:scale-105 hover:bg-yellow-300'
-                >
-                  <Sparkles className='h-5 w-5' />
-                  포인트 획득하기
-                </button>
-              </div>
-            ) : (
-              <div className='space-y-4'>
-                <button
-                  onClick={() => setGameStatus('ready')}
-                  className='rounded-xl bg-gray-100 px-6 py-3 font-bold text-gray-700 shadow-lg transition-all hover:scale-105 hover:bg-gray-200'
-                >
-                  한 판 더 하기
-                </button>
-              </div>
-            )}
+
+            <div className='space-y-4'>
+              <button
+                onClick={() => setGameStatus('ready')}
+                className='rounded-xl bg-gray-100 px-6 py-3 font-bold text-gray-700 shadow-lg transition-all hover:scale-105 hover:bg-gray-200'
+              >
+                한 판 더 하기
+              </button>
+            </div>
           </div>
         );
     }

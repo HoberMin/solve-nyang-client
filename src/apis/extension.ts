@@ -33,3 +33,30 @@ export const useUserExtensionAvatarToggle = () => {
 
   return mutate;
 };
+
+const resetAvatar = async () => {
+  const result = await api.patch('/user/me/extension/reset');
+
+  if (!result.isSuccess) {
+    throw new Error(result.message || '익스텐션 아바타 초기화에 실패했습니다.');
+  }
+
+  return result.data;
+};
+
+export const useResetAvatar = () => {
+  const queryClient = useQueryClient();
+
+  const { mutate } = useMutation({
+    mutationFn: resetAvatar,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['userAvatar'] });
+      toast.success('모든 캐릭터가 초기화되었습니다.');
+    },
+    onError: (error: Error) => {
+      toast.error(error.message);
+    },
+  });
+
+  return mutate;
+};

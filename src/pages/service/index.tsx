@@ -153,7 +153,7 @@ const MainPage = () => {
       description:
         '크롬 익스텐션을 설치하고 브라우저 속 고양이들과 함께 웹서핑을 즐겨보세요! 화면 곳곳을 돌아다니는 귀여운 고양이들이 당신의 웹서핑을 더욱 재미있게 만들어 줄 거예요.',
       image: ExtensionImg,
-      buttonText: '익스텐션 설치하기',
+      buttonText: '익스텐션 사용하기',
       buttonVariant: 'default',
       buttonStyle: 'blue',
       link: '/extension',

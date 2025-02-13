@@ -10,7 +10,7 @@ const LaboratoryPage = () => {
   return (
     <Layout>
       <div className='flex w-full justify-center px-4'>
-        <div className='mt-4 w-full max-w-4xl'>
+        <div className='mt-20 w-full max-w-4xl'>
           <div className='grid grid-cols-1 gap-8 md:grid-cols-2'>
             {/* 출석체크 카드 */}
             <Link
