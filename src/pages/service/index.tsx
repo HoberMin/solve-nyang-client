@@ -14,10 +14,10 @@ import Footer from './components/Footer';
 type ButtonStyle = 'purple' | 'blue' | 'green' | 'pink';
 
 const buttonStyles: Record<ButtonStyle, string> = {
-  purple: 'bg-purple-500 text-white hover:bg-purple-600',
-  blue: 'bg-blue-500 text-white hover:bg-blue-600',
-  green: 'bg-green-500 text-white hover:bg-green-600',
-  pink: 'bg-pink-500 text-white hover:bg-pink-600',
+  purple: 'bg-purple-500 text-white hover:bg-purple-600 hover:text-white',
+  blue: 'bg-blue-500 text-white hover:bg-blue-600 hover:text-white',
+  green: 'bg-green-500 text-white hover:bg-green-600 hover:text-white',
+  pink: 'bg-pink-500 text-white hover:bg-pink-600 hover:text-white',
 };
 
 interface Feature {
