@@ -1,16 +1,85 @@
-import { motion } from 'framer-motion';
-import { Brain, Cat, Code } from 'lucide-react';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import { Brain, Cat, ChevronDown, Code } from 'lucide-react';
 
 import ExtensionImg from '@/assets/banner/Extension.png';
 import GachaImg from '@/assets/banner/Gacha.png';
 import ValentineImg from '@/assets/banner/ValentineEvent.png';
 import ReadmeImg from '@/assets/readme_example.png';
 import Layout from '@/components/Layout';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
 import Footer from './components/Footer';
 
+type ButtonStyle = 'purple' | 'blue' | 'green' | 'pink';
+
+const buttonStyles: Record<ButtonStyle, string> = {
+  purple: 'bg-purple-500 text-white hover:bg-purple-600',
+  blue: 'bg-blue-500 text-white hover:bg-blue-600',
+  green: 'bg-green-500 text-white hover:bg-green-600',
+  pink: 'bg-pink-500 text-white hover:bg-pink-600',
+};
+
+interface Feature {
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+}
+
+interface Character {
+  name: string;
+  rarity: string;
+  imageUrl: string;
+}
+
+interface ContentSection {
+  title: string;
+  description: string;
+  image: string;
+  buttonText: string;
+  buttonVariant: 'default' | 'secondary';
+  buttonStyle: ButtonStyle;
+  link: string;
+  imagePosition: 'left' | 'right';
+}
+
+const ScrollIndicator = () => {
+  const { scrollYProgress } = useScroll();
+  const opacity = useTransform(scrollYProgress, [0, 0.95], [1, 0]);
+
+  return (
+    <motion.div
+      style={{ opacity }}
+      className='fixed bottom-6 left-1/2 z-50'
+      initial={{ scale: 0.9 }}
+    >
+      <motion.div
+        animate={{
+          y: [0, 12, 0],
+        }}
+        transition={{
+          duration: 1.8,
+          repeat: Infinity,
+          ease: 'easeInOut',
+        }}
+      >
+        <Button
+          variant='outline'
+          size='icon'
+          className='h-16 w-16 rounded-full border-4 border-white bg-white/10 backdrop-blur-sm hover:bg-white/20'
+          onClick={() =>
+            window.scrollBy({ top: window.innerHeight, behavior: 'smooth' })
+          }
+        >
+          <ChevronDown className='h-8 w-8 text-white' />
+        </Button>
+      </motion.div>
+    </motion.div>
+  );
+};
+
 const MainPage = () => {
-  const features = [
+  const features: Feature[] = [
     {
       icon: <Brain className='h-8 w-8' />,
       title: '알고리즘 도전',
@@ -29,7 +98,7 @@ const MainPage = () => {
     },
   ];
 
-  const newCharacters = [
+  const newCharacters: Character[] = [
     {
       name: '리액트냥',
       rarity: 'B',
@@ -67,14 +136,15 @@ const MainPage = () => {
     },
   ];
 
-  const contentSections = [
+  const contentSections: ContentSection[] = [
     {
       title: '고양이 뽑기',
       description:
         '솔브냥의 귀여운 고양이 아바타를 뽑아보세요! 찌글한 매력이 돋보이는 D등급부터 화려한 S등급까지, 다양한 고양이들을 수집하며 나만의 컬렉션을 완성해 보세요.',
       image: GachaImg,
       buttonText: '뽑기 하러가기',
-      buttonColor: 'bg-purple-500 hover:bg-purple-600 hover:text-white',
+      buttonVariant: 'secondary',
+      buttonStyle: 'purple',
       link: '/gacha',
       imagePosition: 'left',
     },
@@ -84,7 +154,8 @@ const MainPage = () => {
         '크롬 익스텐션을 설치하고 브라우저 속 고양이들과 함께 웹서핑을 즐겨보세요! 화면 곳곳을 돌아다니는 귀여운 고양이들이 당신의 웹서핑을 더욱 재미있게 만들어 줄 거예요.',
       image: ExtensionImg,
       buttonText: '익스텐션 설치하기',
-      buttonColor: 'bg-blue-500 hover:bg-blue-600 hover:text-white',
+      buttonVariant: 'default',
+      buttonStyle: 'blue',
       link: '/extension',
       imagePosition: 'right',
     },
@@ -94,7 +165,8 @@ const MainPage = () => {
         '수집한 고양이 아바타로 나만의 특별한 GitHub README를 꾸며보세요. 당신만의 독특한 프로필을 만들어서 다른 개발자들과 차별화된 인상을 남겨보세요.',
       image: ReadmeImg,
       buttonText: '나만의 이미지 만들기',
-      buttonColor: 'bg-green-500 hover:bg-green-600 hover:text-white',
+      buttonVariant: 'default',
+      buttonStyle: 'green',
       link: '/image',
       imagePosition: 'left',
     },
@@ -104,7 +176,8 @@ const MainPage = () => {
         '발렌타인데이 한정 이벤트에 참여하고 특별한 고양이 아바타를 획득하세요! 오직 이벤트 기간 동안만 만날 수 있는 한정판 캐릭터들을 놓치지 마세요.',
       image: ValentineImg,
       buttonText: '이벤트 참여하러 가기',
-      buttonColor: 'bg-pink-500 hover:bg-pink-600 hover:text-white',
+      buttonVariant: 'default',
+      buttonStyle: 'pink',
       link: '/valentine',
       imagePosition: 'right',
     },
@@ -112,6 +185,8 @@ const MainPage = () => {
 
   return (
     <Layout>
+      <ScrollIndicator />
+
       {/* 서비스 소개 섹션 */}
       <section className='flex min-h-screen items-center justify-center px-4 py-16'>
         <motion.div
@@ -215,7 +290,6 @@ const MainPage = () => {
                 section.imagePosition === 'right' ? '' : 'md:flex-row-reverse'
               }`}
             >
-              {/* Text Content */}
               <motion.div
                 className='flex-1 text-center md:text-left'
                 initial={{
@@ -232,15 +306,19 @@ const MainPage = () => {
                 <p className='mb-8 text-lg text-gray-300'>
                   {section.description}
                 </p>
-                <a
-                  href={section.link}
-                  className={`inline-block rounded-lg px-6 py-3 font-semibold text-white transition-colors ${section.buttonColor}`}
+                <Button
+                  asChild
+                  variant={section.buttonVariant}
+                  size='lg'
+                  className={cn(
+                    'font-semibold',
+                    buttonStyles[section.buttonStyle],
+                  )}
                 >
-                  {section.buttonText}
-                </a>
+                  <a href={section.link}>{section.buttonText}</a>
+                </Button>
               </motion.div>
 
-              {/* Image */}
               <motion.div
                 className='flex-1'
                 initial={{
