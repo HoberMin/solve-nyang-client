@@ -22,7 +22,7 @@ const AttendancePage = () => {
           </div>
         </div>
         <div className='mx-auto w-full px-4 py-12'>
-          <div className='flex justify-center gap-20'>
+          <div className='flex items-center justify-center gap-20'>
             <div>
               <AttendanceCalendar />
             </div>

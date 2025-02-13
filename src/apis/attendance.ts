@@ -19,6 +19,10 @@ export interface WeeklyStatus {
   message: string;
 }
 
+export interface Today {
+  isAttended: boolean;
+}
+
 // 냥코인 버튼 클릭: 오늘, 문제 풀었는지 확인 요청
 export const checkSolvedProblem = async () => {
   const result = await api.post('/attendance/reward');
@@ -52,6 +56,17 @@ export const getMessage = async () => {
   return result.data;
 };
 
+// 오늘 출석 여부 확인
+export const getTodayAttendance = async () => {
+  const result = await api.get<Today>('/attendance/today');
+
+  if (!result.isSuccess || !result.data) {
+    throw new Error(result.message || '당일 출석 조회 중 오류가 발생했습니다.');
+  }
+
+  return result.data;
+};
+
 // 냥코인 버튼 눌렀을 때
 export const useCheckSolvedProblem = () => {
   const queryClient = useQueryClient();
@@ -59,10 +74,10 @@ export const useCheckSolvedProblem = () => {
   const mutation = useMutation({
     mutationFn: checkSolvedProblem,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['getReward'] });
-      queryClient.invalidateQueries({ queryKey: ['attendanceRecords'] });
-      queryClient.invalidateQueries({ queryKey: ['weeklyStatus'] });
-      // toast.success(data.message || '출석 체크가 완료되었습니다!');
+      queryClient.invalidateQueries({ queryKey: ['attendance-records'] });
+      queryClient.invalidateQueries({ queryKey: ['weekly-status'] });
+      queryClient.invalidateQueries({ queryKey: ['user-point'] });
+      toast.success('출석 체크가 완료되었습니다!');
     },
     onError: (error: Error) => {
       toast.error(error.message);
@@ -74,12 +89,18 @@ export const useCheckSolvedProblem = () => {
 
 export const useGetRecords = () =>
   useSuspenseQuery({
-    queryKey: ['attendanceRecords'],
+    queryKey: ['attendance-records'],
     queryFn: getRecords,
   });
 
 export const useGetMessage = () =>
   useSuspenseQuery({
-    queryKey: ['weeklyStatus'],
+    queryKey: ['weekly-status'],
     queryFn: getMessage,
+  });
+
+export const useGetTodayAttendance = () =>
+  useSuspenseQuery({
+    queryKey: ['today-attendance'],
+    queryFn: getTodayAttendance,
   });
