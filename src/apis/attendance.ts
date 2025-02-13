@@ -77,6 +77,7 @@ export const useCheckSolvedProblem = () => {
       queryClient.invalidateQueries({ queryKey: ['attendance-records'] });
       queryClient.invalidateQueries({ queryKey: ['weekly-status'] });
       queryClient.invalidateQueries({ queryKey: ['user-point'] });
+      queryClient.invalidateQueries({ queryKey: ['today-attendance'] });
       toast.success('출석 체크가 완료되었습니다!');
     },
     onError: (error: Error) => {
