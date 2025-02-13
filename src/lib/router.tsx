@@ -116,6 +116,21 @@ export const router = sentryCreateBrowserRouter([
           <ProtectedRoute element={<Pages.GalleryPage />} requireAuth={true} />
         ),
       },
+      {
+        path: 'memory-game',
+        element: (
+          <ProtectedRoute
+            element={<Pages.MemoryGamePage />}
+            requireAuth={true}
+          />
+        ),
+      },
+      {
+        path: 'name-game',
+        element: (
+          <ProtectedRoute element={<Pages.NameGamePage />} requireAuth={true} />
+        ),
+      },
     ],
   },
   {
