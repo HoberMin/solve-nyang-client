@@ -1,23 +1,13 @@
+import { BaseRarity, FullRarity } from '@/lib/type';
 import { Character } from '@/pages/service/components/AllAvatarList';
 import AvatarCard from '@/pages/service/components/AvatarCard';
 
-export type RarityType = 'H' | 'S' | 'A' | 'B' | 'C' | 'D';
-
 interface RaritySectionProps {
-  title: RarityType;
+  title: BaseRarity;
   characters: Character[];
 }
 
-const rarityTitles: Record<RarityType, string> = {
-  H: 'H등급',
-  S: 'S등급',
-  A: 'A등급',
-  B: 'B등급',
-  C: 'C등급',
-  D: 'D등급',
-};
-
-const rarityColors: Record<RarityType, string> = {
+const rarityColors: Record<FullRarity, string> = {
   H: 'text-[#26ffc9] border-[#26ffc9]',
   S: 'text-[#f74600] border-[#f74600]',
   A: 'text-[#ffc337] border-[#ffc337]',
@@ -32,7 +22,7 @@ const RaritySection = ({ title, characters }: RaritySectionProps) => {
       <div className='flex items-center justify-between px-4'>
         <div className='flex items-center space-x-3'>
           <div className={`text-lg font-bold ${rarityColors[title]}`}>
-            {rarityTitles[title]}
+            {`${title} 등급`}
           </div>
           <span className='text-sm text-white/60'>({characters.length})</span>
         </div>

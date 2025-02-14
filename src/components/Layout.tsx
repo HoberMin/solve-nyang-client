@@ -1,8 +1,8 @@
 import { PropsWithChildren, Suspense, useEffect, useState } from 'react';
 
 import Header from './Header';
+import LoadingScreen from './LoadingScreen';
 import MobileBlockScreen from './MobileBlockScreen';
-import RetroLoading from './RetroLoading';
 
 const Layout = ({ children }: PropsWithChildren) => {
   const [isMobile, setIsMobile] = useState(false);
@@ -14,7 +14,7 @@ const Layout = ({ children }: PropsWithChildren) => {
   }, []);
 
   const checkScreenSize = () => {
-    setIsMobile(window.innerWidth < 1280);
+    setIsMobile(window.innerWidth < 1024);
   };
 
   if (isMobile) {
@@ -22,7 +22,7 @@ const Layout = ({ children }: PropsWithChildren) => {
   }
 
   return (
-    <Suspense fallback={<RetroLoading />}>
+    <Suspense fallback={<LoadingScreen />}>
       <div
         className='relative min-h-screen w-full overflow-x-hidden bg-black font-neo'
         style={{

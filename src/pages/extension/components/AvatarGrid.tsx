@@ -1,7 +1,7 @@
 import { useUserExtensionAvatarToggle } from '@/apis/extension';
 import { UserAvatar } from '@/apis/user';
-import { cn } from '@/lib/utils';
-import { getCatKorName } from '@/pages/gacha/constants/catMappings';
+import { RARITY_CONFIG } from '@/constant/rarityconfig';
+import { cn, getCatKorName } from '@/lib/utils';
 
 interface AvatarGridProps {
   avatars: UserAvatar[];
@@ -14,22 +14,8 @@ export const AvatarGrid = ({ avatars }: AvatarGridProps) => {
     extensionAvatarToggle(ownedAvatarId);
   };
 
-  const rarityColors = {
-    H: 'text-[#26ffc9]',
-    S: 'text-[#f74600]',
-    A: 'text-[#ffc337]',
-    B: 'text-[#7abf16]',
-    C: 'text-[#108df1]',
-    D: 'text-[#a663ee]',
-  };
-
   return (
-    <div
-      className={cn(
-        'grid gap-3',
-        'grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-5 xl:grid-cols-7',
-      )}
-    >
+    <div className={cn('grid grid-cols-2 grid-cols-8 gap-3')}>
       {avatars.map(avatar => (
         <div
           key={avatar.ownedAvatarId}
@@ -51,7 +37,10 @@ export const AvatarGrid = ({ avatars }: AvatarGridProps) => {
               {getCatKorName(avatar.name)}
             </span>
             <span
-              className={cn('text-xs font-medium', rarityColors[avatar.rarity])}
+              className={cn(
+                'text-xs font-medium',
+                RARITY_CONFIG[avatar.rarity].text,
+              )}
             >
               {avatar.rarity}등급
             </span>

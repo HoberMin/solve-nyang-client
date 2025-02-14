@@ -5,11 +5,7 @@ import { SummaryItem } from './SummaryItem';
 
 export const SummaryView = memo(
   ({ results, onOpenChange }: SummaryViewProps) => (
-    // ({ results, onBackdropClick }: SummaryViewProps) => (
-    <div
-      className='fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-80'
-      // onClick={onBackdropClick}
-    >
+    <div className='fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-80'>
       <div className='relative bg-transparent'>
         <div className='absolute left-1/2 top-[-40px] flex w-full -translate-x-1/2 transform justify-center'>
           <button

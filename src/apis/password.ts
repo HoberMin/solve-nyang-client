@@ -1,15 +1,11 @@
 import { useMutation } from '@tanstack/react-query';
+import { toast } from 'sonner';
 
-import { domain } from './avatar';
+import { api } from './core';
 
-interface ChangePassword {
+interface ChangePasswordRequest {
   currentPassword: string;
   newPassword: string;
-}
-
-interface FindPassword {
-  username: string;
-  password: string;
 }
 
 interface FindPasswordRequest {
@@ -17,45 +13,62 @@ interface FindPasswordRequest {
   password: string;
 }
 
-interface FindPasswordResponse {
+interface PasswordResponse {
   message: string;
 }
-// 비밀번호 변경
-export const useChangePassword = () =>
-  useMutation({
-    mutationFn: async ({ currentPassword, newPassword }: ChangePassword) => {
-      const response = await fetch(`${domain}/account/password/change`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-        body: JSON.stringify({ currentPassword, newPassword }),
-      });
 
-      const data = await response.json();
-      if (!response.ok) {
-        throw new Error(data.message || '비밀번호 변경 중 오류 발생');
-      }
-      return data;
+export const changePassword = async (
+  changePasswordForm: ChangePasswordRequest,
+) => {
+  const result = await api.post<PasswordResponse>(
+    '/account/password/change',
+    changePasswordForm,
+  );
+
+  if (!result.isSuccess) {
+    throw new Error(result.message || '비밀번호 변경에 실패했습니다.');
+  }
+
+  return result.data;
+};
+
+export const findPassword = async (findPasswordForm: FindPasswordRequest) => {
+  const result = await api.post<PasswordResponse>(
+    '/account/password/find',
+    findPasswordForm,
+  );
+
+  if (!result.isSuccess) {
+    throw new Error(result.message || '비밀번호 찾기에 실패했습니다.');
+  }
+
+  return result.data;
+};
+
+export const useChangePassword = () => {
+  const { mutate } = useMutation({
+    mutationFn: changePassword,
+    onSuccess: data => {
+      toast.success(data?.message || '비밀번호가 성공적으로 변경되었습니다.');
+    },
+    onError: (error: Error) => {
+      toast.error(error.message);
     },
   });
 
-// 비밀번호 찾기(재설정/재가입)
-export const useFindPassword = () =>
-  useMutation<FindPasswordResponse, Error, FindPasswordRequest>({
-    mutationFn: async ({ username, password }: FindPassword) => {
-      const response = await fetch(`${domain}/account/password/find`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password }),
-      });
+  return mutate;
+};
 
-      const data = await response.json();
-      if (!response.ok) {
-        throw new Error(data.message || '비밀번호 재설정 중 오류 발생');
-      }
-
-      return data;
+export const useFindPassword = () => {
+  const { mutate } = useMutation({
+    mutationFn: findPassword,
+    onSuccess: data => {
+      toast.success(data?.message || '비밀번호가 성공적으로 변경되었습니다.');
+    },
+    onError: (error: Error) => {
+      toast.error(error.message);
     },
   });
+
+  return mutate;
+};

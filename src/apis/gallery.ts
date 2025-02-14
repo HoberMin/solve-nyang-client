@@ -1,12 +1,12 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
 
-import { Rarity } from '@/pages/sale/type';
+import { BaseRarity } from '@/lib/type';
 
-import { domain } from './avatar';
+import { api } from './core';
 
 export interface AvatarGallery {
   name: string;
-  rarity: Rarity;
+  rarity: BaseRarity;
   owned: boolean;
 }
 
@@ -14,18 +14,18 @@ interface AvatarGalleryList {
   collections: AvatarGallery[];
 }
 
-export const getAvatarGallery = async () =>
-  await fetch(`${domain}/user/me/collection`, {
-    headers: {
-      'Content-Type': 'application/json',
-      authorization: `Bearer ${localStorage.getItem('token')}`,
-    },
-  })
-    .then(res => res.json())
-    .then(data => data as AvatarGalleryList);
+export const getAvatarGallery = async (): Promise<AvatarGalleryList> => {
+  const result = await api.get<AvatarGalleryList>('/user/me/collection');
+
+  if (!result.isSuccess || !result.data) {
+    throw new Error(result.message || '갤러리 정보를 불러오는데 실패했습니다.');
+  }
+
+  return result.data;
+};
 
 export const useGetAvatarGallery = () =>
-  useSuspenseQuery({
+  useSuspenseQuery<AvatarGalleryList>({
     queryKey: ['galleryList'],
     queryFn: getAvatarGallery,
   });

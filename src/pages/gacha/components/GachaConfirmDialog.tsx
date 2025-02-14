@@ -5,7 +5,8 @@ import {
   AlertDialogContent,
   AlertDialogFooter,
 } from '@/components/ui/alert-dialog';
-import { DrawConfig } from '@/types/gacha';
+
+import { DrawConfig } from '../constants/gacha';
 
 interface GachaConfirmDialogProps {
   isOpen: boolean;

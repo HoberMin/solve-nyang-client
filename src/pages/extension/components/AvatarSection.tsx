@@ -1,10 +1,12 @@
 import { useState } from 'react';
 
-import { Cat, Puzzle } from 'lucide-react';
+import { Cat, Puzzle, RotateCcw } from 'lucide-react';
 
+import { useResetAvatar } from '@/apis/extension';
 import { UserAvatar } from '@/apis/user';
+import { RarityFilterType } from '@/lib/type';
 import { cn } from '@/lib/utils';
-import { Rarity } from '@/pages/sale/type';
+import ResetDialog from '@/pages/myAvatarImage/components/ResetDialog';
 
 import { AvatarGrid } from './AvatarGrid';
 import { RarityFilter } from './RarityFilter';
@@ -20,7 +22,14 @@ export const AvatarSection = ({
   avatars,
   isExtension,
 }: AvatarSectionProps) => {
-  const [selectedRarity, setSelectedRarity] = useState<Rarity | 'ALL'>('ALL');
+  const [selectedRarity, setSelectedRarity] = useState<RarityFilterType>('ALL');
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const resetAvatar = useResetAvatar();
+
+  const handleReset = () => {
+    resetAvatar();
+    setIsDialogOpen(false);
+  };
 
   const filteredAvatars = avatars.filter(
     avatar => selectedRarity === 'ALL' || avatar.rarity === selectedRarity,
@@ -42,6 +51,12 @@ export const AvatarSection = ({
               <Cat className='h-5 w-5' />
             )}
             <span className='text-lg font-bold'>{title}</span>
+            {isExtension && (
+              <RotateCcw
+                className='h-6 w-6 text-red-500 transition-all'
+                onClick={() => setIsDialogOpen(true)}
+              />
+            )}
           </div>
           <span className='text-sm text-white/60'>({avatars.length})</span>
         </div>
@@ -60,6 +75,11 @@ export const AvatarSection = ({
       <div className='px-2'>
         <AvatarGrid avatars={filteredAvatars} />
       </div>
+      <ResetDialog
+        isOpen={isDialogOpen}
+        onClose={() => setIsDialogOpen(false)}
+        onReset={handleReset}
+      />
     </div>
   );
 };

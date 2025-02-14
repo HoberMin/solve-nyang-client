@@ -1,6 +1,5 @@
+import { FullRarity, RarityFilterType } from '@/lib/type';
 import { cn } from '@/lib/utils';
-
-import { Rarity } from '../sale/type';
 
 export const RARITY_COLORS = {
   H: { bg: 'bg-[#26ffc9]', text: 'text-black' },
@@ -58,7 +57,7 @@ export const styles = {
     },
   },
   card: {
-    wrapper: (rarity: Rarity) =>
+    wrapper: (rarity: FullRarity) =>
       cn(
         'relative cursor-pointer rounded-lg border p-2 transition-all',
         'hover:scale-105 hover:shadow-lg',
@@ -73,7 +72,7 @@ export const styles = {
       ),
     imageContainer: 'aspect-square relative',
     image: 'w-full h-full object-contain p-1',
-    rarityBadge: (rarity: Rarity) =>
+    rarityBadge: (rarity: FullRarity) =>
       cn('absolute right-1 top-1 text-xs font-bold', {
         'text-[#26ffc9]': rarity === 'H',
         'text-[#f74600]': rarity === 'S',
@@ -86,7 +85,7 @@ export const styles = {
   },
   filter: {
     container: 'flex gap-2',
-    button: (isSelected: boolean, rarity: Rarity | 'ALL') => {
+    button: (isSelected: boolean, rarity: RarityFilterType) => {
       const STYLES = {
         ALL: {
           selected: 'bg-gray-800 text-white',

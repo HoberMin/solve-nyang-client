@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+# Block specific paths if needed
+Disallow: /api/
+Disallow: /admin/
+
+# Sitemap
+Sitemap: https://www.solve-nyang.com/sitemap.xml

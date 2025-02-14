@@ -1,15 +1,44 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
-import { Cat, Home } from 'lucide-react';
+import { captureException, showReportDialog } from '@sentry/react';
+import { Cat, Home, RefreshCcw } from 'lucide-react';
 import { useNavigate, useRouteError } from 'react-router-dom';
 
+interface RouterError {
+  status?: number;
+  statusText?: string;
+  message?: string;
+}
+
 const RetroError = () => {
-  const error = useRouteError();
+  const error = useRouteError() as Error | RouterError;
   const navigate = useNavigate();
   const [isHovered, setIsHovered] = useState(false);
+  const [eventId, setEventId] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (error) {
+      const id = captureException(error);
+      setEventId(id);
+    }
+  }, [error]);
 
   const errorMessage =
-    error instanceof Error ? error.message : '일시적인 문제가 발생했어요';
+    error instanceof Error
+      ? error.message
+      : 'status' in error && error.statusText
+        ? `${error.statusText} (${error.status})`
+        : '일시적인 문제가 발생했어요';
+
+  const handleReportFeedback = () => {
+    if (eventId) {
+      showReportDialog({ eventId });
+    }
+  };
+
+  const handleRetry = () => {
+    window.location.reload();
+  };
 
   return (
     <div className='flex min-h-screen flex-col items-center justify-center bg-slate-900'>
@@ -30,13 +59,33 @@ const RetroError = () => {
         <p className='mb-12 max-w-md text-lg leading-loose tracking-wide text-slate-300'>
           {errorMessage}
         </p>
-        <button
-          onClick={() => navigate('/')}
-          className='flex items-center gap-3 rounded-lg bg-slate-800 px-8 py-4 text-slate-200 transition-colors hover:bg-slate-700'
-        >
-          <Home className='h-6 w-6' />
-          <span className='text-lg tracking-wide'>홈으로 돌아가기</span>
-        </button>
+
+        <div className='flex gap-4'>
+          <button
+            onClick={() => navigate('/')}
+            className='flex items-center gap-3 rounded-lg bg-slate-800 px-8 py-4 text-slate-200 transition-colors hover:bg-slate-700'
+          >
+            <Home className='h-6 w-6' />
+            <span className='text-lg tracking-wide'>홈으로 돌아가기</span>
+          </button>
+
+          <button
+            onClick={handleRetry}
+            className='flex items-center gap-3 rounded-lg bg-slate-800 px-8 py-4 text-slate-200 transition-colors hover:bg-slate-700'
+          >
+            <RefreshCcw className='h-6 w-6' />
+            <span className='text-lg tracking-wide'>다시 시도하기</span>
+          </button>
+        </div>
+
+        {eventId && (
+          <button
+            onClick={handleReportFeedback}
+            className='mt-8 text-slate-400 underline hover:text-slate-300'
+          >
+            문제 리포트 보내기
+          </button>
+        )}
       </div>
     </div>
   );

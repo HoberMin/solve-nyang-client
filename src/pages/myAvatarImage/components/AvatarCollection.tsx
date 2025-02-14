@@ -5,15 +5,12 @@ import { toast } from 'sonner';
 
 import { useResetAvatar } from '@/apis/avatar';
 import { UserAvatar, useGetUserAvatar } from '@/apis/user';
+import { RARITY_ORDER } from '@/constant/rarityconfig';
+import { FullRarity, RarityFilterType } from '@/lib/type';
 
 import { AvatarCard } from './AvatarCard';
 import { RarityFilter } from './RarityFilter';
 import ResetDialog from './ResetDialog';
-
-export type RarityType = 'H' | 'S' | 'A' | 'B' | 'C' | 'D';
-type Filter = RarityType | 'ALL';
-
-const RARITY_ORDER: RarityType[] = ['H', 'S', 'A', 'B', 'C', 'D'];
 
 const MAX_VISIBLE_AVATARS = 15;
 
@@ -22,11 +19,11 @@ interface AvatarCollectionProps {
 }
 
 export const AvatarCollection = ({ onToggle }: AvatarCollectionProps) => {
-  const [visibleFilter, setVisibleFilter] = useState<Filter>('ALL');
-  const [hiddenFilter, setHiddenFilter] = useState<Filter>('ALL');
+  const [visibleFilter, setVisibleFilter] = useState<RarityFilterType>('ALL');
+  const [hiddenFilter, setHiddenFilter] = useState<RarityFilterType>('ALL');
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  const { mutate: resetAvatar } = useResetAvatar();
+  const resetAvatar = useResetAvatar();
   const { data: avatarData } = useGetUserAvatar();
   const avatars = avatarData.avatars;
 
@@ -39,20 +36,19 @@ export const AvatarCollection = ({ onToggle }: AvatarCollectionProps) => {
         acc[rarity] = avatars.filter(a => a.rarity === rarity).length;
         return acc;
       },
-      {} as Record<RarityType, number>,
+      {} as Record<FullRarity, number>,
     );
   };
 
   const visibleCounts = getCountsByRarity(visibleAvatars);
   const hiddenCounts = getCountsByRarity(hiddenAvatars);
 
-  const filterAvatars = (avatars: UserAvatar[], filter: Filter) =>
+  const filterAvatars = (avatars: UserAvatar[], filter: RarityFilterType) =>
     avatars
       .filter(avatar => filter === 'ALL' || avatar.rarity === filter)
       .sort(
         (a, b) =>
-          RARITY_ORDER.indexOf(a.rarity as RarityType) -
-          RARITY_ORDER.indexOf(b.rarity as RarityType),
+          RARITY_ORDER.indexOf(a.rarity) - RARITY_ORDER.indexOf(b.rarity),
       );
 
   const handleReset = () => {
@@ -107,7 +103,7 @@ export const AvatarCollection = ({ onToggle }: AvatarCollectionProps) => {
         </div>
 
         <div className='px-2'>
-          <div className='grid grid-cols-3 gap-3 md:grid-cols-5 lg:grid-cols-5 xl:grid-cols-7'>
+          <div className='grid grid-cols-8 gap-3'>
             {filterAvatars(visibleAvatars, visibleFilter).map(avatar => (
               <AvatarCard
                 key={avatar.ownedAvatarId}
@@ -138,7 +134,7 @@ export const AvatarCollection = ({ onToggle }: AvatarCollectionProps) => {
         </div>
 
         <div className='px-2'>
-          <div className='grid grid-cols-3 gap-3 md:grid-cols-5 lg:grid-cols-5 xl:grid-cols-7'>
+          <div className='grid grid-cols-8 gap-3'>
             {filterAvatars(hiddenAvatars, hiddenFilter).map(avatar => (
               <AvatarCard
                 key={avatar.ownedAvatarId}

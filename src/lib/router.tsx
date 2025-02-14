@@ -1,81 +1,163 @@
+import { wrapCreateBrowserRouterV7 } from '@sentry/react';
 import { createBrowserRouter } from 'react-router-dom';
 
-import MaintenancePage from '@/pages/comingSoon';
+import RetroError from '@/components/ErrorBoundary';
+import ProtectedRoute from '@/components/ProtectdRoute';
+import Root from '@/components/Root';
+import { Pages } from '@/pages';
 
-export const router = createBrowserRouter([
-  // {
-  //   path: '/',
-  //   element: <Root />,
-  //   errorElement: <RetroError />,
-  //   children: [
-  //     {
-  //       index: true,
-  //       element: <Service />,
-  //     },
-  //     {
-  //       path: 'contest',
-  //       element: <ProtectedRoute element={<Contest />} requireAuth={true} />,
-  //     },
-  //     {
-  //       path: 'auction',
-  //       element: <ProtectedRoute element={<Auction />} requireAuth={true} />,
-  //     },
-  //     {
-  //       path: 'profile',
-  //       element: (
-  //         <ProtectedRoute element={<ProfilePage />} requireAuth={true} />
-  //       ),
-  //     },
-  //     {
-  //       path: 'sale',
-  //       element: <ProtectedRoute element={<SalePage />} requireAuth={true} />,
-  //     },
-  //     {
-  //       path: 'gacha',
-  //       element: <ProtectedRoute element={<Gacha />} requireAuth={true} />,
-  //     },
-  //     {
-  //       path: 'change',
-  //       element: (
-  //         <ProtectedRoute element={<ChangePassword />} requireAuth={true} />
-  //       ),
-  //     },
-  //     {
-  //       path: 'extension',
-  //       element: (
-  //         <ProtectedRoute element={<ExtensionPage />} requireAuth={true} />
-  //       ),
-  //     },
-  //     {
-  //       path: 'image',
-  //       element: (
-  //         <ProtectedRoute element={<AvatarImagePage />} requireAuth={true} />
-  //       ),
-  //     },
-  //     {
-  //       path: 'sale-background',
-  //       element: (
-  //         <ProtectedRoute element={<SaleBackground />} requireAuth={true} />
-  //       ),
-  //     },
-  //     {
-  //       path: 'signup',
-  //       element: <ProtectedRoute element={<Signup />} requireAuth={false} />,
-  //     },
-  //     {
-  //       path: 'login',
-  //       element: <ProtectedRoute element={<Login />} requireAuth={false} />,
-  //     },
-  //     {
-  //       path: 'find',
-  //       element: (
-  //         <ProtectedRoute element={<FindPassword />} requireAuth={false} />
-  //       ),
-  //     },
-  //   ],
-  // },
+const sentryCreateBrowserRouter =
+  wrapCreateBrowserRouterV7(createBrowserRouter);
+
+export const router = sentryCreateBrowserRouter([
+  {
+    path: '/',
+    element: <Root />,
+    errorElement: <RetroError />,
+    children: [
+      {
+        index: true,
+        element: <Pages.ServicePage />,
+      },
+      {
+        path: 'contest',
+        element: (
+          <ProtectedRoute element={<Pages.ContestPage />} requireAuth={true} />
+        ),
+      },
+      {
+        path: 'auction',
+        element: (
+          <ProtectedRoute element={<Pages.AuctionPage />} requireAuth={true} />
+        ),
+      },
+      {
+        path: 'profile',
+        element: (
+          <ProtectedRoute element={<Pages.ProfilePage />} requireAuth={true} />
+        ),
+      },
+      {
+        path: 'sale',
+        element: (
+          <ProtectedRoute element={<Pages.SalePage />} requireAuth={true} />
+        ),
+      },
+      {
+        path: 'gacha',
+        element: (
+          <ProtectedRoute element={<Pages.GachaPage />} requireAuth={true} />
+        ),
+      },
+      {
+        path: 'change',
+        element: (
+          <ProtectedRoute
+            element={<Pages.ChangePasswordPage />}
+            requireAuth={true}
+          />
+        ),
+      },
+      {
+        path: 'extension',
+        element: (
+          <ProtectedRoute
+            element={<Pages.ExtensionPage />}
+            requireAuth={true}
+          />
+        ),
+      },
+      {
+        path: 'image',
+        element: (
+          <ProtectedRoute
+            element={<Pages.AvatarImagePage />}
+            requireAuth={true}
+          />
+        ),
+      },
+      {
+        path: 'sale-background',
+        element: (
+          <ProtectedRoute
+            element={<Pages.BackgroundSalePage />}
+            requireAuth={true}
+          />
+        ),
+      },
+      {
+        path: 'signup',
+        element: (
+          <ProtectedRoute element={<Pages.SignupPage />} requireAuth={false} />
+        ),
+      },
+      {
+        path: 'login',
+        element: (
+          <ProtectedRoute element={<Pages.LoginPage />} requireAuth={false} />
+        ),
+      },
+      {
+        path: 'find',
+        element: (
+          <ProtectedRoute
+            element={<Pages.FindPasswordPage />}
+            requireAuth={false}
+          />
+        ),
+      },
+      {
+        path: 'valentine',
+        element: (
+          <ProtectedRoute
+            element={<Pages.ValentinePage />}
+            requireAuth={true}
+          />
+        ),
+      },
+      {
+        path: 'gallery',
+        element: (
+          <ProtectedRoute element={<Pages.GalleryPage />} requireAuth={true} />
+        ),
+      },
+      {
+        path: 'memory-game',
+        element: (
+          <ProtectedRoute
+            element={<Pages.MemoryGamePage />}
+            requireAuth={true}
+          />
+        ),
+      },
+      {
+        path: 'name-game',
+        element: (
+          <ProtectedRoute element={<Pages.NameGamePage />} requireAuth={true} />
+        ),
+      },
+      {
+        path: 'attendance',
+        element: (
+          <ProtectedRoute
+            element={<Pages.AttendancePage />}
+            requireAuth={true}
+          />
+        ),
+      },
+      {
+        path: 'laboratory',
+        element: (
+          <ProtectedRoute
+            element={<Pages.LaboratoryPage />}
+            requireAuth={true}
+          />
+        ),
+      },
+    ],
+  },
   {
     path: '*',
-    element: <MaintenancePage />,
+    element: <Pages.NotFoundPage />,
   },
 ]);

@@ -37,13 +37,13 @@ interface ErrorMessages {
   PASSWORD_MISMATCH: string;
   PASSWORD_CHECK: string;
   FAILED_TO_CHECK_USER: string;
+  PASSWORD_SPACE: string;
 }
 
-// 상수 정의
 const VALIDATION: ValidationRules = {
   PASSWORD_MIN_LENGTH: 8,
   PASSWORD_PATTERN:
-    /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&^])[A-Za-z\d@$!%*#?&^]{8,}$/,
+    /^(?=.*[A-Za-z])(?=.*\d)(?=.*[~!@#$%^&*_\-+=`|(){}[\]:;"'<>,.?/])[A-Za-z\d~!@#$%^&*_\-+=`|(){}[\]:;"'<>,.?/]{8,}$/,
 };
 
 const INITIAL_FORM_STATE: FormData = {
@@ -61,32 +61,40 @@ const ERROR_MESSAGES: ErrorMessages = {
   PASSWORD_MISMATCH: '비밀번호가 일치하지 않습니다.',
   PASSWORD_CHECK: '비밀번호를 확인해주세요.',
 
-  FAILED_TO_CHECK_USER: '사용자 확인에 실패했습니다.', // verify의 Failed to check user
+  FAILED_TO_CHECK_USER: '사용자 확인에 실패했습니다.',
+  PASSWORD_SPACE: '비밀번호에 공백을 포함할 수 없습니다.',
 };
 
 const ChangePassword = () => {
   const navigate = useNavigate();
   const changeMutation = useChangePassword();
-  // const getEncryptionMutation = useGetEncryption();
 
   const [formData, setFormData] = useState<FormData>(INITIAL_FORM_STATE);
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [isShowCurrentPassword, setIsShowCurrentPassword] =
-    useState<boolean>(false);
-  const [isShowNewPassword, setIsShowNewPassword] = useState<boolean>(false);
+  const [isShowCurrentPassword, setIsShowCurrentPassword] = useState(false);
+  const [isShowNewPassword, setIsShowNewPassword] = useState(false);
 
-  // 유효성 검사 통과 여부
   const isValid =
     formData.currentPassword &&
     formData.newPassword &&
     formData.passwordConfirm &&
     formData.newPassword === formData.passwordConfirm;
 
-  // 입력 폼 수정 감지(새 비밀번호 입력)
   const handleInputChange = (
     value: string,
     fieldName: keyof FormData, // FormData의 키 중 하나로 제한
-  ): void => {
+  ) => {
+    if (
+      (fieldName === 'newPassword' || fieldName === 'passwordConfirm') &&
+      value.includes(' ')
+    ) {
+      setErrors(prev => ({
+        ...prev,
+        [fieldName]: ERROR_MESSAGES.PASSWORD_SPACE,
+      }));
+      return;
+    }
+
     setFormData(prev => ({ ...prev, [fieldName]: value }));
 
     if (fieldName === 'newPassword') {
@@ -137,13 +145,17 @@ const ChangePassword = () => {
   const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
 
-    // 현재 비밀번호와 새 비밀번호가 동일한 경우 요청 보내지 않음
+    if (!formData.newPassword.trim() || !formData.passwordConfirm.trim()) {
+      toast.error(ERROR_MESSAGES.PASSWORD_SPACE);
+      return;
+    }
+
     if (formData.currentPassword === formData.newPassword) {
       toast.error('새 비밀번호는 현재 비밀번호와 달라야 합니다.');
       return;
     }
 
-    changeMutation.mutate(
+    changeMutation(
       {
         currentPassword: formData.currentPassword,
         newPassword: formData.newPassword,
@@ -170,7 +182,6 @@ const ChangePassword = () => {
     <Layout>
       <div className='flex min-h-[calc(100vh-64px)] flex-col items-center justify-center gap-16 px-4 lg:flex-row lg:px-8'>
         <div className='w-full max-w-sm lg:w-[30%]'>
-          {/* <Card className='border-zinc-800 bg-zinc-950/50'> */}
           <Card className='border-zinc-800 bg-white/15'>
             <CardHeader>
               <CardTitle className='text-center text-2xl text-zinc-100'>
@@ -190,6 +201,7 @@ const ChangePassword = () => {
                       onChange={e =>
                         handleInputChange(e.target.value, 'currentPassword')
                       }
+                      onKeyDown={e => e.key === ' ' && e.preventDefault()}
                       className='h-10 bg-zinc-900 pr-10 text-zinc-100'
                       placeholder='현재 비밀번호를 입력하세요.'
                     />
@@ -217,6 +229,7 @@ const ChangePassword = () => {
                       onChange={e =>
                         handleInputChange(e.target.value, 'newPassword')
                       }
+                      onKeyDown={e => e.key === ' ' && e.preventDefault()}
                       className='h-10 bg-zinc-900 pr-10 text-zinc-100'
                       placeholder='새 비밀번호를 입력하세요.'
                     />
@@ -251,6 +264,7 @@ const ChangePassword = () => {
                     onChange={e =>
                       handleInputChange(e.target.value, 'passwordConfirm')
                     }
+                    onKeyDown={e => e.key === ' ' && e.preventDefault()}
                     className='h-10 bg-zinc-900 text-zinc-100'
                     placeholder='비밀번호를 다시 입력하세요.'
                   />

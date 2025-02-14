@@ -5,14 +5,17 @@ import {
 } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
+import { BaseRarity } from '@/lib/type';
+
+import { api } from './core';
+
 export const domain = 'https://api.solve-nyang.com';
 
-export type RarityType = 'S' | 'A' | 'B' | 'C' | 'D';
 export interface Avatar {
-  id: string; // 고유값
+  id: string;
   avatarId: number;
   name: string;
-  rarity: RarityType;
+  rarity: BaseRarity;
   dropRate: number;
 }
 
@@ -20,69 +23,75 @@ export interface AvatarList {
   avatars: Avatar[];
 }
 
-export const gachaAvatar = async (count: number) =>
-  await fetch(`${domain}/gacha/draw`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      authorization: `Bearer ${localStorage.getItem('token')}`,
-    },
-    body: JSON.stringify({
-      count,
-    }),
-  })
-    .then(res => res.json())
-    .then(data => data as AvatarList);
+interface ResetAvatarResponse {
+  message?: string;
+}
 
-export const getAvatarList = async () =>
-  await fetch(`${domain}/avatar`, {
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  })
-    .then(res => res.json())
-    .then(data => data as AvatarList);
+export const gachaAvatar = async (count: number) => {
+  const result = await api.post<AvatarList>('/gacha/draw', { count });
 
-const resetAvatar = async () => {
-  const response = await fetch(`${domain}/user/me/avatar/reset`, {
-    method: 'PATCH',
-    headers: {
-      'Content-Type': 'application/json',
-      authorization: `Bearer ${localStorage.getItem('token')}`,
-    },
-  });
-
-  if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`);
+  if (!result.isSuccess || !result.data) {
+    throw new Error(result.message || '가챠 뽑기에 실패했습니다.');
   }
 
-  return response;
+  return result.data;
+};
+
+export const getAvatarList = async () => {
+  const result = await api.get<AvatarList>('/avatar');
+
+  if (!result.isSuccess || !result.data) {
+    throw new Error(result.message || '아바타 목록을 불러오는데 실패했습니다.');
+  }
+
+  return result.data;
+};
+
+const resetAvatar = async () => {
+  const result = await api.patch<ResetAvatarResponse>('/user/me/avatar/reset');
+
+  if (!result.isSuccess) {
+    throw new Error(result.message || '아바타 초기화에 실패했습니다.');
+  }
+
+  return result.data;
 };
 
 export const useResetAvatar = () => {
   const queryClient = useQueryClient();
 
-  return useMutation({
-    mutationFn: () => resetAvatar(),
-    onSuccess: () => {
+  const { mutate } = useMutation({
+    mutationFn: resetAvatar,
+    onSuccess: data => {
       queryClient.invalidateQueries({ queryKey: ['userAvatar'] });
-      toast.success('모든 캐릭터가 초기화되었습니다.');
+      toast.success(data?.message || '모든 캐릭터가 초기화되었습니다.');
     },
-    onError: () => {
-      toast.error('초기화 중 오류가 발생했습니다.');
+    onError: (error: Error) => {
+      toast.error(error.message);
     },
   });
+
+  return mutate;
 };
 
 export const useGetAvatarList = () =>
-  useSuspenseQuery({
+  useSuspenseQuery<AvatarList>({
     queryKey: ['avatarList'],
     queryFn: getAvatarList,
   });
 
 export const useGachaAvatarApi = () => {
-  const { mutateAsync } = useMutation<AvatarList, Error, number>({
-    mutationFn: (count: number) => gachaAvatar(count),
+  const queryClient = useQueryClient();
+
+  const { mutateAsync } = useMutation({
+    mutationFn: gachaAvatar,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['userAvatar'] });
+      queryClient.invalidateQueries({ queryKey: ['user-point'] });
+    },
+    onError: (error: Error) => {
+      toast.error(error.message);
+    },
   });
 
   return mutateAsync;

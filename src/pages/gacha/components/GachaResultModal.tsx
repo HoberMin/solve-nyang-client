@@ -1,30 +1,19 @@
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
+import { getCatKorName } from '@/lib/utils';
+
 import {
   ANIMATION_STEPS,
   ANIMATION_TIMING,
   AnimationStep,
   RARITY_TO_IMAGE,
-  getCatKorName,
-} from '../constants/catMappings';
+} from '../constants/gacha';
 import useImagePreloader, {
   GachaResultModalProps,
 } from '../hooks/usePreloader';
 import Confetti from './Confetti';
+import { RARITY_INFO } from './SummaryItem';
 import { SummaryView } from './SummaryView';
-
-interface RarityInfo {
-  dropRate: string;
-  color: string;
-}
-
-const RARITY_INFO: Record<string, RarityInfo> = {
-  S: { dropRate: '1', color: '#f74600' },
-  A: { dropRate: '4', color: '#ffc337' },
-  B: { dropRate: '30', color: '#7abf16' },
-  C: { dropRate: '45', color: '#108df1' },
-  D: { dropRate: '20', color: '#a663ee' },
-};
 
 export const GachaResultModal = memo(
   ({
@@ -117,34 +106,6 @@ export const GachaResultModal = memo(
       handleNext,
       onOpenChange,
     ]);
-
-    // const handleBackdropClick = useCallback(
-    //   (e: React.MouseEvent<HTMLDivElement>) => {
-    //     if (e.target !== e.currentTarget) return;
-
-    //     if (isAnimating) return;
-
-    //     if (!isSingleDraw && !isSummary) {
-    //       if (currentIndex < results.length - 1) {
-    //         handleNext();
-    //       } else {
-    //         setIsSummary(true);
-    //       }
-    //       return;
-    //     }
-
-    //     onOpenChange(false);
-    //   },
-    //   [
-    //     isAnimating,
-    //     isSingleDraw,
-    //     isSummary,
-    //     currentIndex,
-    //     results.length,
-    //     handleNext,
-    //     onOpenChange,
-    //   ],
-    // );
 
     useEffect(() => {
       const handleKeyPress = (event: globalThis.KeyboardEvent) => {
