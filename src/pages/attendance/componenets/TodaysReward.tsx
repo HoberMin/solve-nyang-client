@@ -51,9 +51,16 @@ const CheckSolvedProblem = () => {
                   : '냥코인 받기'}
             </button>
           </div>
-          <div className='space-y-1 text-white'>
-            <p>* 전에 풀었던 문제를 다시 푸는 경우 냥코인 수령 불가</p>
-            <p>* 다른 언어로 다시 풀었을 경우 냥코인 수령 불가</p>
+          <div className='space-y-2 text-white'>
+            <p>* 1일 1회 참여 가능합니다.</p>
+            <p>
+              * 전에 풀었던 문제를 다시 푸는 경우 <br /> 냥코인을 받을 수
+              없습니다.
+            </p>
+            <p>
+              * 같은 문제를 다른 언어로 다시 풀었을 경우 <br /> 냥코인을 받을 수
+              없습니다.
+            </p>
           </div>
         </div>
       </div>
