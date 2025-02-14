@@ -144,7 +144,7 @@ export const AttendanceCalendar: React.FC = () => {
         ))}
 
         {allDays.map(day => {
-          const isToday = isSameDay(day, today);
+          // const isToday = isSameDay(day, today);
           const isPast = isBeforeDay(day, today);
           const isCurrentMonth = day.getUTCMonth() === month - 1;
 
@@ -154,14 +154,12 @@ export const AttendanceCalendar: React.FC = () => {
             return isSameDay(utcAttendanceDate, day);
           });
 
-          const bgColorClass = isToday ? 'bg-gray-200/70' : 'bg-white';
+          const bgColorClass = 'bg-white';
           const textColorClass = !isCurrentMonth
             ? 'text-gray-400'
-            : isToday
-              ? 'text-black'
-              : isPast
-                ? 'text-gray-400'
-                : 'text-black';
+            : isPast
+              ? 'text-gray-400'
+              : 'text-black';
 
           return (
             <div
