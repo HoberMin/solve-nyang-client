@@ -69,7 +69,7 @@ export const MyImage = ({ username }: MyImageProps) => {
 
   const handleCopy = async () => {
     try {
-      const imgTag = `<a href="https://www.solve-nyang.com"><img src="https://api.solve-nyang.com/compose/${username}" width="600" height="300"/></a>`;
+      const imgTag = `<a href="https://www.solve-nyang.com"><img src="${domain}/compose/${username}" width="600" height="300"/></a>`;
       await navigator.clipboard.writeText(imgTag);
       setIsCopied(true);
       setTimeout(() => setIsCopied(false), 2000);
