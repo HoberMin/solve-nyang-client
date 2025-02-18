@@ -231,9 +231,17 @@ const CatNameGame = () => {
 
         <form onSubmit={checkAnswer} className='space-y-4'>
           <Input
+            maxLength={20}
+            onPaste={e => e.preventDefault()}
+            onCopy={e => e.preventDefault()}
+            onCut={e => e.preventDefault()}
+            onChange={e => {
+              if (e.target.value.length <= 20) {
+                setCurrentAnswer(e.target.value);
+              }
+            }}
             type='text'
             value={currentAnswer}
-            onChange={e => setCurrentAnswer(e.target.value)}
             placeholder='고양이의 이름을 입력하세요'
             className='border-white/50 bg-transparent text-lg text-white placeholder:text-gray-300'
             autoComplete='off'

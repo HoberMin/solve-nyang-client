@@ -60,7 +60,6 @@ axiosInstance.interceptors.response.use(
         );
 
         if (data.accessToken) {
-          // data.data.accessToken이 아닌 data.accessToken
           localStorage.setItem('token', data.accessToken);
           return axiosInstance(error.config!);
         }

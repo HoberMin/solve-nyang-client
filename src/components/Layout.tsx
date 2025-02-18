@@ -38,6 +38,7 @@ const Layout = ({ children }: PropsWithChildren) => {
         <main className='min-h-[calc(100vh-64px)] w-full'>
           <div className='mx-auto max-w-full'>{children}</div>
         </main>
+        {/* <Chatbot /> */}
       </div>
     </Suspense>
   );
