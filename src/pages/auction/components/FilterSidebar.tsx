@@ -48,8 +48,13 @@ const FilterSidebar = ({
           <div className='relative'>
             <Input
               placeholder='고양이 이름을 입력하세요.'
+              maxLength={20}
               value={inputValue}
-              onChange={onInputChange}
+              onChange={e => {
+                if (e.target.value.length <= 20) {
+                  onInputChange(e);
+                }
+              }}
               className='h-12 border-transparent bg-gray-900 pl-12 text-gray-200'
             />
             <Search className='absolute left-3 top-3 h-6 w-6 text-gray-400' />
