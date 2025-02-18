@@ -18,6 +18,8 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 
+// import { ApiError } from '../signup/types';
+
 interface FormData {
   username: string;
   password: string;
@@ -41,14 +43,14 @@ interface ErrorMessages {
   PASSWORD_SPACE: string;
 }
 
-interface ApiError extends Error {
-  response?: {
-    status: number;
-    data: {
-      message?: string;
-    };
-  };
-}
+// interface ApiError extends Error {
+//   response?: {
+//     status: number;
+//     data: {
+//       message?: string;
+//     };
+//   };
+// }
 
 const VALIDATION: ValidationRules = {
   PASSWORD_MIN_LENGTH: 8,
@@ -65,20 +67,20 @@ const INITIAL_FORM_STATE: FormData = {
 const ERROR_MESSAGES: ErrorMessages = {
   EMPTY_NICKNAME: '닉네임을 입력해 주세요.',
   EMPTY_PASSWORD: '비밀번호를 입력해 주세요.',
-  PASSWORD_LENGTH: '비밀번호는 8자 이상이어야 합니다.',
+  PASSWORD_LENGTH: '비밀번호는 8~20자로 설정해야 합니다.',
   PASSWORD_PATTERN: '영문, 숫자, 특수문자를 최소 1자 포함해야 합니다.',
   PASSWORD_MISMATCH: '비밀번호가 일치하지 않습니다.',
   PASSWORD_CHECK: '비밀번호를 확인해주세요.',
 
-  FAILED_TO_CHECK_USER: '사용자 확인에 실패했습니다.', // verify의 Failed to check user
+  FAILED_TO_CHECK_USER: '사용자 확인에 실패했습니다.',
   FAILED_MODIFY_PASSWORD: '비밀번호 수정 실패',
   PASSWORD_SPACE: '비밀번호에 공백을 포함할 수 없습니다.',
 };
 
-const FEEDBACK_MESSAGES = {
-  ENCRYPTION_GUIDE: '암호화키를 solved.ac 내정보-이름에 입력하세요.',
-  INCOMPLETE_FORM: '가입정보를 입력하세요.',
-};
+// const FEEDBACK_MESSAGES = {
+//   ENCRYPTION_GUIDE: '암호화키를 solved.ac 내정보-이름에 입력하세요.',
+//   INCOMPLETE_FORM: '가입정보를 입력하세요.',
+// };
 
 const FindPassword = () => {
   const navigate = useNavigate();
@@ -87,7 +89,7 @@ const FindPassword = () => {
 
   const [formData, setFormData] = useState<FormData>(INITIAL_FORM_STATE);
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [encryptionKey, setEncryptionKey] = useState<string>(''); // 인증키 재발급
+  const [encryptionKey, setEncryptionKey] = useState<string>('');
   const [isShowPassword, setIsShowPassword] = useState<boolean>(false);
   const [isKeyIssued, setIsKeyIssued] = useState<boolean>(false);
   const [isValid, setIsValid] = useState<boolean>(false);
@@ -168,24 +170,10 @@ const FindPassword = () => {
         setEncryptionKey(data.verificationCode);
         setIsKeyIssued(true);
         setErrors(prev => ({ ...prev, encryption: '', username: '' }));
-        toast.success(FEEDBACK_MESSAGES.ENCRYPTION_GUIDE);
+        // toast.success(FEEDBACK_MESSAGES.ENCRYPTION_GUIDE);
       },
-      onError: (error: ApiError) => {
-        // 디버깅을 위한 에러 로그 추가
-        console.log('Error response:', error.response?.data);
-        console.log('Error status:', error.response?.status);
-
+      onError: () => {
         toast.error('존재하지 않는 사용자입니다.');
-
-        // 왜 안될까
-        // if (error.response?.status === 403) {
-        //   toast.error('존재하지 않는 사용자입니다.');
-        // } else {
-        //   // 기타 에러
-        //   toast.error(
-        //     '암호화 키 발급에 실패 했습니다. 잠시 후 다시 시도해주세요',
-        //   );
-        // }
       },
     });
   };
@@ -213,7 +201,6 @@ const FindPassword = () => {
       },
       {
         onSuccess: () => {
-          toast.success('비밀번호가 재설정 되었습니다.');
           navigate('/login');
         },
         onError: (error: Error) => {
@@ -343,6 +330,7 @@ const FindPassword = () => {
                         handleInputChange(e.target.value, 'password')
                       }
                       onKeyDown={e => e.key === ' ' && e.preventDefault()}
+                      maxLength={20}
                       className='h-10 bg-zinc-900 pr-10 text-zinc-100'
                       placeholder='새로운 비밀번호를 입력하세요.'
                     />
@@ -376,6 +364,7 @@ const FindPassword = () => {
                       handleInputChange(e.target.value, 'passwordConfirm')
                     }
                     onKeyDown={e => e.key === ' ' && e.preventDefault()}
+                    maxLength={20}
                     autoComplete='off'
                     className='h-10 bg-zinc-900 text-zinc-100'
                     placeholder='비밀번호를 다시 입력하세요.'

@@ -36,6 +36,7 @@ export const PasswordInput = ({
           className='h-10 bg-zinc-900 pr-10 text-zinc-100'
           autoComplete='off'
           placeholder={placeholder}
+          maxLength={20}
         />
         {onToggleShow &&
           (showPassword ? (

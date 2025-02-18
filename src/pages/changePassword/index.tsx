@@ -167,13 +167,14 @@ const ChangePassword = () => {
           setErrors({});
           navigate('/');
         },
-        onError: (error: Error) => {
-          if (error.message === 'Incorrect current password') {
-            toast.error('현재 비밀번호를 확인해주세요.');
-          } else {
-            toast.error('비밀번호 변경 중 오류가 발생했습니다.');
-          }
-        },
+        // onError: (error: Error) => {
+        // toast.error(error.message);
+        // if (error.message === 'Incorrect current password') {
+        //   toast.error('현재 비밀번호를 확인해주세요.');
+        // } else {
+        //   toast.error('비밀번호 변경 중 오류가 발생했습니다.');
+        // }
+        // },
       },
     );
   };
@@ -202,6 +203,7 @@ const ChangePassword = () => {
                         handleInputChange(e.target.value, 'currentPassword')
                       }
                       onKeyDown={e => e.key === ' ' && e.preventDefault()}
+                      maxLength={20}
                       className='h-10 bg-zinc-900 pr-10 text-zinc-100'
                       placeholder='현재 비밀번호를 입력하세요.'
                     />
@@ -230,6 +232,7 @@ const ChangePassword = () => {
                         handleInputChange(e.target.value, 'newPassword')
                       }
                       onKeyDown={e => e.key === ' ' && e.preventDefault()}
+                      maxLength={20}
                       className='h-10 bg-zinc-900 pr-10 text-zinc-100'
                       placeholder='새 비밀번호를 입력하세요.'
                     />
@@ -261,6 +264,7 @@ const ChangePassword = () => {
                   <Input
                     type='password'
                     value={formData.passwordConfirm}
+                    maxLength={20}
                     onChange={e =>
                       handleInputChange(e.target.value, 'passwordConfirm')
                     }
