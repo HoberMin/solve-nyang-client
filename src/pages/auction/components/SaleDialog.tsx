@@ -44,8 +44,8 @@ const SaleDialog: React.FC<SaleDialogProps> = ({
     if (!isNaN(numValue)) {
       if (numValue <= 0) {
         setError('1냥 이상의 가격을 입력해주세요.');
-      } else if (numValue > 1000000) {
-        setError('100만냥 이하의 가격을 입력해주세요.');
+      } else if (numValue >= 1000000) {
+        setError('100만냥 미만의 가격을 입력해주세요.');
       } else {
         setError('');
       }
@@ -62,7 +62,7 @@ const SaleDialog: React.FC<SaleDialogProps> = ({
   };
 
   const handleProceed = () => {
-    if (price > 0 && price <= 1000000) {
+    if (price > 0 && price < 1000000) {
       setIsConfirmDialogOpen(true);
     }
   };
@@ -98,6 +98,7 @@ const SaleDialog: React.FC<SaleDialogProps> = ({
                 <Input
                   id='price'
                   type='text'
+                  maxLength={7}
                   value={price === 0 ? '' : price}
                   onChange={e => {
                     const value = e.target.value;
