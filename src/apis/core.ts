@@ -15,7 +15,7 @@ export interface ApiResult<T> {
   message?: string;
 }
 
-const DOMAIN = 'https://dev.api.solve-nyang.com';
+const DOMAIN = 'https://api.solve-nyang.com';
 const MAX_RETRY_COUNT = 3;
 let currentRetryCount = 0;
 
@@ -60,7 +60,6 @@ axiosInstance.interceptors.response.use(
         );
 
         if (data.accessToken) {
-          // data.data.accessToken이 아닌 data.accessToken
           localStorage.setItem('token', data.accessToken);
           return axiosInstance(error.config!);
         }
