@@ -48,8 +48,8 @@ export const findPassword = async (findPasswordForm: FindPasswordRequest) => {
 export const useChangePassword = () => {
   const { mutate } = useMutation({
     mutationFn: changePassword,
-    onSuccess: data => {
-      toast.success(data?.message || '비밀번호가 성공적으로 변경되었습니다.');
+    onSuccess: () => {
+      toast.success('비밀번호가 성공적으로 변경되었습니다.');
     },
     onError: (error: Error) => {
       toast.error(error.message);
@@ -62,8 +62,8 @@ export const useChangePassword = () => {
 export const useFindPassword = () => {
   const { mutate } = useMutation({
     mutationFn: findPassword,
-    onSuccess: data => {
-      toast.success(data?.message || '비밀번호가 성공적으로 변경되었습니다.');
+    onSuccess: () => {
+      toast.success('비밀번호가 성공적으로 재설정되었습니다.');
     },
     onError: (error: Error) => {
       toast.error(error.message);

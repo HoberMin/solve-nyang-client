@@ -162,19 +162,10 @@ const ChangePassword = () => {
       },
       {
         onSuccess: () => {
-          toast.success('비밀번호가 변경되었습니다.');
           setFormData(INITIAL_FORM_STATE);
           setErrors({});
           navigate('/');
         },
-        // onError: (error: Error) => {
-        // toast.error(error.message);
-        // if (error.message === 'Incorrect current password') {
-        //   toast.error('현재 비밀번호를 확인해주세요.');
-        // } else {
-        //   toast.error('비밀번호 변경 중 오류가 발생했습니다.');
-        // }
-        // },
       },
     );
   };
