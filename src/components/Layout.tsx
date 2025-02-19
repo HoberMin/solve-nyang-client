@@ -1,6 +1,5 @@
 import { PropsWithChildren, Suspense, useEffect, useState } from 'react';
 
-import ChatBot from './ChatBot';
 import Header from './Header';
 import LoadingScreen from './LoadingScreen';
 import MobileBlockScreen from './MobileBlockScreen';
