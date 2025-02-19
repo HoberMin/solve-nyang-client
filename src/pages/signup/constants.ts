@@ -15,7 +15,7 @@ export const INITIAL_FORM_STATE: FormData = {
 export const ERROR_MESSAGES: ErrorMessages = {
   EMPTY_NICKNAME: '닉네임을 입력해 주세요.',
   EMPTY_PASSWORD: '비밀번호를 입력해 주세요.',
-  PASSWORD_LENGTH: '비밀번호는 8자 이상이어야 합니다.',
+  PASSWORD_LENGTH: '비밀번호는 8~20자로 설정해야 합니다.',
   PASSWORD_PATTERN: '영문, 숫자, 특수문자를 최소 1자 포함해야 합니다.',
   PASSWORD_MISMATCH: '비밀번호가 일치하지 않습니다.',
   PASSWORD_CHECK: '비밀번호를 확인해주세요.',
