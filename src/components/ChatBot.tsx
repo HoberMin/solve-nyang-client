@@ -15,7 +15,7 @@ interface ChatBotResponse {
 }
 
 export const chatBot = async (message: string): Promise<ChatBotResponse> => {
-  const response = await fetch('http://70.12.115.69:8000/chat', {
+  const response = await fetch('http://3.34.42.75:8787/chat', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
