@@ -1,6 +1,5 @@
 import { PropsWithChildren, Suspense, useEffect, useState } from 'react';
 
-import ChatBot from './ChatBot';
 import Header from './Header';
 import LoadingScreen from './LoadingScreen';
 import MobileBlockScreen from './MobileBlockScreen';
@@ -39,7 +38,7 @@ const Layout = ({ children }: PropsWithChildren) => {
         <main className='min-h-[calc(100vh-64px)] w-full'>
           <div className='mx-auto max-w-full'>{children}</div>
         </main>
-        <ChatBot />
+        {/* <ChatBot /> */}
       </div>
     </Suspense>
   );
