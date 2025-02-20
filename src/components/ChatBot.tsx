@@ -15,7 +15,7 @@ interface ChatBotResponse {
 }
 
 export const chatBot = async (message: string): Promise<ChatBotResponse> => {
-  const response = await fetch('http://70.12.115.69:8080/chat', {
+  const response = await fetch('http://70.12.115.69:8000/chat', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -39,6 +39,7 @@ export const chatBot = async (message: string): Promise<ChatBotResponse> => {
 const ChatbotComponent = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [inputMessage, setInputMessage] = useState('');
+  const maxLength = 200; // 최대 글자수 제한
   const [messages, setMessages] = useState<Chat[]>([
     {
       sender: 'ai',
@@ -80,6 +81,21 @@ const ChatbotComponent = () => {
     },
   });
 
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    if (value.length <= maxLength) {
+      setInputMessage(value);
+    }
+  };
+
+  const handlePaste = (e: React.ClipboardEvent) => {
+    e.preventDefault();
+    const pastedText = e.clipboardData.getData('text');
+    const remainingSpace = maxLength - inputMessage.length;
+    const truncatedText = pastedText.slice(0, remainingSpace);
+    setInputMessage(prev => prev + truncatedText);
+  };
+
   const handleSendMessage = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!inputMessage.trim() || mutation.isPending) return;
@@ -98,7 +114,7 @@ const ChatbotComponent = () => {
         ...prev,
         {
           sender: 'ai',
-          content: response.response, // ChatBotResponse의 response 필드 사용
+          content: response.response,
         },
       ]);
     } catch (error) {
@@ -115,6 +131,13 @@ const ChatbotComponent = () => {
       },
     ]);
     setInputMessage('');
+  };
+
+  const getProgressColor = () => {
+    const ratio = inputMessage.length / maxLength;
+    if (ratio < 0.5) return 'bg-emerald-500';
+    if (ratio < 0.8) return 'bg-yellow-500';
+    return 'bg-red-500';
   };
 
   return (
@@ -153,13 +176,13 @@ const ChatbotComponent = () => {
             <div className='flex items-center gap-2'>
               <button
                 onClick={handleNewChat}
-                className={'rounded-lg p-1.5 text-slate-300 transition-colors'}
+                className='rounded-lg p-1.5 text-slate-300 transition-colors'
               >
                 <RotateCcw className='h-5 w-5 text-black' />
               </button>
               <button
                 onClick={() => setIsOpen(false)}
-                className={'rounded-lg p-1.5 text-slate-300 transition-colors'}
+                className='rounded-lg p-1.5 text-slate-300 transition-colors'
               >
                 <X className='h-5 w-5 text-black' />
               </button>
@@ -190,8 +213,8 @@ const ChatbotComponent = () => {
                       : 'bg-slate-800/80 text-slate-100 backdrop-blur-sm',
                   )}
                 >
-                  <p className='text-[0.925rem] leading-relaxed'>
-                    {message.content}
+                  <p className='whitespace-pre-wrap break-words text-[0.925rem] leading-relaxed'>
+                    {message.content.replace(/[#*`_~>/\]]/g, '')}
                   </p>
                 </div>
               </div>
@@ -211,34 +234,49 @@ const ChatbotComponent = () => {
           </div>
 
           <div className='border-t border-slate-700/30 bg-slate-900/50 p-4 backdrop-blur-sm'>
-            <form
-              onSubmit={handleSendMessage}
-              className='flex items-center gap-2'
-            >
-              <input
-                type='text'
-                value={inputMessage}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setInputMessage(e.target.value)
-                }
-                disabled={mutation.isPending}
-                placeholder='메시지를 입력하세요...'
-                className={cn(
-                  'flex-1 rounded-xl border-0 bg-slate-800/80 px-4 py-3',
-                  'text-white placeholder-slate-400 outline-none',
-                  'focus:outline-none focus:ring-2 focus:ring-violet-500/50',
-                )}
-              />
-              <button
-                type='submit'
-                disabled={mutation.isPending}
-                className={cn(
-                  'rounded-xl bg-violet-500 p-3 text-white transition-colors',
-                  'hover:bg-violet-600 disabled:cursor-not-allowed disabled:opacity-50',
-                )}
-              >
-                <Send className='h-5 w-5' />
-              </button>
+            <form onSubmit={handleSendMessage} className='flex flex-col gap-2'>
+              <div className='flex items-center gap-2'>
+                <div className='relative flex-1'>
+                  <input
+                    type='text'
+                    value={inputMessage}
+                    onChange={handleInputChange}
+                    onPaste={handlePaste}
+                    disabled={mutation.isPending}
+                    placeholder='메시지를 입력하세요...'
+                    maxLength={maxLength}
+                    className={cn(
+                      'w-full rounded-xl border-0 bg-slate-800/80 px-4 py-3 pr-20',
+                      'text-white placeholder-slate-400 outline-none',
+                      'focus:outline-none focus:ring-2 focus:ring-violet-500/50',
+                    )}
+                  />
+                  <span className='absolute bottom-2 right-3 text-xs text-slate-400'>
+                    {inputMessage.length}/{maxLength}
+                  </span>
+                </div>
+                <button
+                  type='submit'
+                  disabled={mutation.isPending || !inputMessage.trim()}
+                  className={cn(
+                    'rounded-xl bg-violet-500 p-3 text-white transition-colors',
+                    'hover:bg-violet-600 disabled:cursor-not-allowed disabled:opacity-50',
+                  )}
+                >
+                  <Send className='h-5 w-5' />
+                </button>
+              </div>
+              <div className='h-1 w-full rounded-full bg-slate-700/30'>
+                <div
+                  className={cn(
+                    'h-full rounded-full transition-all duration-300',
+                    getProgressColor(),
+                  )}
+                  style={{
+                    width: `${(inputMessage.length / maxLength) * 100}%`,
+                  }}
+                />
+              </div>
             </form>
           </div>
         </div>
