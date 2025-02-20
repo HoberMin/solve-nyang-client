@@ -15,9 +15,15 @@ const CheckSolvedProblem = () => {
     await checkSolved();
   }, 3000);
 
+  const isDisabledTime = () => {
+    const currentHour = new Date().getHours();
+
+    return currentHour >= 0 && currentHour < 2;
+  };
+
   const buttonStyle = `mt-10 w-[150px] font-medium text-gray-100 transition-colors ${
-    todayAttendance?.isAttended
-      ? 'bg-gray-500 cursor-not-allowed' // 이미 출석한 경우 회색
+    todayAttendance?.isAttended || isDisabledTime()
+      ? 'bg-gray-500 cursor-not-allowed' // 이미 출석했거나 00~02시 사이인 경우 회색
       : 'bg-green-600 hover:bg-green-500' // 출석 가능한 경우 초록색
   }`;
 
@@ -41,14 +47,18 @@ const CheckSolvedProblem = () => {
             </a>
             <button
               onClick={handleRewardClick}
-              disabled={isPending || todayAttendance?.isAttended}
+              disabled={
+                isPending || todayAttendance?.isAttended || isDisabledTime()
+              }
               className={buttonStyle}
             >
               {isPending
                 ? '확인 중...'
                 : todayAttendance?.isAttended
                   ? '지급 완료'
-                  : '냥코인 받기'}
+                  : isDisabledTime()
+                    ? '서비스 점검 중'
+                    : '냥코인 받기'}
             </button>
           </div>
           <div className='space-y-2 text-white'>
@@ -61,6 +71,7 @@ const CheckSolvedProblem = () => {
               * 같은 문제를 다른 언어로 다시 풀었을 경우 <br /> 냥코인을 받을 수
               없습니다.
             </p>
+            <p>* 매일 00시 ~ 02시는 서비스 점검 시간입니다.</p>
           </div>
         </div>
       </div>
