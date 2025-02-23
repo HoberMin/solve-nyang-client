@@ -54,7 +54,7 @@ const Header = () => {
           <MenuItem href='/login'>로그인</MenuItem>
         ) : (
           <>
-            <MenuItem href='/valentine'>발렌타인</MenuItem>
+            {/* <MenuItem href='/valentine'>발렌타인</MenuItem> */}
             <MenuItem href='/laboratory'>실험실</MenuItem>
             <MenuItem href='/contest'>공모전</MenuItem>
             <MenuItem href='/gacha'>뽑기 </MenuItem>

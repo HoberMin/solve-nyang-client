@@ -3,7 +3,6 @@ import { Brain, Cat, ChevronDown, Code } from 'lucide-react';
 
 import ExtensionImg from '@/assets/banner/Extension.png';
 import GachaImg from '@/assets/banner/Gacha.png';
-import ValentineImg from '@/assets/banner/ValentineEvent.png';
 import ReadmeImg from '@/assets/readme_example.png';
 import Layout from '@/components/Layout';
 import { Button } from '@/components/ui/button';
@@ -170,17 +169,17 @@ const MainPage = () => {
       link: '/image',
       imagePosition: 'left',
     },
-    {
-      title: '발렌타인데이 이벤트',
-      description:
-        '발렌타인데이 한정 이벤트에 참여하고 특별한 고양이 아바타를 획득하세요! 오직 이벤트 기간 동안만 만날 수 있는 한정판 캐릭터들을 놓치지 마세요.',
-      image: ValentineImg,
-      buttonText: '이벤트 참여하러 가기',
-      buttonVariant: 'default',
-      buttonStyle: 'pink',
-      link: '/valentine',
-      imagePosition: 'right',
-    },
+    // {
+    //   title: '발렌타인데이 이벤트',
+    //   description:
+    //     '발렌타인데이 한정 이벤트에 참여하고 특별한 고양이 아바타를 획득하세요! 오직 이벤트 기간 동안만 만날 수 있는 한정판 캐릭터들을 놓치지 마세요.',
+    //   image: ValentineImg,
+    //   buttonText: '이벤트 참여하러 가기',
+    //   buttonVariant: 'default',
+    //   buttonStyle: 'pink',
+    //   link: '/valentine',
+    //   imagePosition: 'right',
+    // },
   ];
 
   return (
