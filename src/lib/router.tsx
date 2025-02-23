@@ -106,15 +106,15 @@ export const router = sentryCreateBrowserRouter([
           />
         ),
       },
-      {
-        path: 'valentine',
-        element: (
-          <ProtectedRoute
-            element={<Pages.ValentinePage />}
-            requireAuth={true}
-          />
-        ),
-      },
+      // {
+      //   path: 'valentine',
+      //   element: (
+      //     <ProtectedRoute
+      //       element={<Pages.ValentinePage />}
+      //       requireAuth={true}
+      //     />
+      //   ),
+      // },
       {
         path: 'gallery',
         element: (
