@@ -14,6 +14,7 @@ export const CAT_MAPPINGS: Record<string, CatInfo> = {
   LikeCat: { korName: '좋아하냥', engName: 'LikeCat' },
 
   // S 등급
+  ChillCat: { korName: '칠냥', engName: 'ChillCat' },
   CodingCat: { korName: '코딩냥', engName: 'CodingCat' },
   FishbowlCat: { korName: '어항냥', engName: 'FishbowlCat' },
   UFOCat: { korName: 'UFO냥', engName: 'UFOCat' },

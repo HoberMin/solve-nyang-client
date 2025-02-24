@@ -22,7 +22,7 @@ interface ContestFile {
   storedFilename: string | null;
 }
 
-const ContestPage = () => {
+const ContestSubmitPage = () => {
   const submitContestAvatar = useSubmitContestAvatar();
   const [
     { file, preview, imageUrl, originalFilename, storedFilename },
@@ -283,4 +283,4 @@ const ContestPage = () => {
   );
 };
 
-export default ContestPage;
+export default ContestSubmitPage;

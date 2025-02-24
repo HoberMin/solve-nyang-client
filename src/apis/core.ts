@@ -15,7 +15,7 @@ export interface ApiResult<T> {
   message?: string;
 }
 
-const DOMAIN = 'https://api.solve-nyang.com';
+const DOMAIN = 'https://dev.api.solve-nyang.com';
 const MAX_RETRY_COUNT = 3;
 let currentRetryCount = 0;
 

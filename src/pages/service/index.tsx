@@ -25,12 +25,6 @@ interface Feature {
   description: string;
 }
 
-interface Character {
-  name: string;
-  rarity: string;
-  imageUrl: string;
-}
-
 interface ContentSection {
   title: string;
   description: string;
@@ -94,44 +88,6 @@ const MainPage = () => {
       icon: <Code className='h-8 w-8' />,
       title: 'README 꾸미기',
       description: '수집한 캐릭터로 나만의 특별한 GitHub 프로필을 꾸며보세요',
-    },
-  ];
-
-  const newCharacters: Character[] = [
-    {
-      name: '리액트냥',
-      rarity: 'B',
-      imageUrl: '/cats/ReactCat.svg',
-    },
-    {
-      name: '노드냥',
-      rarity: 'B',
-      imageUrl: '/cats/NodeCat.svg',
-    },
-    {
-      name: '장고냥',
-      rarity: 'B',
-      imageUrl: '/cats/DjangoCat.svg',
-    },
-    {
-      name: '코틀린냥',
-      rarity: 'B',
-      imageUrl: '/cats/KotlinCat.svg',
-    },
-    {
-      name: '스위프트냥',
-      rarity: 'B',
-      imageUrl: '/cats/SwiftCat.svg',
-    },
-    {
-      name: '뷰냥',
-      rarity: 'B',
-      imageUrl: '/cats/VueCat.svg',
-    },
-    {
-      name: '러스트냥',
-      rarity: 'B',
-      imageUrl: '/cats/RustCat.svg',
     },
   ];
 
@@ -245,38 +201,53 @@ const MainPage = () => {
             transition={{ delay: 0.2 }}
             viewport={{ once: true }}
           >
-            <h2 className='mb-10 text-3xl font-bold text-white'>
+            <h2 className='mb-4 text-3xl font-bold text-white'>
               새로운 아바타 업데이트 !
             </h2>
+            <p className='mb-10 text-lg text-gray-300'>
+              여러분의 투표로 선정된 특별한 고양이를 소개합니다
+            </p>
           </motion.div>
 
-          <div className='mb-12 grid grid-cols-4 gap-1 md:grid-cols-6 lg:grid-cols-7'>
-            {newCharacters.map((character, index) => (
-              <motion.div
-                key={character.name}
-                className='text-center'
-                initial={{ y: 20, opacity: 0 }}
-                whileInView={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.3 + index * 0.1 }}
-                viewport={{ once: true }}
-              >
-                <img
-                  src={character.imageUrl}
-                  alt={character.name}
-                  className='mx-auto h-36 w-36 rounded-full'
-                />
-                <h3 className='text-lg font-semibold text-white'>
-                  {character.name}
-                </h3>
-                <span className='rounded text-sm font-bold text-[#7abf16]'>
-                  {character.rarity} 등급
-                </span>
-              </motion.div>
-            ))}
+          <div className='mb-12'>
+            <motion.div
+              className='overflow-hidden rounded-xl border border-white/20 bg-white/5 p-8'
+              initial={{ y: 20, opacity: 0 }}
+              whileInView={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.3 }}
+              viewport={{ once: true }}
+            >
+              <div className='flex flex-col items-center gap-6 md:flex-row md:justify-center'>
+                <div className='relative'>
+                  <img
+                    src='/cats/ChillCat.svg'
+                    alt='칠냥'
+                    className='h-40 w-40'
+                  />
+                </div>
+
+                <div className='text-center md:text-left'>
+                  <div className='mb-3'>
+                    <h3 className='text-2xl font-bold text-[#f74600]'>칠냥</h3>
+                    <p className='mt-1 text-sm text-gray-300'>
+                      2024 솔브냥 공모전 대상 수상작
+                    </p>
+                  </div>
+
+                  <div className='space-y-2 text-sm text-gray-300'>
+                    <p>🏆 등급: S</p>
+                    <p>✨ 특징: 여유로운 표정과 찰떡같은 포즈</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className='mt-6 text-center text-sm text-gray-400'>
+                <p>* 당선된 아바타는 뽑기에서 만나보실 수 있습니다</p>
+              </div>
+            </motion.div>
           </div>
         </motion.div>
       </section>
-
       {/* Content Sections */}
       {contentSections.map(section => (
         <section
