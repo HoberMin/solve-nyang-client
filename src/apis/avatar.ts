@@ -9,7 +9,7 @@ import { BaseRarity } from '@/lib/type';
 
 import { api } from './core';
 
-export const domain = 'https://api.solve-nyang.com';
+export const domain = 'https://dev.api.solve-nyang.com';
 
 export interface Avatar {
   id: string;
