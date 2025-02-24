@@ -26,12 +26,6 @@ interface Feature {
   description: string;
 }
 
-interface Character {
-  name: string;
-  rarity: string;
-  imageUrl: string;
-}
-
 interface ContentSection {
   title: string;
   description: string;
@@ -95,14 +89,6 @@ const MainPage = () => {
       icon: <Code className='h-8 w-8' />,
       title: 'README 꾸미기',
       description: '수집한 캐릭터로 나만의 특별한 GitHub 프로필을 꾸며보세요',
-    },
-  ];
-
-  const newCharacters: Character[] = [
-    {
-      name: '칠냥',
-      rarity: 'S',
-      imageUrl: '/cats/ChillCat.svg',
     },
   ];
 
