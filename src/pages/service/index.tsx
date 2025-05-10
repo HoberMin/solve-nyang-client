@@ -230,7 +230,7 @@ const MainPage = () => {
                   <div className='mb-3'>
                     <h3 className='text-2xl font-bold text-[#f74600]'>칠냥</h3>
                     <p className='mt-1 text-sm text-gray-300'>
-                      2024 솔브냥 공모전 대상 수상작
+                      2025 솔브냥 공모전 대상 수상작
                     </p>
                   </div>
 
